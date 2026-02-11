@@ -82,11 +82,6 @@ function addSectionData() {
   for (let n = 0; n < _pageData.sections.length; n++) {
     sectionCnt = n + 1;
     if (sectionCnt == 1) {
-      // playBtnSounds(_pageData.sections[sectionCnt - 1].introAudio);
-      // audioEnd(function () {
-      //   resetSimulationAudio();
-      //   window.enableCaterpillarMovement();
-      // })
 
       let instText = '';
       for (let k = 0; k < _pageData.sections[sectionCnt - 1].iText.length; k++) {
@@ -105,34 +100,32 @@ function addSectionData() {
       const numberObjects =
         _pageData.sections[sectionCnt - 1].content.numberObjects;
 
-      // pick ONE random pattern
-
-      let htmlContent = "";
-
-
       let headerConent = "";
       let popupDiv = "";
 
       headerConent += `<div class="confetti"></div>`;
+
       popupDiv += '<div class="popup">';
       popupDiv += '<div class="popup-wrap">';
-
       popupDiv += '<div class="popBtns">';
       popupDiv += '<button id="refresh" data-tooltip="Replay"></button>';
       popupDiv += '<button id="homeBack" data-tooltip="Back"></button>';
       popupDiv += "</div>";
       popupDiv += "</div>";
       popupDiv += "</div>";
+
       popupDiv += '<div class="greetingsPop">';
       popupDiv += '<div class="popup-wrap">';
       popupDiv += "</div>";
       popupDiv += "</div>";
-      popupDiv += popupDiv += `<div id="introPopup-10"><div class="popup-content">
+
+      // ⭐ FIXED: Removed extra 'popupDiv +=' here
+      popupDiv += `<div id="introPopup-10"><div class="popup-content">
       <button class="introPopAudio mute" onclick="togglePopAudio(this, '${_pageData.sections[sectionCnt - 1].infoAudio}')"></button>
       <button class="introPopclose" data-tooltip="Close" onClick="closeIntroPop('introPopup-10')"></button>
       <img src="${_pageData.sections[sectionCnt - 1].infoImg}" alt="">
-  </div>
-</div>`;
+      </div>
+      </div>`;
 
       popupDiv += `<div id="home-popup" class="popup-home" role="dialog" aria-label="Exit confirmation" aria-hidden="false">
     <div class="popup-content modal-box">
@@ -167,27 +160,22 @@ function addSectionData() {
         .find(".content-bg")
         .find(".content-style")
         .find(".body")
-        .find(".animat-container")[0]; // 👈 important
+        .find(".animat-container")[0];
 
       initSnakeGameAtMount(mountEl);
 
-
-
-
-      // $(".flip-card").on("click", onClickHanlder);
-
-
-
-      // $("#refresh").on("click", restartActivity);
-      // $("#home,#homeBack").on("click", jumtoPage)  
-
       $("#refresh").on("click", function () {
-
         jumtoPage(_controller.pageCnt);
-        startGame();
+        console.log("working");
+        initSnakeGame();
       });
+
       $("#homeBack").on("click", function () {
-        jumtoPage(_controller.pageCnt - 1)
+        if (window.stopSnakeIdle) {
+          window.stopSnakeIdle();
+        }
+        jumtoPage(2)
+
       });
 
       $(".flipTextAudio").on("click", replayLastAudio);
@@ -410,28 +398,48 @@ function initSnakeGame() {
      CANVAS HELPERS
   ========================= */
   function resizeCanvas() {
+    // 1. Force canvas to fit parent visually (Fixes "going outside" issue)
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+
+    // 2. Measure the parent container exactly
     const rect = gameWrapper.getBoundingClientRect();
+
+    // Safety: If element is hidden or collapsed, stop here
     if (rect.width === 0 || rect.height === 0) {
-      requestAnimationFrame(resizeCanvas);
       return;
     }
 
+    // 3. Set internal resolution (High DPI support)
     dpr = window.devicePixelRatio || 1;
+
+    // Set drawing buffer size to match parent pixels
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
-    canvas.style.width = `${rect.width}px`;
-    canvas.style.height = `${rect.height}px`;
+
+    // 4. Apply scaling for coordinate system
+    // (Changing width/height resets context, so we apply scale freshly here)
     ctx.scale(dpr, dpr);
 
     const logicalWidth = rect.width;
     const logicalHeight = rect.height;
 
+    // 5. Grid Calculations (Preserve clip shape alignment)
+    // We calculate tile size based on the smaller dimension to keep tiles square
     tileSize = Math.min(logicalWidth, logicalHeight) / (BASE_TILE_COUNT + 1);
+
+    // Calculate how many tiles fit in the respective dimensions
     tileCountX = Math.floor(logicalWidth / tileSize) - 1;
     tileCountY = Math.floor(logicalHeight / tileSize) - 1;
 
+    // 6. Recalculate Offsets to perfectly center the grid
     gridOffsetX = (logicalWidth - (tileCountX * tileSize)) / 2;
     gridOffsetY = (logicalHeight - (tileCountY * tileSize)) / 2;
+
+    // Force a redraw immediately so the user doesn't see a blank flash
+    if (!isGameActive && snake.length > 0) {
+      render();
+    }
   }
 
   function clearCanvas() {
@@ -687,12 +695,16 @@ function initSnakeGame() {
 
       // --- CHECK WIN CONDITION ---
       if (nextValue > currentPattern.end) {
-        // ✅ STOP INFINITE LOOP
+        // ✅ STOP INFINITE LOOP (Level 1: Prevent Function Re-entry)
         if (victoryTriggered) return;
         victoryTriggered = true;
 
         isGameActive = false;
         isGameEnded = true;
+
+        // ✅ STOP INFINITE LOOP (Level 2: Prevent Callback Re-execution)
+        // This variable is trapped in the closure and ensures the final block runs exactly once
+        let finalSequenceCompleted = false;
 
         // Wait for correct audio to end, then play victory sequence
         audioEnd(function () {
@@ -704,8 +716,12 @@ function initSnakeGame() {
           playBtnSounds(_pageData.sections[sectionCnt - 1].greatJobAudio);
 
           audioEnd(function () {
+            // Check the closure flag to ensure we don't loop if 'finalAudio' triggers audioEnd again
+            if (finalSequenceCompleted) return;
+            finalSequenceCompleted = true;
+
             if (typeof showEndAnimations === 'function') {
-              showEndAnimations(); // ✅ Calls only once now
+              showEndAnimations(); // ✅ Calls only once now guaranteed
             }
           });
         });
@@ -742,7 +758,6 @@ function initSnakeGame() {
       snake.pop();
     }
   }
-
 
   function render() {
     clearCanvas();
@@ -1121,7 +1136,9 @@ function stayPage() {
 }
 function leavePage() {
   playClickThen();
-  idleStopTimer();
+  if (window.stopSnakeIdle) {
+    window.stopSnakeIdle();
+}
   var audio = document.getElementById("simulationAudio");
   if (audio) {
     // Stop audio whether it's playing or paused

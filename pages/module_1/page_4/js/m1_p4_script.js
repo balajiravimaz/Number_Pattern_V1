@@ -130,7 +130,7 @@ function addSectionData() {
       popupDiv += '<div class="popup-wrap">';
       popupDiv += "</div>";
       popupDiv += "</div>";
-      popupDiv += popupDiv += `<div id="introPopup-9"><div class="popup-content">
+      popupDiv += `<div id="introPopup-9"><div class="popup-content">
       <button class="introPopAudio mute" onclick="togglePopAudio(this, '${_pageData.sections[sectionCnt - 1].infoAudio}')"></button>
       <button class="introPopclose" data-tooltip="Close" onClick="closeIntroPop('introPopup-9')"></button>
       <img src="${_pageData.sections[sectionCnt - 1].infoImg}" alt="">
@@ -412,25 +412,26 @@ function initSnakeGame() {
     }
   }
 
-  /* =========================
-     CANVAS & RENDERING
-  ========================= */
+
   function resizeCanvas() {
+    // 1. Force canvas to fit parent visually (Fixes "going outside" issue)
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+
     const rect = gameWrapper.getBoundingClientRect();
+
+    // Safety check: if element is hidden, retry later
     if (rect.width === 0 || rect.height === 0) {
       requestAnimationFrame(resizeCanvas);
       return;
     }
 
-    // FIX 2: Use device pixel ratio for sharp rendering on retina displays
-    const dpr = window.devicePixelRatio || 1;
+    // Use device pixel ratio for sharp rendering
+    dpr = window.devicePixelRatio || 1;
 
+    // Set internal buffer size (High DPI)
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
-
-    // Scale canvas back to display size
-    canvas.style.width = rect.width + 'px';
-    canvas.style.height = rect.height + 'px';
 
     // Scale context to match device pixel ratio
     ctx.scale(dpr, dpr);
@@ -439,17 +440,24 @@ function initSnakeGame() {
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
+    // --- Grid Calculation Logic ---
     tileSize = Math.min(rect.width, rect.height) / (BASE_TILE_COUNT + 1);
+
+    // Calculate how many tiles fit
     tileCountX = Math.floor(rect.width / tileSize) - 1;
     tileCountY = Math.floor(rect.height / tileSize) - 1;
 
+    // Calculate centering offsets
     const usedWidth = tileCountX * tileSize;
     const usedHeight = tileCountY * tileSize;
+
     gridOffsetX = (rect.width - usedWidth) / 2;
     gridOffsetY = (rect.height - usedHeight) / 2;
 
+    // Force immediate redraw to update clip path and grid
     render();
   }
+
 
   function clearCanvas() {
     const dpr = window.devicePixelRatio || 1;
@@ -948,6 +956,8 @@ function initSnakeGame() {
             // 4. Show animations            
             setTimeout(function () {
               $(".animations").removeClass("show");
+              $(".greetingsPop").css("visibility", "visible");
+              $(".greetingsPop").css("opacity", "1");
             }, 2500)
 
             // 5. Play greatJob audio
@@ -1372,7 +1382,9 @@ function stayPage() {
 function leavePage() {
   playClickThen();
   var audio = document.getElementById("simulationAudio");
-  window.stopIdleTimer();
+  if (window.stopSnakeIdle) {
+    window.stopSnakeIdle();
+  }
   if (audio) {
     // Stop audio whether it's playing or paused
     audio.pause();
@@ -1563,25 +1575,24 @@ function showEndAnimations() {
   // console.log("Audio ending");
   pageVisited();
 
-  $(".popup").css({
-    visibility: "visible",
-    opacity: "1",
-    display: "flex"
-  });
+  $(".confetti").addClass("show");
+
 
   const showEndAnimationsHandler = function () {
     const audioEl = $audio[0];
 
-
-
     // ✅ Only trigger after 2 seconds
     if (audioEl.currentTime > 2) {
 
-      $(".confetti").addClass("show");
+      $(".greetingsPop").css("visibility", "hidden");
+      $(".greetingsPop").css("opacity", "0");
 
-      setTimeout(function () {
-        $(".confetti").removeClass("show");
-      }, 2000);
+      $(".popup").css({
+        visibility: "visible",
+        opacity: "1",
+        display: "flex"
+      });
+      $(".confetti").removeClass("show");
 
       // ✅ Run only once
       $audio.off("timeupdate", showEndAnimationsHandler);

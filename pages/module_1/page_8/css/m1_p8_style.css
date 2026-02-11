@@ -124,28 +124,14 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   padding: 10px 15px;
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst {
-  margin-top: 40px;
+  margin-top: 30px;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-#section-1 .content-holder .col-left .content .content-bg .content-style .inst .intro-audio {
-  width: 25px;
-  height: 25px;
-  background: url(../images/introAudio.png);
-  background-repeat: no-repeat;
-  background-size: contain;
-  cursor: pointer;
-  margin-left: 5px;
-  border: none;
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst p {
   color: #819da7;
   text-align: center;
   font-size: 2rem;
-  margin-bottom: 0px;
+  margin-bottom: 20px;
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst p span {
   color: red;
@@ -456,6 +442,9 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   height: auto;
   opacity: 0;
 }
+#section-1 .content-holder .col-left .content .content-bg .content-style > .body .animat-container .game-area .cups .cupContain img {
+  transition: none !important;
+}
 #section-1 .content-holder .col-left .content .content-bg .content-style > .body .animat-container .game-area .cups .cupContain:nth-child(2) {
   bottom: 30px;
 }
@@ -711,7 +700,7 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   font-weight: bold;
   color: #fff;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 {
   display: none;
   opacity: 0;
   position: fixed;
@@ -724,7 +713,7 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   transition: opacity 0.3s ease;
   z-index: 111111;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -742,11 +731,11 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   background: transparent;
 }
 @media (max-width: 950px) and (orientation: landscape) {
-  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content {
+  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content {
     width: 350px;
   }
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopclose {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopclose {
   position: absolute;
   top: 30px;
   right: 125px;
@@ -759,20 +748,20 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   /* Show tooltip on hover */
 }
 @media (min-width: 951px) and (orientation: landscape) and (hover: none) {
-  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopclose {
+  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopclose {
     right: 100px;
     top: 20px;
   }
 }
 @media (max-width: 950px) and (orientation: landscape) {
-  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopclose {
+  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopclose {
     right: 75px;
     top: 15px;
     width: 15px;
     height: 15px;
   }
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopclose::after {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopclose::after {
   content: attr(data-tooltip);
   /* tooltip text from attribute */
   position: absolute;
@@ -797,13 +786,13 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   margin-top: 4px;
   z-index: 10;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopclose:hover::after {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopclose:hover::after {
   opacity: 1;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopclose:hover {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopclose:hover {
   transform: scale(1.125);
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopAudio {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopAudio {
   position: absolute;
   width: 40px;
   height: 40px;
@@ -813,35 +802,35 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   transition: transform 0.5s ease-in-out;
 }
 @media (min-width: 951px) and (orientation: landscape) and (hover: none) {
-  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopAudio {
+  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopAudio {
     top: 30px;
     left: 75px;
   }
 }
 @media (max-width: 950px) and (orientation: landscape) {
-  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopAudio {
+  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopAudio {
     top: 30px;
     width: 20px;
     height: 20px;
     left: 60px;
   }
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopAudio:hover {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopAudio:hover {
   transform: scale(1.125);
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopAudio.playing {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopAudio.playing {
   background: url(../images/music.png) no-repeat;
   background-size: contain;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopAudio.mute {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopAudio.mute {
   background: url(../images/pause.png) no-repeat;
   background-size: contain;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content img {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content img {
   width: 100%;
   height: auto;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup.popup-home {
+#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup {
   display: none;
   position: fixed;
   top: 0;
@@ -857,7 +846,7 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   align-items: center;
   z-index: 1111111;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup.popup-home .popup-content {
+#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup .popup-content {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -866,7 +855,7 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   z-index: 10002;
   text-align: center;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup.popup-home .popup-content h2 {
+#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup .popup-content h2 {
   font-family: "Alphakind", Arial, sans-serif;
   color: #ff0000;
   font-size: 32px;
@@ -874,7 +863,7 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   margin-bottom: 10px;
   margin-top: 0;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup.popup-home .popup-content.modal-box {
+#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup .popup-content.modal-box {
   background-color: #e0e0e0;
   border-radius: 10px;
   padding: 25px;
@@ -885,15 +874,15 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   text-align: center;
 }
 @media screen and (orientation: landscape) and (max-height: 299px) {
-  #section-1 .content-holder .col-left .content .content-bg .content-style #home-popup.popup-home .popup-content.modal-box {
+  #section-1 .content-holder .col-left .content .content-bg .content-style #home-popup .popup-content.modal-box {
     padding: 15px;
   }
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup.popup-home .popup-content.modal-box p {
+#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup .popup-content.modal-box p {
   text-align: center;
   margin-bottom: 5px;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup.popup-home .popup-content .modal-message {
+#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup .popup-content .modal-message {
   font-family: "Alphakind", Arial, sans-serif;
   color: #000;
   font-size: 26px;
@@ -901,20 +890,20 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   text-align: center;
   margin: 20px 0;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup.popup-home .popup-content .modal-question {
+#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup .popup-content .modal-question {
   font-family: "Alphakind", Arial, sans-serif;
   color: #000;
   font-size: 26px;
   text-align: center;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup.popup-home .popup-content .modal-buttons {
+#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup .popup-content .modal-buttons {
   display: flex;
   justify-content: center;
   gap: 20px;
   margin-top: 15x;
   flex-wrap: wrap;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup.popup-home .popup-content .modal-buttons .modal-btn {
+#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup .popup-content .modal-buttons .modal-btn {
   font-family: "Alphakind", Arial, sans-serif;
   background-color: #0066ff;
   color: #ffffff;
@@ -929,7 +918,7 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   width: 100px;
   flex: 0 0 auto;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup.popup-home .popup-content .modal-buttons .modal-btn:hover {
+#section-1 .content-holder .col-left .content .content-bg .content-style #home-popup .popup-content .modal-buttons .modal-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0, 102, 255, 0.5);
 }

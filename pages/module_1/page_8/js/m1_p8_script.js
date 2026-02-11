@@ -60,7 +60,6 @@ function _pageLoaded() {
   addSectionData();
   initPageAnimations();
   appState.pageCount = 4;
-  $('.introInfo').attr('data-popup', 'introPopup-8');
   $("#f_header").css({ backgroundImage: `url(${_pageData.sections[0].headerImg})` });
   $("#f_header").find("#f_courseTitle").css({ backgroundImage: `url(${_pageData.sections[0].headerText})` });
   $(".home_btn").css({ backgroundImage: `url(${_pageData.sections[0].backBtnSrc})` });
@@ -103,7 +102,7 @@ function addSectionData() {
           removeTags(_pageData.sections[sectionCnt - 1].iText) +
           '">' +
           _pageData.sections[sectionCnt - 1].iText +
-          "</p><button class='intro-audio' data-audio='" + _pageData.sections[sectionCnt - 1].introAudio + "'> </button></div>"
+          "</p></div>"
         );
 
 
@@ -151,9 +150,9 @@ function addSectionData() {
       popupDiv += '<div class="popup-wrap">';
       popupDiv += "</div>";
       popupDiv += "</div>";
-      popupDiv += `<div id="introPopup-8"><div class="popup-content">
+      popupDiv += `<div id="introPopup-1"><div class="popup-content">
                     <button class="introPopAudio mute" onclick="togglePopAudio(this, '${_pageData.sections[sectionCnt - 1].infoAudio}')"></button>
-                    <button class="introPopclose" data-tooltip="Close" onClick="closeIntroPop('introPopup-8')"></button>
+                    <button class="introPopclose" data-tooltip="Close" onClick="closeIntroPop('introPopup-1')"></button>
                     <img src="${_pageData.sections[sectionCnt - 1].infoImg}" alt="">
                 </div>
             </div>`;
@@ -162,7 +161,7 @@ function addSectionData() {
     <div class="popup-content modal-box">
       <h2 class="modal-title">Oops!</h2>
       <div class="modal-message">
-        <p>If you leave the pattern game then you have to start from beginning.</p>     
+        <p>If you leave the fun game then you have to start from beginning.</p>     
         <p class="modal-question">Are you sure you want to leave?</p>   
       </div>      
       <div class="modal-buttons">
@@ -186,7 +185,7 @@ function addSectionData() {
           "</div> </div>"
         );
 
-      $('.intro-audio').off('click').on('click', onClickAudioHandler);
+
       // enableDragAndDrop({
       //   cupsSelector: ".cups .cup",
       //   slotsSelector: ".shelf .slot",
@@ -283,36 +282,6 @@ function playFeedbackAudio(_audio) {
   })
 }
 
-function onClickAudioHandler(e) {
-  $("#courseAudio")[0].pause();
-  playClickThen();
-  $('.dummy-box').show();
-  e.stopPropagation();
-  const audioSrc = $(this).data('audio');
-  if (!audioSrc) {
-    console.log('No audio src found');
-    return;
-  }
-
-  const audio = document.getElementById('courseAudio');
-  if (!audio) {
-    console.log('Audio element not found');
-    return;
-  }
-
-  audio.src = audioSrc;
-  audio.currentTime = 0;
-
-  audio.play().catch(err => {
-    console.error('Audio play failed:', err);
-  });
-
-  audio.addEventListener('ended', function () {
-    console.log('Audio finished playing');
-    resetSimulationAudio();
-    $('.dummy-box').hide();
-  });
-}
 
 function getRandomPattern(patterns) {
   if (!Array.isArray(patterns) || patterns.length === 0) return null;
@@ -379,7 +348,7 @@ function loadPattern(index) {
 
 function handlePatternCompleted() {
   const gameArea = document.querySelector(".game-area");
-  console.log("Pattern completed! Loading next pattern...");
+    console.log("Pattern completed! Loading next pattern...");
 
   gameArea.classList.add("is-fading");
   setTimeout(() => {
@@ -635,59 +604,75 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
     cup.addEventListener("pointerdown", startDrag);
   });
 
-  function startDrag(e) {
+// Global variable to store the scale
+let currentScale = 1;
+
+function startDrag(e) {
     if (activeCup) return;
     e.preventDefault();
-    // playClickThen(); // Assuming this is defined globally in your project
 
     activeCup = e.currentTarget;
     const img = activeCup.querySelector("img");
+    const rect = img.getBoundingClientRect();
 
-    // 1. Hide the ENTIRE original cup (not just the image) so it looks like it moved
+    // 1. Detect the scale of the game automatically
+    // We check the width of the wrapper vs its actual rendered width
+    const wrapper = document.getElementById('f_wrapper') || document.body;
+    currentScale = wrapper.getBoundingClientRect().width / wrapper.offsetWidth;
+
+    // 2. Calculate the offset
+    // We must account for the scale here
+    offsetX = (e.clientX - rect.left) / currentScale;
+    offsetY = (e.clientY - rect.top) / currentScale;
+
+    // 3. Create the ghost
+    dragImg = img.cloneNode(true);
+    
+    // 4. Force Reset styles
+    Object.assign(dragImg.style, {
+        position: "absolute", // Use absolute, not fixed, to stay inside the scaled coordinate system
+        width: img.offsetWidth + "px",
+        height: img.offsetHeight + "px",
+        margin: "0",
+        transform: "none",
+        bottom: "auto",
+        right: "auto",
+        pointerEvents: "none",
+        zIndex: "99999"
+    });
+
+    // 5. Append to the SAME container as the cup, not the body
+    // This ensures the ghost is subject to the same scaling as the cup
+    activeCup.parentElement.appendChild(dragImg);
     activeCup.style.opacity = "0";
 
-    // 2. Create drag image (clone)
-    dragImg = img.cloneNode(true);
-
-    // 3. Fix Styling to ensure "Perfect Position"
-    dragImg.style.position = "fixed";
-    dragImg.style.width = img.getBoundingClientRect().width + "px"; // Use rect width for accuracy
-    dragImg.style.height = img.getBoundingClientRect().height + "px";
-    dragImg.style.pointerEvents = "none";
-    dragImg.style.zIndex = "9999";
-
-    // IMPORTANT: Reset margins and transforms to prevent cursor offset issues
-    dragImg.style.margin = "0";
-    dragImg.style.padding = "0";
-    dragImg.style.transform = "none";
-    dragImg.style.display = "block"; // Prevents inline spacing issues
-
-    document.body.appendChild(dragImg);
-
-    // 4. Calculate offset strictly based on the image's current screen position
-    const rect = img.getBoundingClientRect();
-    offsetX = e.clientX - rect.left;
-    offsetY = e.clientY - rect.top;
-
-    // Move drag image to follow cursor immediately
+    // Initial position
     moveAt(e.clientX, e.clientY);
 
     document.addEventListener("pointermove", onMove);
     document.addEventListener("pointerup", endDrag);
-  }
+}
 
-  function moveAt(x, y) {
-    if (!dragImg) return;
-    // This keeps the image exactly under the cursor where you clicked
-    dragImg.style.left = (x - offsetX) + "px";
-    dragImg.style.top = (y - offsetY) + "px";
-  }
+function moveAt(x, y) {
+    if (!dragImg || !activeCup) return;
+
+    // Get the container's position to calculate relative movement
+    const parentRect = activeCup.parentElement.getBoundingClientRect();
+
+    // Math: (Mouse Pos - Container Pos) / Scale - Initial Offset
+    const posX = (x - parentRect.left) / currentScale - offsetX;
+    const posY = (y - parentRect.top) / currentScale - offsetY;
+
+    dragImg.style.left = posX + "px";
+    dragImg.style.top = posY + "px";
+}
 
   function onMove(e) {
     moveAt(e.clientX, e.clientY);
   }
 
   function endDrag(e) {
+    document.body.classList.remove("dragging-active");
     document.removeEventListener("pointermove", onMove);
     document.removeEventListener("pointerup", endDrag);
 
@@ -878,7 +863,7 @@ function playBtnSounds(soundFile) {
 
 
 function resetSimulationAudio() {
-
+  console.log("Balajia");
 
   const audioElement = document.getElementById("simulationAudio");
   if (!audioElement) return;
