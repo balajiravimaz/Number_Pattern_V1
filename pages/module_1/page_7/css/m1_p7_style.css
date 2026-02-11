@@ -140,6 +140,12 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   cursor: pointer;
   margin-left: 5px;
   border: none;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+#section-1 .content-holder .col-left .content .content-bg .content-style .inst .intro-audio:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst p {
   color: #819da7;
@@ -1107,4 +1113,4 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   100% {
     transform: scale(1);
   }
-}/*# sourceMappingURL=m1_p7_style.css.map */
+}

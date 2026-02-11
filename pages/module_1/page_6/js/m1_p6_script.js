@@ -116,9 +116,11 @@ function addSectionData() {
 
                     imgObj += '</button><div class="btn_info i-txt-toolTip" id="info-' + (i + 1) + '" data-tooltip="Information"></div></div>'
 
+                    // console.log( _pageData.sections[sectionCnt - 1].content.sectionArray[i].infoPopAudio, "pop audios");
+
                     $('#section-' + sectionCnt).find('.content-holder').append(
                         '<div class="infobtnPopup" id="infobtnPopup-' + (i + 1) + '"><div class="popup-content">' +
-                        '<button class="infoPopAudio mute" onclick="togglePopAudio(this, \'' + _pageData.sections[sectionCnt - 1].content.sectionArray[i].infoPopAudio + '\')"></button>' +
+                        '<button class="infoPopAudio mute" onclick="togglePopAudio(this, \'' + _pageData.sections[sectionCnt - 1].content.sectionArray[i].infoAudio + '\')"></button>' +
                         '<button class="introPopclose" data-tooltip="Close" onClick="closeIntroPop(\'.infobtnPopup\')"></button>' +
                         '<img src="' + _pageData.sections[sectionCnt - 1].content.sectionArray[i].infoImg + '" alt="">' +
                         '</div></div>'

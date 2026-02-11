@@ -126,32 +126,12 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst {
   margin-top: 30px;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 3px;
-}
-#section-1 .content-holder .col-left .content .content-bg .content-style .inst .intro-audio {
-  width: 25px;
-  height: 25px;
-  background: url(../images/introAudio.png);
-  background-repeat: no-repeat;
-  background-size: contain;
-  cursor: pointer;
-  margin-left: 5px;
-  border: none;
-  opacity: 1;
-  transition: opacity 0.2s ease;
-}
-#section-1 .content-holder .col-left .content .content-bg .content-style .inst .intro-audio:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst p {
   color: #819da7;
   text-align: center;
   font-size: 2rem;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst p span {
   color: red;
@@ -720,7 +700,7 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   font-weight: bold;
   color: #fff;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 {
   display: none;
   opacity: 0;
   position: fixed;
@@ -733,7 +713,7 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   transition: opacity 0.3s ease;
   z-index: 111111;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -751,11 +731,11 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   background: transparent;
 }
 @media (max-width: 950px) and (orientation: landscape) {
-  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content {
+  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content {
     width: 350px;
   }
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopclose {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopclose {
   position: absolute;
   top: 30px;
   right: 125px;
@@ -768,20 +748,20 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   /* Show tooltip on hover */
 }
 @media (min-width: 951px) and (orientation: landscape) and (hover: none) {
-  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopclose {
+  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopclose {
     right: 100px;
     top: 20px;
   }
 }
 @media (max-width: 950px) and (orientation: landscape) {
-  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopclose {
+  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopclose {
     right: 75px;
     top: 15px;
     width: 15px;
     height: 15px;
   }
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopclose::after {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopclose::after {
   content: attr(data-tooltip);
   /* tooltip text from attribute */
   position: absolute;
@@ -806,13 +786,13 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   margin-top: 4px;
   z-index: 10;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopclose:hover::after {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopclose:hover::after {
   opacity: 1;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopclose:hover {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopclose:hover {
   transform: scale(1.125);
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopAudio {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopAudio {
   position: absolute;
   width: 40px;
   height: 40px;
@@ -822,31 +802,31 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   transition: transform 0.5s ease-in-out;
 }
 @media (min-width: 951px) and (orientation: landscape) and (hover: none) {
-  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopAudio {
+  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopAudio {
     top: 30px;
     left: 75px;
   }
 }
 @media (max-width: 950px) and (orientation: landscape) {
-  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopAudio {
+  #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopAudio {
     top: 30px;
     width: 20px;
     height: 20px;
     left: 60px;
   }
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopAudio:hover {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopAudio:hover {
   transform: scale(1.125);
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopAudio.playing {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopAudio.playing {
   background: url(../images/music.png) no-repeat;
   background-size: contain;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content .introPopAudio.mute {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content .introPopAudio.mute {
   background: url(../images/pause.png) no-repeat;
   background-size: contain;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-8 .popup-content img {
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-1 .popup-content img {
   width: 100%;
   height: auto;
 }

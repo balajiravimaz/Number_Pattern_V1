@@ -141,7 +141,7 @@ function addSectionData() {
     <div class="popup-content modal-box">
       <h2 class="modal-title">Oops!</h2>
       <div class="modal-message">
-        <p>If you leave the fun game then you have to start from beginning.</p>     
+        <p>If you leave the shapes pattern simulation then you have to start from beginning.</p>     
         <p class="modal-question">Are you sure you want to leave?</p>   
       </div>      
       <div class="modal-buttons">
@@ -322,7 +322,8 @@ function initSnakeGame() {
 
   // --- STATE VARIABLES ---
   let isProcessingMove = false;
-  let isWrongAction = false; // <--- NEW: Strictly locks controls during wrong audio
+  let isWrongAction = false;
+  let isCorrectAction = false; // <--- NEW: Locks controls during correct audio// <--- NEW: Strictly locks controls during wrong audio
   let spawnTimer = null;     // <--- NEW: Prevents double timers
 
 
@@ -912,12 +913,16 @@ function initSnakeGame() {
     snake.unshift(newHead);
 
     if (hitFood) {
+
       if (hitFood.correct) {
         // === CORRECT FOOD ===
 
-        // 1. Cancel any previous spawn timers to prevent double-generation
+        // 1. LOCK CONTROLS IMMEDIATELY
         if (spawnTimer) clearTimeout(spawnTimer);
         spawnTimer = null;
+
+        isCorrectAction = true;    // <--- NEW: Lock specific to correct move
+        isProcessingMove = true;   // <--- NEW: Double lock
 
         snakePattern.push(hitFood.shape);
         nextShapeIndex++;
@@ -932,74 +937,62 @@ function initSnakeGame() {
         // 2. Clear food immediately so it disappears
         foods = [];
 
-        // Win Check - Do this BEFORE playing audio
+        // Win Check
         const hasWon = snakePattern.length >= TARGET_LENGTH;
 
         if (hasWon) {
           isGameActive = false;
-          // ✅ Clear all timers and foods to prevent any spawning
           if (spawnTimer) {
             clearTimeout(spawnTimer);
             spawnTimer = null;
           }
-          foods = []; // ✅ Clear foods so nothing draws on canvas
+          foods = [];
 
-          // ✅ CORRECTED FLOW for final food:
-          // 1. Play correctAudio (eating sound)
           isCorrectFinal(() => {
-            // 2. After correctAudio ends, hide animations briefly            
-
-            // 3. Center the snake
             $(".animations").addClass("show");
             centerCompletedSnake();
-
-            // 4. Show animations            
             setTimeout(function () {
               $(".animations").removeClass("show");
               $(".greetingsPop").css("visibility", "visible");
               $(".greetingsPop").css("opacity", "1");
             }, 2500)
 
-            // 5. Play greatJob audio
             playBtnSounds(_pageData.sections[sectionCnt - 1].greatJob);
             $(".inst").text('');
             $(".inst").append(`<p>${_pageData.sections[sectionCnt - 1].finalText}</p>`)
 
-            // 6. After greatJob audio ends, show end animations (ONLY ONCE)
             const audio = document.getElementById("simulationAudio");
-
             const onGreatJobEnd = () => {
-              audio.removeEventListener("ended", onGreatJobEnd); // ✅ Remove listener immediately
+              audio.removeEventListener("ended", onGreatJobEnd);
               showEndAnimations();
             };
-
             audio.addEventListener("ended", onGreatJobEnd);
           });
 
           animateEating();
           animateFoodToHead(hitFood);
-
           return;
         }
 
-        // Audio & Animation for continuing game
-        isCorrect();  // ✅ Don't pass food parameter
+        // === CHANGE HERE: Audio Callback for Continuing Game ===
+
         animateEating();
         animateFoodToHead(hitFood);
 
-        // 3. ✅ ONLY spawn once with timeout, after animations
-        spawnTimer = setTimeout(() => {
-          // ✅ Double check game is still active
-          if (!isGameActive) {
-            spawnTimer = null;
-            return;
-          }
+        // Play Audio -> Wait for End -> Then Unlock & Spawn
+        isCorrect(() => {
+          // Unlock controls
+          isCorrectAction = false;
+          isProcessingMove = false;
+
+          // Spawn new food
           spawnFoods();
           render();
-          spawnTimer = null;
-        }, 500);
+        });
 
-      } else {
+      }
+
+      else {
         // === WRONG FOOD ===
 
         // 1. LOCK CONTROLS IMMEDIATELY
@@ -1076,22 +1069,25 @@ function initSnakeGame() {
   // ✅ Track correct audio to prevent overlaps
   let correctAudioInstance = null;
 
-  function isCorrect() {
+  function isCorrect(callback) { // <--- UPDATED: Added callback parameter
     if (typeof playBtnSounds === 'function' && typeof _pageData !== 'undefined') {
-      // ✅ Stop any previous correct audio before playing new one
       if (correctAudioInstance) {
         correctAudioInstance.pause();
         correctAudioInstance.currentTime = 0;
         correctAudioInstance = null;
       }
 
-      // Play new audio and track it
       const audioPath = _pageData.sections[sectionCnt - 1].correctAudio;
+
       correctAudioInstance = new Audio(audioPath);
       correctAudioInstance.play().catch(e => console.log("Audio error:", e));
       correctAudioInstance.onended = () => {
         correctAudioInstance = null;
+        if (callback) callback(); // <--- UPDATED: Execute callback when audio ends
       };
+    } else {
+      // Fallback if audio system missing
+      if (callback) setTimeout(callback, 500);
     }
   }
 
@@ -1233,7 +1229,7 @@ function initSnakeGame() {
   ========================= */
   function setDirection(dirKey) {
     // 1. HARD STOP: If we are in the middle of a "Wrong" action/audio, ignore EVERYTHING.
-    if (isWrongAction) return;
+    if (isWrongAction || isCorrectAction) return; // <--- UPDATED: Added isCorrectAction check
 
     resetIdleTimer();
 
@@ -1258,7 +1254,8 @@ function initSnakeGame() {
 
     // Safety unlock for normal moves (cancelled if moveSnake hits wrong food)
     setTimeout(() => {
-      if (!isWrongAction) isProcessingMove = false;
+      // <--- UPDATED: Only unlock if neither Wrong nor Correct action is happening
+      if (!isWrongAction && !isCorrectAction) isProcessingMove = false;
     }, MOVE_DELAY);
   }
 
@@ -1382,8 +1379,8 @@ function stayPage() {
 function leavePage() {
   playClickThen();
   var audio = document.getElementById("simulationAudio");
-  if (window.stopSnakeIdle) {
-    window.stopSnakeIdle();
+  if (window.stopIdleSoundNow) {
+    window.stopIdleSoundNow();
   }
   if (audio) {
     // Stop audio whether it's playing or paused
@@ -1607,7 +1604,7 @@ function showEndAnimations() {
 
 function closeIntroPop(ldx) {
   playClickThen();
-  AudioController.play();
+  // AudioController.play();
   document.getElementById(ldx).style.display = 'none';
   let audio = document.getElementById("popupAudio");
   if (audio.src) {

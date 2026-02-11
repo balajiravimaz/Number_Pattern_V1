@@ -6,7 +6,7 @@ var _pagePreloadArray = {
   video: 1,
   data: -1,
 }; // item not availble please assign value 1.
-var jsonSRC = "pages/module_1/page_7/data/m1_p7_data.json?v=";
+var jsonSRC = "pages/module_1/page_8/data/m1_p8_data.json?v=";
 _pageAudioSync = true;
 _forceNavigation = false;
 _audioRequired = false;
@@ -21,6 +21,11 @@ _checkAudioFlag = false;
 _tweenTimeline = null;
 _popTweenTimeline = null;
 var lastPatternId = null;
+var patterns = null;
+var allPatterns = null;
+
+var currentPatternIndex = 0;
+var totalPatterns = 0;
 
 var _audioIndex = 0;
 _videoId = null;
@@ -31,11 +36,6 @@ var totalSection = 0;
 var prevSectionCnt = -1;
 var sectionTopPos = [];
 var playMainAudio = false;
-
-var dataValue = []; var currentPattern = null; var currentIndex = 0;
-var patterns = [];
-
-
 // ------------------ common function start ------------------------------------------------------------------------
 $(document).ready(function () {
   //console.log('Page ready')
@@ -56,10 +56,10 @@ function _pageLoaded() {
   if (_videoRequired) _videoId = "courseVideo";
 
   //addSlideData();
-  console.log(_pageData.sections, _pageData.sections[0].backBtnSrc, "pageDAtat")
-  appState.pageCount = _controller.pageCnt - 1;
+  // console.log(_pageData.sections, _pageData.sections[0].backBtnSrc, "pageDAtat")
   addSectionData();
-  $('.introInfo').attr('data-popup', 'introPopup-7');
+  initPageAnimations();
+  appState.pageCount = 4;
   $("#f_header").css({ backgroundImage: `url(${_pageData.sections[0].headerImg})` });
   $("#f_header").find("#f_courseTitle").css({ backgroundImage: `url(${_pageData.sections[0].headerText})` });
   $(".home_btn").css({ backgroundImage: `url(${_pageData.sections[0].backBtnSrc})` });
@@ -88,7 +88,7 @@ function addSectionData() {
     if (sectionCnt == 1) {
       playBtnSounds(_pageData.sections[sectionCnt - 1].introAudio);
       audioEnd(function () {
-        $(".dummy-patch").hide();
+        // $(".dummy-patch").hide();
         resetSimulationAudio();
       })
       $("#section-" + sectionCnt)
@@ -102,7 +102,7 @@ function addSectionData() {
           removeTags(_pageData.sections[sectionCnt - 1].iText) +
           '">' +
           _pageData.sections[sectionCnt - 1].iText +
-          "</p><button disabled class='intro-audio'  data-audio='" + _pageData.sections[sectionCnt - 1].introAudio + "'> </button></div>"
+          "</p></div>"
         );
 
 
@@ -120,15 +120,14 @@ function addSectionData() {
 
       const numberObjects =
         _pageData.sections[sectionCnt - 1].content.numberObjects;
-      patterns = numberObjects;
-      loadNewPattern();
+      patterns = _pageData.sections[sectionCnt - 1].content.numberObjects;
 
       // pick ONE random pattern
       const pattern = getRandomPattern(numberObjects);
 
       let htmlContent = "";
       htmlContent += `<div class="game-area">`;
-      htmlContent += `<div class="shelf"><div class="drop-box">${getShelfHTML(pattern)}</div></div>`;
+      htmlContent += `<div class="shelf">${getShelfHTML(pattern)}</div>`;
       htmlContent += `<div class="cups">${getCupHTML(pattern)}</div>`;
       htmlContent += `</div>`;
 
@@ -151,12 +150,12 @@ function addSectionData() {
       popupDiv += '<div class="popup-wrap">';
       popupDiv += "</div>";
       popupDiv += "</div>";
-      popupDiv += `<div id="introPopup-7"><div class="popup-content">
-      <button class="introPopAudio mute" onclick="togglePopAudio(this, '${_pageData.sections[sectionCnt - 1].infoAudio}')"></button>
-      <button class="introPopclose" data-tooltip="Close" onClick="closeIntroPop('introPopup-7')"></button>
-      <img src="${_pageData.sections[sectionCnt - 1].infoImg}" alt="">
-  </div>
-</div>`;
+      popupDiv += `<div id="introPopup-1"><div class="popup-content">
+                    <button class="introPopAudio mute" onclick="togglePopAudio(this, '${_pageData.sections[sectionCnt - 1].infoAudio}')"></button>
+                    <button class="introPopclose" data-tooltip="Close" onClick="closeIntroPop('introPopup-1')"></button>
+                    <img src="${_pageData.sections[sectionCnt - 1].infoImg}" alt="">
+                </div>
+            </div>`;
 
       popupDiv += `<div id="home-popup" class="popup-home" role="dialog" aria-label="Exit confirmation" aria-hidden="false">
     <div class="popup-content modal-box">
@@ -186,30 +185,30 @@ function addSectionData() {
           "</div> </div>"
         );
 
-      $('.intro-audio').off('click').on('click', onClickAudioHandler);
-      /* enableDragAndDrop({
-        cupsSelector: ".cups .cup",
-        slotsSelector: ".shelf .slot",
 
-        onCorrectDrop: (cup, slot) => {
-          cup.classList.remove("success");
-          void cup.offsetWidth;
-          cup.classList.add("success");
-          playFeedbackAudio(_pageData.sections[sectionCnt - 1].correctAudio);
-        },
+      // enableDragAndDrop({
+      //   cupsSelector: ".cups .cup",
+      //   slotsSelector: ".shelf .slot",
 
-        onWrongDrop: (cup) => {
-          playFeedbackAudio(_pageData.sections[sectionCnt - 1].wrongAudio);
-        },
+      //   onCorrectDrop: (cup, slot) => {
+      //     cup.classList.remove("success");
+      //     void cup.offsetWidth;
+      //     cup.classList.add("success");
+      //     playFeedbackAudio(_pageData.sections[sectionCnt - 1].correctAudio);
+      //   },
 
-        onGameCompleted: () => {
-          console.log("Game Completed");
-          setTimeout(function () {
-            playBtnSounds(_pageData.sections[sectionCnt - 1].finalAudio);
-            showEndAnimations();
-          }, 1000)
-        }
-      }); */
+      //   onWrongDrop: (cup) => {
+      //     playFeedbackAudio(_pageData.sections[sectionCnt - 1].wrongAudio);
+      //   },
+
+      //   onGameCompleted: () => {
+      //     console.log("Game Completed");
+      //     setTimeout(function () {
+      //       playBtnSounds(_pageData.sections[sectionCnt - 1].finalAudio);
+      //       showEndAnimations();
+      //     }, 1000)
+      //   }
+      // });
 
 
 
@@ -218,17 +217,28 @@ function addSectionData() {
 
 
       // $("#refresh").on("click", restartActivity);
-      // $("#home,#homeBack").on("click", jumtoPage)  
+      // $("#home,#homeBack").on("click", jumtoPage)        
+
+      totalPatterns = _pageData.sections[sectionCnt - 1].content.numberObjects.length;
+      allPatterns = _pageData.sections[sectionCnt - 1].content.numberObjects;
+
+
+      const gameArea = document.querySelector(".game-area");
+      gameArea.classList.add("is-fading");
+
+      loadPattern(0);
+
+      requestAnimationFrame(() => {
+        gameArea.classList.remove("is-fading");
+      });
 
       $("#refresh").on("click", function () {
-        console.log("Refresh")
         jumtoPage(_controller.pageCnt);
-        console.log("Refresh")
       });
       $("#homeBack").on("click", function () {
-        console.log("Home back");
         jumtoPage(_controller.pageCnt - 1)
       });
+
       // $("#home").on("click", function () {
       //   playClickThen();
       //   $("#home-popup").css('display', 'flex');
@@ -240,7 +250,9 @@ function addSectionData() {
       //     toggleAudio(el);
       // });
       // _currentAudio = _pageData.sections[sectionCnt - 1].content.flipObjects[0].instAudio;
+
       $(".flipTextAudio").on("click", replayLastAudio);
+
       // document.querySelector("#info").addEventListener("click", function (event) {
       //   playClickThen();
       //   AudioController.pause();
@@ -271,247 +283,141 @@ function playFeedbackAudio(_audio) {
 }
 
 
-function onClickAudioHandler(e) {
-  $(".intro-audio").prop("disabled", true);
-  $("#simulationAudio")[0].pause();
-  playClickThen();
-  $('.dummy-box').show();
-  e.stopPropagation();
-  const audioSrc = $(this).data('audio');
-  if (!audioSrc) {
-    console.log('No audio src found');
-    return;
-  }
-
-  const audio = document.getElementById('simulationAudio');
-  if (!audio) {
-    console.log('Audio element not found');
-    return;
-  }
-
-  audio.src = audioSrc;
-  audio.currentTime = 0;
-
-  audio.play().catch(err => {
-    console.error('Audio play failed:', err);
-  });
-
-  audio.addEventListener('ended', function () {
-    console.log('Audio finished playing');
-    $("dummy-patch").hide();
-    resetSimulationAudio();
-    $(".intro-audio").prop("disabled", false);
-    $('.dummy-box').hide();
-
-  });
-}
-
 function getRandomPattern(patterns) {
   if (!Array.isArray(patterns) || patterns.length === 0) return null;
 
-  //const lastId = getLastPatternId();
+  const lastId = getLastPatternId();
 
   let availablePatterns = patterns;
 
-  /* if (!isNaN(lastId) && patterns.length > 1) {
+  if (!isNaN(lastId) && patterns.length > 1) {
     availablePatterns = patterns.filter(
       p => p.patternId !== lastId
     );
-  } */
+  }
 
   const selected =
     availablePatterns[Math.floor(Math.random() * availablePatterns.length)];
 
-  //saveLastPatternId(selected.patternId);
+  saveLastPatternId(selected.patternId);
 
   return selected;
 }
 
 
 
-/* ---------------- Correct Next Value ---------------- */
-function updateCorrectNextValue() {
-  if (!currentPattern || !currentPattern.sequence) return;
 
-  // Get the repeating pattern (first 2 values from the sequence)
-  const repeatingPattern = currentPattern.sequence.slice(0, 2); // ["apple", "banana"]
+function loadPattern(index) {
+  const pattern = allPatterns[index];
+  if (!pattern) return;
 
-  // The last value filled is the last entry in dataValue
-  const lastFilledValue = dataValue[dataValue.length - 1];  // e.g., "apple" or "banana"
+  $(".dummy-patch").show();
 
-  // Determine the next value based on the last filled value
-  const nextIndex = repeatingPattern.indexOf(lastFilledValue) === 0 ? 1 : 0; // Alternate between apple and banana
+  const cupsEl = document.querySelector(".cups");
+  const shelfEl = document.querySelector(".shelf");
 
-  // Set the correct next value
-  currentPattern.correctNextValue = repeatingPattern[nextIndex];
+  cupsEl.innerHTML = getCupHTML(pattern);
+  shelfEl.innerHTML = getShelfHTML(pattern);
+
+  // ⬅️ MUST be after DOM update
+  initPageAnimations();
+  enableDragAndDrop({
+    cupsSelector: ".cups .cup",
+    slotsSelector: ".shelf .slot",
+
+    onCorrectDrop: (cup, slot) => {
+      cup.classList.remove("success");
+      void cup.offsetWidth;
+      cup.classList.add("success");
+      playFeedbackAudio(_pageData.sections[sectionCnt - 1].correctAudio);
+    },
+
+    onWrongDrop: (cup) => {
+      playFeedbackAudio(_pageData.sections[sectionCnt - 1].wrongAudio);
+    },
+
+    onGameCompleted: () => {
+      setTimeout(function () {
+        handlePatternCompleted();
+      }, 500)
+    }
+  });
+
 }
 
 
-/* ---------------- Shelf ---------------- */
-function getShelfHTML(pattern) {
+function handlePatternCompleted() {
+  const gameArea = document.querySelector(".game-area");
+    console.log("Pattern completed! Loading next pattern...");
+
+  gameArea.classList.add("is-fading");
+  setTimeout(() => {
+    currentPatternIndex++;
+
+    if (currentPatternIndex < allPatterns.length) {
+      loadPattern(currentPatternIndex);
+
+      requestAnimationFrame(() => {
+        gameArea.classList.remove("is-fading");
+      });
+    } else {
+      setTimeout(function () {
+        showEndAnimations();
+        playBtnSounds(_pageData.sections[sectionCnt - 1].finalAudio);
+      }, 500)
+    }
+  }, 1000);
+  // setTimeout(function(){
+  //   $(".dummy-patch").hide();
+  // })
+}
+
+
+
+function shuffleArray(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function getCupHTML(pattern) {
   let html = "";
 
-  pattern.sequence.slice(0, 3).forEach(value => {
-    const item = pattern.items.find(i => i.value === value);
-    if (!item) return;
+  if (!pattern || !Array.isArray(pattern.items)) return html;
 
-    dataValue.push(value); // Track the initial sequence (first 3 slots)
+  // shuffle but NEVER allow correct order
+  const shuffledItems = shuffleItemsAvoidCorrect(
+    pattern.items,
+    pattern.sequence
+  );
+
+  for (let i = 0; i < shuffledItems.length; i++) {
+    const item = shuffledItems[i];
+
     html += `
-      <div class="slot filled" data-value="${value}">
-        <img src="${item.img}" alt="${item.value}">
+    <div class="cupContain" id="cupContain-${i + 1}">
+      <div class="cup" draggable="true" data-value="${item.value}">
+        <img src="${item.img}" />
+      </div>
       </div>
     `;
-  });
-
-  // Add 3 empty slots
-  for (let i = 0; i < 3; i++) {
-    html += `<div class="slot empty"></div>`;
   }
 
   return html;
 }
 
-/* ---------------- Cups ---------------- */
-/* ---------------- Cups ---------------- */
-function getCupHTML(pattern) {
-  if (!pattern) return "";
+function getShelfHTML(pattern) {
+  let html = "";
 
-  const correctItem = pattern.items.find(
-    i => i.value === pattern.correctNextValue
-  );
-
-  const incorrectItem = pattern.items.find(
-    i => i.value !== pattern.correctNextValue
-  );
-
-  if (!correctItem || !incorrectItem) return "";
-
-  // RANDOMIZE position: sometimes correct left, sometimes right
-  const options =
-    Math.random() < 0.5
-      ? [correctItem, incorrectItem]
-      : [incorrectItem, correctItem];
-
-  return options.map(item => `
-    <div class="cupContain">
-      <div class="round_bg">
-        <div class="cup" data-value="${item.value}">
-          <img src="${item.img}" alt="${item.value}">
-        </div>
-      </div>
-    </div>
-  `).join("");
-}
-
-
-/* ---------------- Interaction ---------------- */
-$(document).on("pointerdown", ".cup", function (e) {
-  e.preventDefault();
-
-  if (!currentPattern) return;
-
-  const selectedValue = $(this).data("value");
-  const correctValue = currentPattern.correctNextValue;
-
-  if (selectedValue !== correctValue) {
-    wrongFeedback(this);
-    return;
+  for (let i = 0; i < pattern.sequence.length; i++) {
+    html += `
+      <div class="slot" data-value="${pattern.sequence[i]}"></div>
+    `;
   }
 
-  correctFeedback(this);
-  fillNextSlot(selectedValue);
-});
-
-/* ---------------- Fill Logic ---------------- */
-function fillNextSlot(value) {
-  const $slot = $(".slot.empty").first();
-  const item = currentPattern.items.find(i => i.value === value);
-  if (!$slot.length || !item) return;
-
-  // Fill the empty slot with the selected value
-  $slot
-    .removeClass("empty")
-    .addClass("filled sparkle")
-    .attr("data-value", value)
-    .html(`<img src="${item.img}" alt="${item.value}">`);
-
-  setTimeout(() => $slot.removeClass("sparkle"), 600);
-
-  // Track progression
-  dataValue.push(value);
-
-  // Update next expected value
-  updateCorrectNextValue();
-
-  // If all slots are filled, load a new pattern
-  currentIndex++;
-
-  if (currentIndex === 3) {
-    //setTimeout(loadNewPattern, 800);
-    playBtnSounds(_pageData.sections[sectionCnt - 1].finalAudio);
-    showEndAnimations();
-    // Optionally disable further interaction
-    $(".cup").css("pointer-events", "none");
-  } else {
-    renderCups();
-  }
-}
-
-/* ---------------- Feedback ---------------- */
-function correctFeedback(cup) {
-  cup.classList.remove("success");
-  void cup.offsetWidth;
-  cup.classList.add("success");
-  playFeedbackAudio(_pageData.sections[sectionCnt - 1].correctAudio);
-}
-
-function wrongFeedback(cup) {
-  $(cup).addClass("shake");
-  playFeedbackAudio(_pageData.sections[sectionCnt - 1].wrongAudio);
-}
-
-function playVoice(type) {
-  if (type === "instruction") {
-    console.log("Look at the pattern. Tap the correct bead.");
-  } else {
-    console.log(type === "good-job" ? "Good job!" : "Try again!");
-  }
+  return html;
 }
 
 
-/* ---------------- Pattern Load ---------------- */
-function loadNewPattern() {
-  if (!patterns || !patterns.length) {
-    console.warn("Patterns not available");
-    return;
-  }
-
-  currentIndex = 0;
-  dataValue = []; // reset instead of redeclare
-
-  currentPattern = patterns[Math.floor(Math.random() * patterns.length)];
-
-  $(".shelf").html(getShelfHTML(currentPattern));
-
-  updateCorrectNextValue(); // first missing value
-  renderCups();
-
-  playVoice("instruction");
-
-  setTimeout(() => {
-    if ($(".slot.empty").length > 0) playVoice("instruction");
-  }, 5000);
-}
-
-
-/* ---------------- Render ---------------- */
-function renderCups() {
-  $(".cups").html(getCupHTML(currentPattern));
-}
-
-
-//----------------------------------------------------------
-/* function isSameOrder(items, sequence) {
+function isSameOrder(items, sequence) {
   if (items.length !== sequence.length) return false;
 
   for (let i = 0; i < items.length; i++) {
@@ -532,7 +438,7 @@ function shuffleItemsAvoidCorrect(items, sequence) {
   } while (isSameOrder(shuffled, sequence) && attempts < 10);
 
   return shuffled;
-} */
+}
 
 
 
@@ -677,8 +583,225 @@ function resetCupPosition(cup) {
 // }
 
 
+function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrongDrop, onGameCompleted }) {
+  const cups = document.querySelectorAll(cupsSelector);
+  const slots = document.querySelectorAll(slotsSelector);
 
+  let activeCup = null;
+  let dragImg = null;
+  let offsetX = 0;
+  let offsetY = 0;
 
+  // Store original positions for all cups
+  cups.forEach(cup => {
+    cup._originalParent = cup.parentElement;
+    // We don't strictly need data-startX/Y for the drag logic here 
+    // because we calculate offset dynamically on click, but keeping it as per your code.
+    const rect = cup.getBoundingClientRect();
+    cup.dataset.startX = rect.left + window.scrollX;
+    cup.dataset.startY = rect.top + window.scrollY;
+
+    cup.addEventListener("pointerdown", startDrag);
+  });
+
+// Global variable to store the scale
+let currentScale = 1;
+
+function startDrag(e) {
+    if (activeCup) return;
+    e.preventDefault();
+
+    activeCup = e.currentTarget;
+    const img = activeCup.querySelector("img");
+    const rect = img.getBoundingClientRect();
+
+    // 1. Detect the scale of the game automatically
+    // We check the width of the wrapper vs its actual rendered width
+    const wrapper = document.getElementById('f_wrapper') || document.body;
+    currentScale = wrapper.getBoundingClientRect().width / wrapper.offsetWidth;
+
+    // 2. Calculate the offset
+    // We must account for the scale here
+    offsetX = (e.clientX - rect.left) / currentScale;
+    offsetY = (e.clientY - rect.top) / currentScale;
+
+    // 3. Create the ghost
+    dragImg = img.cloneNode(true);
+    
+    // 4. Force Reset styles
+    Object.assign(dragImg.style, {
+        position: "absolute", // Use absolute, not fixed, to stay inside the scaled coordinate system
+        width: img.offsetWidth + "px",
+        height: img.offsetHeight + "px",
+        margin: "0",
+        transform: "none",
+        bottom: "auto",
+        right: "auto",
+        pointerEvents: "none",
+        zIndex: "99999"
+    });
+
+    // 5. Append to the SAME container as the cup, not the body
+    // This ensures the ghost is subject to the same scaling as the cup
+    activeCup.parentElement.appendChild(dragImg);
+    activeCup.style.opacity = "0";
+
+    // Initial position
+    moveAt(e.clientX, e.clientY);
+
+    document.addEventListener("pointermove", onMove);
+    document.addEventListener("pointerup", endDrag);
+}
+
+function moveAt(x, y) {
+    if (!dragImg || !activeCup) return;
+
+    // Get the container's position to calculate relative movement
+    const parentRect = activeCup.parentElement.getBoundingClientRect();
+
+    // Math: (Mouse Pos - Container Pos) / Scale - Initial Offset
+    const posX = (x - parentRect.left) / currentScale - offsetX;
+    const posY = (y - parentRect.top) / currentScale - offsetY;
+
+    dragImg.style.left = posX + "px";
+    dragImg.style.top = posY + "px";
+}
+
+  function onMove(e) {
+    moveAt(e.clientX, e.clientY);
+  }
+
+  function endDrag(e) {
+    document.body.classList.remove("dragging-active");
+    document.removeEventListener("pointermove", onMove);
+    document.removeEventListener("pointerup", endDrag);
+
+    // Remove drag image visually
+    if (dragImg) {
+      dragImg.remove();
+      dragImg = null;
+    }
+
+    // Make the original visible again immediately.
+    // If we drop successfully, it moves. If we fail, it stays/animates.
+    if (activeCup) {
+      activeCup.style.opacity = "1";
+    }
+
+    let droppedOnSlot = false;
+
+    slots.forEach(slot => {
+      const rect = slot.getBoundingClientRect();
+      if (e.clientX > rect.left && e.clientX < rect.right && e.clientY > rect.top && e.clientY < rect.bottom) {
+        droppedOnSlot = true;
+        handleDrop(slot);
+      }
+    });
+
+    // Note: If droppedOnSlot is false, the activeCup (which is now opacity: 1)
+    // simply appears back at its original position because we never moved it in the DOM.
+    // This satisfies "otherwise it should go back original position".
+
+    if (!droppedOnSlot) {
+      activeCup = null;
+    }
+  }
+
+  function handleDrop(slot) {
+    if (!activeCup) return;
+
+    // STOP if slot already has a cup
+    if (slot.children.length > 0) {
+      activeCup = null; // Reset if slot is full
+      return;
+    }
+
+    const cupValue = activeCup.dataset.value;
+    const slotValue = slot.dataset.value;
+
+    // Append cup to slot visually first
+    slot.appendChild(activeCup);
+
+    // Disable dragging while cup is in slot (temporarily)
+    activeCup.style.pointerEvents = "none";
+    activeCup.style.touchAction = "none";
+    activeCup.removeEventListener("pointerdown", startDrag);
+
+    if (cupValue === slotValue) {
+      onCorrectDrop?.(activeCup, slot); // <- call first
+      activeCup = null; // <- then null
+      if (isGameCompleted(slots)) {
+        onGameCompleted?.();
+      }
+    } else {
+      // Logic for Wrong Drop
+      onWrongDrop?.(activeCup);
+
+      const cupRef = activeCup;
+      activeCup = null; // Release reference so new drags can start if needed
+
+      shakeCup(cupRef, () => {
+        setTimeout(() => {
+          animateBack(cupRef);
+        }, 500);
+      });
+    }
+  }
+
+  function shakeCup(cup, onComplete) {
+    if (!cup) return;
+
+    cup.style.transition = "transform 0.08s ease";
+    cup.style.transform = "translateX(-5px)";
+
+    setTimeout(() => { cup.style.transform = "translateX(5px)"; }, 80);
+    setTimeout(() => { cup.style.transform = "translateX(0)"; }, 160);
+    setTimeout(() => {
+      cup.style.transition = "";
+      onComplete && onComplete();
+    }, 200);
+  }
+
+  function animateBack(cup) {
+    if (!cup || !cup._originalParent) return;
+
+    const originalParent = cup._originalParent;
+    const DURATION = 800; // Reduced duration slightly for snappier feel
+
+    const firstRect = cup.getBoundingClientRect();
+    originalParent.appendChild(cup); // Move back in DOM
+    const lastRect = cup.getBoundingClientRect();
+
+    const deltaX = firstRect.left - lastRect.left;
+    const deltaY = firstRect.top - lastRect.top;
+
+    cup.style.pointerEvents = "none";
+    cup.style.transition = "none";
+    cup.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+
+    // Force reflow
+    cup.getBoundingClientRect();
+
+    requestAnimationFrame(() => {
+      cup.style.transition = `transform ${DURATION}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+      cup.style.transform = "translate(0, 0)";
+    });
+
+    setTimeout(() => {
+      cup.style.transition = "";
+      cup.style.transform = "";
+      cup.style.pointerEvents = "";
+      cup.addEventListener("pointerdown", startDrag);
+    }, DURATION);
+  }
+  function isGameCompleted(slots) {
+    return [...slots].every(slot => {
+      const cup = slot.querySelector(".cup");
+      return cup && cup.dataset.value === slot.dataset.value;
+    });
+  }
+
+}
 
 
 
@@ -696,7 +819,7 @@ function leavePage() {
     audio.currentTime = 0;
   }
 
-  jumtoPage(5);
+  jumtoPage(_controller.pageCnt - 1);
 }
 
 function jumtoPage(pageNo) {
@@ -725,7 +848,7 @@ function playBtnSounds(soundFile) {
     activeAudio.pause();
     // Do NOT reset src yet, let it finish
   }
-  $(".intro-audio").prop("disabled", true);
+
   audio.loop = false;
   audio.src = soundFile;
   audio.load();
@@ -735,16 +858,12 @@ function playBtnSounds(soundFile) {
   audio.play().catch((err) => {
     console.warn("Audio play error:", err);
   });
-  audio.onended = function () {
-    $(".intro-audio").prop("disabled", false);
-  };
 }
 
 
 
 function resetSimulationAudio() {
-
-  $("dummy-patch").hide();
+  console.log("Balajia");
 
   const audioElement = document.getElementById("simulationAudio");
   if (!audioElement) return;
@@ -759,8 +878,6 @@ function resetSimulationAudio() {
 
   audioElement.load();
   audioElement.onended = null;
-  // ✅ ensure button enabled
-  $(".intro-audio").prop("disabled", false);
 }
 
 
@@ -977,8 +1094,13 @@ function withAudioSync() {
 
   _tweenTimeline.add(animateFadeIn($(".ost"), 0.5).play(), 0.1);
   _tweenTimeline.add(animateFadeOut($(".ost"), 0.5).play(), 4.5);
-  _tweenTimeline.add(animateFadeOut($(".dummy-patch"), 0.5).play(), 3);
+  _tweenTimeline.add(animateFadeOut($(".dummy-patch"), 0.5).play(), 4);
   // _tweenTimeline.add(animateFadeIn($(".inst"), 0.5).play(), 5);
+
+  var box = [1, 2, 3];
+  for (let k = 0; k < box.length; k++) {
+    _tweenTimeline.add(animateFadeIn($(".cupContain").eq(k), 0.5, 0).play(), box[k]);
+  }
 
   _tweenTimeline.add(
     animateFadeIn($(".animat-container"), 0.5, 0).play(),

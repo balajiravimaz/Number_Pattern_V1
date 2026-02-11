@@ -53,6 +53,12 @@ function _pageLoaded() {
   //addSlideData();
   // console.log(_pageData.sections, _pageData.sections[0].backBtnSrc, "pageDAtat")
   addSectionData();
+  // console.log(_controller._globalMusicPlaying, "asldkfjasldkj")
+  // if (_controller._globalMusicPlaying) {
+  //   $(".music").addClass("playing")
+  // } else {
+  //   $(".music").addClass("mute")
+  // }
   appState.pageCount = _controller.pageCnt - 1;
   $('.introInfo').attr('data-popup', 'introPopup-10');
   $("#f_header").css({ backgroundImage: `url(${_pageData.sections[0].headerImg})` });
@@ -131,7 +137,7 @@ function addSectionData() {
     <div class="popup-content modal-box">
       <h2 class="modal-title">Oops!</h2>
       <div class="modal-message">
-        <p>If you leave the fun game then you have to start from beginning.</p>     
+        <p>If you leave the number pattern simulation then you have to start from beginning.</p>     
         <p class="modal-question">Are you sure you want to leave?</p>   
       </div>      
       <div class="modal-buttons">
@@ -730,14 +736,14 @@ function initSnakeGame() {
 
       // --- CONTINUE GAME (Spawn new food AFTER audio) ---
       // ✅ Pause game inputs
-      isGameActive = false;
+      // isGameActive = false;
 
       // ✅ Wait for correct audio to finish before spawning
       audioEnd(function () {
         if (!isGameEnded && !foodsSpawned) {
           foodsSpawned = true;
           spawnFoods();
-          isGameActive = true; // ✅ Resume game inputs
+          // isGameActive = true; // ✅ Resume game inputs
         }
       });
 
@@ -1138,7 +1144,7 @@ function leavePage() {
   playClickThen();
   if (window.stopSnakeIdle) {
     window.stopSnakeIdle();
-}
+  }
   var audio = document.getElementById("simulationAudio");
   if (audio) {
     // Stop audio whether it's playing or paused

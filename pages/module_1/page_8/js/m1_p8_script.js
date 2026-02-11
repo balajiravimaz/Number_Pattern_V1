@@ -60,6 +60,7 @@ function _pageLoaded() {
   addSectionData();
   initPageAnimations();
   appState.pageCount = 4;
+  $('.introInfo').attr('data-popup', 'introPopup-8');
   $("#f_header").css({ backgroundImage: `url(${_pageData.sections[0].headerImg})` });
   $("#f_header").find("#f_courseTitle").css({ backgroundImage: `url(${_pageData.sections[0].headerText})` });
   $(".home_btn").css({ backgroundImage: `url(${_pageData.sections[0].backBtnSrc})` });
@@ -90,6 +91,7 @@ function addSectionData() {
       audioEnd(function () {
         // $(".dummy-patch").hide();
         resetSimulationAudio();
+        $(".intro-audio").prop("disabled", false);
       })
       $("#section-" + sectionCnt)
         .find(".content-holder")
@@ -102,7 +104,7 @@ function addSectionData() {
           removeTags(_pageData.sections[sectionCnt - 1].iText) +
           '">' +
           _pageData.sections[sectionCnt - 1].iText +
-          "</p></div>"
+          "</p><button disabled class='intro-audio'  data-audio='" + _pageData.sections[sectionCnt - 1].introAudio + "'></div>"
         );
 
 
@@ -150,9 +152,9 @@ function addSectionData() {
       popupDiv += '<div class="popup-wrap">';
       popupDiv += "</div>";
       popupDiv += "</div>";
-      popupDiv += `<div id="introPopup-1"><div class="popup-content">
+      popupDiv += `<div id="introPopup-8"><div class="popup-content">
                     <button class="introPopAudio mute" onclick="togglePopAudio(this, '${_pageData.sections[sectionCnt - 1].infoAudio}')"></button>
-                    <button class="introPopclose" data-tooltip="Close" onClick="closeIntroPop('introPopup-1')"></button>
+                    <button class="introPopclose" data-tooltip="Close" onClick="closeIntroPop('introPopup-8')"></button>
                     <img src="${_pageData.sections[sectionCnt - 1].infoImg}" alt="">
                 </div>
             </div>`;
@@ -161,7 +163,7 @@ function addSectionData() {
     <div class="popup-content modal-box">
       <h2 class="modal-title">Oops!</h2>
       <div class="modal-message">
-        <p>If you leave the fun game then you have to start from beginning.</p>     
+        <p>If you leave the pattern game then you have to start from beginning.</p>     
         <p class="modal-question">Are you sure you want to leave?</p>   
       </div>      
       <div class="modal-buttons">
@@ -185,6 +187,8 @@ function addSectionData() {
           "</div> </div>"
         );
 
+
+        $('.intro-audio').off('click').on('click', onClickAudioHandler);
 
       // enableDragAndDrop({
       //   cupsSelector: ".cups .cup",
@@ -236,7 +240,7 @@ function addSectionData() {
         jumtoPage(_controller.pageCnt);
       });
       $("#homeBack").on("click", function () {
-        jumtoPage(_controller.pageCnt - 1)
+        jumtoPage(5)
       });
 
       // $("#home").on("click", function () {
@@ -280,6 +284,40 @@ function playFeedbackAudio(_audio) {
   audioEnd(function () {
     $(".dummy-patch").hide();
   })
+}
+
+function onClickAudioHandler(e) {
+  $(".intro-audio").prop("disabled", true);
+  $("#simulationAudio")[0].pause();
+  playClickThen();
+  $('.dummy-box').show();
+  e.stopPropagation();
+  const audioSrc = $(this).data('audio');
+  if (!audioSrc) {
+    console.log('No audio src found');
+    return;
+  }
+
+  const audio = document.getElementById('simulationAudio');
+  if (!audio) {
+    console.log('Audio element not found');
+    return;
+  }
+
+  audio.src = audioSrc;
+  audio.currentTime = 0;
+
+  audio.play().catch(err => {
+    console.error('Audio play failed:', err);
+  });
+
+  audio.addEventListener('ended', function () {
+    console.log('Audio finished playing');
+    $("dummy-patch").hide();
+    resetSimulationAudio();
+    $(".intro-audio").prop("disabled", false);
+    $('.dummy-box').hide();
+  });
 }
 
 
@@ -348,7 +386,7 @@ function loadPattern(index) {
 
 function handlePatternCompleted() {
   const gameArea = document.querySelector(".game-area");
-    console.log("Pattern completed! Loading next pattern...");
+  console.log("Pattern completed! Loading next pattern...");
 
   gameArea.classList.add("is-fading");
   setTimeout(() => {
@@ -457,130 +495,6 @@ function resetCupPosition(cup) {
   cup.style.top = `${cup.dataset.startY}px`;
 }
 
-// function enableDragAndDrop({
-//   cupsSelector,
-//   slotsSelector,
-//   onCorrectDrop,
-//   onWrongDrop,
-//   onGameCompleted
-// }) {
-//   const cups = document.querySelectorAll(cupsSelector);
-//   const slots = document.querySelectorAll(slotsSelector);
-
-//   let activeCup = null;
-//   let dragImg = null;
-//   let offsetX = 0;
-//   let offsetY = 0;
-
-//   cups.forEach(cup => {
-//     cup.addEventListener("pointerdown", startDrag);
-//   });
-
-//   function startDrag(e) {
-//     if (activeCup) return;
-//     e.preventDefault();
-//     playClickThen();
-
-//     activeCup = e.currentTarget;
-//     const img = activeCup.querySelector("img");
-
-//     // clone image
-//     dragImg = img.cloneNode(true);
-//     dragImg.style.position = "fixed";
-//     dragImg.style.width = img.offsetWidth + "px";
-//     dragImg.style.height = img.offsetHeight + "px";
-//     dragImg.style.pointerEvents = "none";
-//     dragImg.style.zIndex = "9999";
-
-//     document.body.appendChild(dragImg);
-
-//     const rect = img.getBoundingClientRect();
-//     offsetX = e.clientX - rect.left;
-//     offsetY = e.clientY - rect.top;
-
-//     moveAt(e.clientX, e.clientY);
-
-//     document.addEventListener("pointermove", onMove);
-//     document.addEventListener("pointerup", endDrag);
-//   }
-
-//   function moveAt(x, y) {
-//     dragImg.style.left = x - offsetX + "px";
-//     dragImg.style.top = y - offsetY + "px";
-//   }
-
-//   function onMove(e) {
-//     moveAt(e.clientX, e.clientY);
-//   }
-
-//   function endDrag(e) {
-//     document.removeEventListener("pointermove", onMove);
-//     document.removeEventListener("pointerup", endDrag);
-
-//     let dropped = false;
-
-//     slots.forEach(slot => {
-//       const rect = slot.getBoundingClientRect();
-
-//       if (
-//         e.clientX > rect.left &&
-//         e.clientX < rect.right &&
-//         e.clientY > rect.top &&
-//         e.clientY < rect.bottom
-//       ) {
-//         dropped = true;
-//         handleDrop(slot);
-//       }
-//     });
-
-//     const cupRef = activeCup;
-
-//     dragImg.remove();
-//     dragImg = null;
-//     activeCup = null;
-
-//     // if (!dropped && cupRef) {
-//     //   onWrongDrop?.(cupRef);
-//     // }
-//   }
-
-//   function handleDrop(slot) {
-//     if (!activeCup || slot.children.length > 0) {
-//       onWrongDrop?.(activeCup);
-//       return;
-//     }
-
-//     const cupValue = activeCup.dataset.value;
-//     const slotValue = slot.dataset.value;
-
-//     if (cupValue === slotValue) {
-//       slot.appendChild(activeCup);
-
-//       // 🔒 FULLY DISABLE FUTURE DRAG
-//       activeCup.style.pointerEvents = "none";
-//       activeCup.style.touchAction = "none";
-//       activeCup.removeEventListener("pointerdown", startDrag);
-
-//       onCorrectDrop?.(activeCup, slot);
-
-//       if (isGameCompleted(slots)) {
-//         onGameCompleted?.();
-//       }
-//     }
-
-//     else {
-//       onWrongDrop?.(activeCup);
-//     }
-//   }
-// }
-
-
-// function isGameCompleted(slots) {
-//   return [...slots].every(slot =>
-//     slot.children.length === 1 &&
-//     slot.children[0].dataset.value === slot.dataset.value
-//   );
-// }
 
 
 function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrongDrop, onGameCompleted }) {
@@ -604,10 +518,10 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
     cup.addEventListener("pointerdown", startDrag);
   });
 
-// Global variable to store the scale
-let currentScale = 1;
+  // Global variable to store the scale
+  let currentScale = 1;
 
-function startDrag(e) {
+  function startDrag(e) {
     if (activeCup) return;
     e.preventDefault();
 
@@ -627,18 +541,18 @@ function startDrag(e) {
 
     // 3. Create the ghost
     dragImg = img.cloneNode(true);
-    
+
     // 4. Force Reset styles
     Object.assign(dragImg.style, {
-        position: "absolute", // Use absolute, not fixed, to stay inside the scaled coordinate system
-        width: img.offsetWidth + "px",
-        height: img.offsetHeight + "px",
-        margin: "0",
-        transform: "none",
-        bottom: "auto",
-        right: "auto",
-        pointerEvents: "none",
-        zIndex: "99999"
+      position: "absolute", // Use absolute, not fixed, to stay inside the scaled coordinate system
+      width: img.offsetWidth + "px",
+      height: img.offsetHeight + "px",
+      margin: "0",
+      transform: "none",
+      bottom: "auto",
+      right: "auto",
+      pointerEvents: "none",
+      zIndex: "99999"
     });
 
     // 5. Append to the SAME container as the cup, not the body
@@ -651,9 +565,9 @@ function startDrag(e) {
 
     document.addEventListener("pointermove", onMove);
     document.addEventListener("pointerup", endDrag);
-}
+  }
 
-function moveAt(x, y) {
+  function moveAt(x, y) {
     if (!dragImg || !activeCup) return;
 
     // Get the container's position to calculate relative movement
@@ -665,7 +579,7 @@ function moveAt(x, y) {
 
     dragImg.style.left = posX + "px";
     dragImg.style.top = posY + "px";
-}
+  }
 
   function onMove(e) {
     moveAt(e.clientX, e.clientY);
@@ -805,9 +719,11 @@ function moveAt(x, y) {
 
 
 
+
+
 function stayPage() {
   playClickThen();
-  AudioController.play();
+  // AudioController.play();
   $("#home-popup").hide();
 }
 function leavePage() {
@@ -864,6 +780,7 @@ function playBtnSounds(soundFile) {
 
 function resetSimulationAudio() {
   console.log("Balajia");
+  $("dummy-patch").hide();
 
   const audioElement = document.getElementById("simulationAudio");
   if (!audioElement) return;
