@@ -1,0 +1,174 @@
+{
+  "mainAudio": {
+    "audioSRC": "assets/audios/1sec.mp3",
+    "isEmptyAudio": false,
+    "audioIndex": 0
+  },
+  "bgImgs": [
+    {
+      "imageSRC": "pages/module_1/page_7/images/banana.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/simulation.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/fun_game.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/great_job.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/back.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/bg_music.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/bg_pause.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/bg_music.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/close.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/bg_pause.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/correct.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/header_bg.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/header_title.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/info.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/info_disabled.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/music.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/mute.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/pause.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/reload.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/replay.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/right_bg.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_7/images/wrong.png",
+      "altText": ""
+    }
+  ],
+  "imgCollage": {
+    "desktop": [
+      {
+        "imageSRC": "",
+        "altText": ""
+      }
+    ],
+    "portrait": [
+      {
+        "imageSRC": "",
+        "altText": ""
+      }
+    ]
+  },
+  "sections": [
+    {
+      "slideTitle": "Course Objectives",
+      "headerTitle": "Heavy - Light",
+      "headerImg": "pages/module_1/page_7/images/header_bg.png",
+      "headerText": "pages/module_1/page_7/images/header_title.png",
+      "infoAudio": "pages/module_1/page_7/audios/intro_audio.mp3",
+      "infoImg": "pages/module_1/page_7/images/fun_game.png",
+      "ost": "",
+      "iText": "<span>Tap</span> the correct bead to complete the pattern",
+      "endAudio": "",
+      "backBtnSrc": "pages/module_1/page_7/images/back.png",
+      "introAudio": "pages/module_1/page_7/audios/intro_audio.mp3",
+      "correctAudio": "pages/module_1/page_7/audios/good_job.mp3",
+      "wrongAudio": "pages/module_1/page_7/audios/try_again.mp3",
+      "finalAudio": "pages/module_1/page_7/audios/final_audio.mp3",
+      "content": {
+        "btnAudios": [
+          "pages/module_1/page_7/audios/click.mp3",
+          "pages/module_1/page_7/audios/bg_music.mp3"
+        ],
+        "numberObjects": [
+          {
+            "patternId": 1,
+            "type": "fruits",
+            "sequence": [
+              "apple",
+              "banana",
+              "apple"
+            ],
+            "slots": 3,
+            "correctNextValue": "banana",
+            "incorrectValue": "apple",
+            "items": [
+              {
+                "value": "apple",
+                "img": "pages/module_1/page_7/images/apple.png"
+              },
+              {
+                "value": "banana",
+                "img": "pages/module_1/page_7/images/banana.png"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "transcriptText": [
+    [
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    ]
+  ],
+  "ccText": [
+    [
+      {
+        "text": "",
+        "startTime": 0,
+        "endTime": 6.2
+      }
+    ]
+  ]
+}

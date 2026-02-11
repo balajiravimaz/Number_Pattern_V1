@@ -1,0 +1,135 @@
+$transcript-box-w: 450px;
+$transcript-box-mobile-w: 250px;
+$transcript-box-h: 160px;
+$transcript-bgcolor: #747480;
+$transcript-header-w: 100%;
+$transcript-header-h: 30px;
+$transcript-closebtn-w: $transcript-header-h;
+$transcript-closebtn-h: $transcript-header-h;
+$transcript-content-w: $transcript-header-w - 16;
+$transcript-content-h: $transcript-box-h - ($transcript-header-h + 16);
+$transcript-content-bgcolor: #747480;
+$transcript-text-color: #fff;
+
+// ------- Transcript container -------
+#f_transcriptContainer {
+    position: fixed;
+    z-index: 9999;
+    bottom: 80px;
+    right: 20%;
+    display: none;
+    overflow: hidden;
+    width: $transcript-box-w;
+    height: $transcript-box-h;
+    border: 2px solid #2e2e38;
+    background-color: $transcript-bgcolor;
+
+
+   
+
+    #f_transHeader {
+        position: relative;
+        float: left;
+        width: $transcript-header-w;
+        height: $transcript-header-h;
+        margin: 0;
+        cursor: move;
+        background-color: #2e2e38;
+      
+        #f_transTitle {
+            font-family: "EYInterstateregular";
+            // font-size: $popup-title-text-size;
+            font-size: 15.36px;
+            font-weight: bold;
+            line-height: $transcript-header-h;
+            float: left;
+            width: auto;
+            height: auto;
+            margin-left: 10px;
+            cursor: move;
+            color: #fff;
+            
+            @extend .displayTableCell;
+
+        }
+
+    }
+
+    #f_transClose {
+        font-family: $icon-font;
+        font-size: 24px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: $transcript-closebtn-w;
+        height: $transcript-closebtn-h;
+        cursor: pointer;
+        color: #fff;
+        border: none;
+        background-color: transparent;
+    }
+    
+    #f_transContent {
+        position: relative;
+        top: 8px;
+        left: 8px;
+        overflow: hidden;
+        width: 96% !important;
+        height: $transcript-content-h;
+        background-color: $transcript-content-bgcolor;
+
+
+        #f_transText {
+            font-family: 'EYInterstateLight', sans-serif;
+            font-size: 15.36px;
+            line-height: 18px;
+            float: left;
+            width: 97%;
+            height: auto;
+            margin: 0;
+            text-align: left;
+            color: $transcript-text-color;
+            //padding:10px;
+
+            p {
+                //float: left;
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            &>ul {
+                margin-left: 20px;
+                margin-top: 5px;
+                list-style-type: none;
+
+                &>li {
+                  position: relative;
+                  line-height: 19px;
+                  margin-bottom: 5px;
+
+                  &:before {
+                    content: "\A";
+                    position: absolute;
+                    border-top: 5px solid transparent;
+                    left: -18px;
+                    top: 6px;
+                    border-bottom: 5px solid transparent;
+                    border-left: 10px solid #fff;
+                  }
+
+                }
+
+
+              }
+        }
+    }
+}
+
+// ------------- Scrollbar style -------------
+.transTrack {
+    @include scrollTrack($scrollbar-track-w, $scrollbar-track-margin, $popup-scrollbar-trackcolor, $transcript-content-h);
+}
+
+.transHandle {
+    @include scrollHandle($scrollbar-handle-w, 40px, $popup-scrollbar-handlecolor, $scrollbar-handle-margin);
+}

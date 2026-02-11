@@ -1,0 +1,16 @@
+{
+	"strictNavigation": true,
+	"audioRequired": true,
+	"audioSyncRequired": true,
+	"helpRequired": false,
+	"glossaryRequired": true,
+	"resourceRequired": true,
+	"refrenceRequired": true,
+	"transcriptRequired": true,
+	"ccRequired": false,
+	"homeBtnRequired": true,
+	"progressTimeRequired": true,
+	"noOfGadgetBtn": 5,
+	"timeLineRequired": true,
+	"settingBtnRequired": true
+}

@@ -1,0 +1,50 @@
+[
+	{
+		"terms": {			
+			"btnTitle":"Terms",
+			"tableTitle": [
+				"Term",
+				"Definition"
+			],
+			"table": [
+				{
+					"term": "A",
+					"definition": "Continuously monitor"
+				},
+				{
+					"term": "B",
+					"definition": "The application ​"
+				},
+				{
+					"term": "C",
+					"definition": "'Application onboarding"
+				},
+				{
+					"term": "D",
+					"definition": "The set of points on the boundary"
+				},
+
+				{
+					"term": "E",
+					"definition": "A mechanism to validate"
+				},
+				{
+					"term": "F",
+					"definition": "How access to privileged "
+				},
+				{
+					"term": "G",
+					"definition": "Highly privileged "
+				},
+				{
+					"term": "H",
+					"definition": "A tool that typically "
+				},
+				{
+					"term": "I",
+					"definition": "Just In Time (JIT) "
+				}								
+			]
+		}
+	}	
+]

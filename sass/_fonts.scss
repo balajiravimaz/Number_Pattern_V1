@@ -1,0 +1,67 @@
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg) {
+    $src: null;
+    $extmods: (eot: "?", svg: "#"+ str-replace($name, " ", "_"));
+    $formats: (otf: "opentype", ttf: "truetype");
+
+    @each $ext in $exts {
+        $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
+        $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+        $src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
+    }
+
+    @font-face {
+        font-family: quote($name);
+        font-style: $style;
+        font-weight: $weight;
+        src: $src;
+    }
+}
+
+// @include font-face(RobotoRegular,
+// fonts/RobotoRegular,
+// null,
+// null,
+// ttf woff);
+// @include font-face(RobotoItalic,
+// fonts/RobotoItalic,
+// null,
+// null,
+// ttf woff);
+// @include font-face(RobotoBold,
+// fonts/RobotoBold,
+// null,
+// null,
+// ttf woff);
+// @include font-face(RobotoBoldItalic,
+// fonts/RobotoBoldItalic,
+// null,
+// null,
+// ttf woff);
+// @include font-face(RobotoMedium,
+// fonts/RobotoMedium,
+// null,
+// null,
+// ttf woff);
+// @include font-face(RobotoMediumItalic,
+// fonts/RobotoMediumItalic,
+// null,
+// null,
+// ttf woff);
+
+//font style
+//----- fonts -----
+// $regular: "RobotoRegular";
+// $regular-italic: "RobotoItalic";
+// $bold: "RobotoBold";
+// $bold-italic: "RobotoBoldItalic";
+// $medium: "RobotoMedium";
+// $medium-italic: "RobotoMediumItalic";
+// $bold: "RobotoBold";
+// $bold-italic: "RobotoBoldItalic";
+
+@include font-face(FontAwesome,
+    fonts/line-awesome,
+    null,
+    null,
+    ttf woff);
+$icon-font: "LineAwesome";

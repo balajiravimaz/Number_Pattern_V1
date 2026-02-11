@@ -1,0 +1,60 @@
+// Mixins
+// Background Cover Mixin
+@mixin background-cover {
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+//--------------
+@mixin border-radius($radius) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    -ms-border-radius: $radius;
+    border-radius: $radius;
+}
+
+@mixin box-shadow($horizontal, $vertical, $blur, $depth, $color) {
+    -webkit-box-shadow: $horizontal $vertical $blur $depth $color;
+    -moz-box-shadow: $horizontal $vertical $blur $depth $color;
+    box-shadow: $horizontal $vertical $blur $depth $color;
+}
+
+@mixin inset-box-shadow($horizontal, $vertical, $blur, $depth, $color) {
+    -webkit-box-shadow: inset $horizontal $vertical $blur $depth $color;
+    -moz-box-shadow: inset $horizontal $vertical $blur $depth $color;
+    box-shadow: inset $horizontal $vertical $blur $depth $color;
+}
+
+@mixin bgImage($url, $size, $repeat) {
+    background-image: url($url);
+    background-size: $size;
+    background-repeat: $repeat;
+}
+
+@mixin rotateY($deg) {
+    -webkit-transform: rotateY($deg);
+    transform: rotateY($deg);
+}
+
+@mixin scrollTrack($_w, $_m, $_c, $_h) {
+    width: $_w;
+    margin: $_m;
+    background-color: $_c;
+    height: $_h;
+    top: 0px;
+}
+
+@mixin scrollHandle($_w, $_h, $_c, $_m) {
+    width: $_w;
+    height: $_h;
+    background-color: $_c;
+    margin: $_m;
+    border-radius: 0px;
+}
+
+// Font Mixins
+@mixin serif-font {
+    font-family: 'Open Sans', sans-serif;
+}

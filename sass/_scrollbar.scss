@@ -1,0 +1,56 @@
+$scroll-track-width: 2px;
+$scroll-knob-width: 6px;
+$scroll-knob-height: auto;
+$scrollbar-width: $scroll-knob-width;
+$track-color: #b6b6bb;
+$knob-color: #094368;
+$popup-scrollbar-trackcolor: rgba(46, 51, 58, 1);
+$popup-scrollbar-handlecolor: rgba(255, 153, 1, 1);
+
+.textContainer {
+    position: relative;
+    float: left;
+    width: calc(100% - 15px);
+    height: auto;
+}
+
+.sliderBar {
+    position: absolute;
+    width: $scrollbar-width;
+    height: 100%;
+    right: 0;
+    top: 0;
+}
+
+.scrollTrack {
+    position: absolute;
+    width: $scroll-track-width;
+    height: 100%;
+    background-color: $track-color;
+    left: ($scrollbar-width - $scroll-track-width) / 2;
+}
+
+.knobBar {
+    position: relative;
+    width: $scroll-knob-width;
+    height: $scroll-knob-height;
+    background: $knob-color;
+    border-radius: $scroll-knob-width;
+    left: 0;
+}
+
+.unselectable {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.selectable {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}

@@ -1,0 +1,96 @@
+[
+  {
+    "courseName": "Course Title Goes here​",
+    "module": [
+      {
+        "heading": "Module 01",
+        "URL": "#",
+        "hasAudio": "true",
+        "hasVideo": "false",
+        "page": [
+          {
+            "heading": "Static pages",
+            "dataURL": "#",
+            "URL": "#",
+            "hasAudio": "false",
+            "hasVideo": "false",
+            "subpage": [
+              {
+                "heading": "1",
+                "URL": "pages/module_1/page_1/page.html",
+                "hasAudio": "true",
+                "hasVideo": "false",
+                "page": [],
+                "inMenuShow": "true",
+                "type": "branching"
+              },
+              {
+                "heading": "2",
+                "URL": "pages/module_1/page_2/page.html",
+                "hasAudio": "true",
+                "hasVideo": "true",
+                "page": [],
+                "inMenuShow": "true",
+                "type": "video"
+              },
+              {
+                "heading": "3",
+                "URL": "pages/module_1/page_3/page.html",
+                "hasAudio": "true",
+                "hasVideo": "false",
+                "page": [],
+                "inMenuShow": "true",
+                "type": "branching"
+              },              
+              {
+                "heading": "4",
+                "URL": "pages/module_1/page_4/page.html",
+                "hasAudio": "true",
+                "hasVideo": "false",
+                "page": [],
+                "inMenuShow": "true",
+                "type": "simulation"
+              },
+              {
+                "heading": "5",
+                "URL": "pages/module_1/page_5/page.html",
+                "hasAudio": "true",
+                "hasVideo": "false",
+                "page": [],
+                "inMenuShow": "true",
+                "type": "simulation"
+              },
+              {
+                "heading": "2",
+                "URL": "pages/module_1/page_6/page.html",
+                "hasAudio": "true",
+                "hasVideo": "true",
+                "page": [],
+                "inMenuShow": "true",
+                "type": "branching"
+              },
+              {
+                "heading": "2",
+                "URL": "pages/module_1/page_7/page.html",
+                "hasAudio": "true",
+                "hasVideo": "true",
+                "page": [],
+                "inMenuShow": "true",
+                "type": "game"
+              },
+              {
+                "heading": "8",
+                "URL": "pages/module_1/page_8/page.html",
+                "hasAudio": "true",
+                "hasVideo": "false",
+                "page": [],
+                "inMenuShow": "true",
+                "type": "game"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

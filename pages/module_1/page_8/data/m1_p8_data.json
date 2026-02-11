@@ -1,0 +1,330 @@
+{
+  "mainAudio": {
+    "audioSRC": "assets/audios/1sec.mp3",
+    "isEmptyAudio": false,
+    "audioIndex": 0
+  },
+  "bgImgs": [
+    {
+      "imageSRC": "pages/module_1/page_8/images/18.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/20.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/19.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/4.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/5.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/6.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/7.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/8.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/9.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/11.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/12.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/13.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/15.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/16.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/17.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/18.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/19.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/20.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/simulation.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/fun_game.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/great_job.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/back.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/bg_music.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/bg_pause.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/bg_music.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/close.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/bg_pause.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/correct.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/header_bg.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/header_title.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/info.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/info_disabled.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/music.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/mute.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/pause.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/reload.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/replay.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/right_bg.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_8/images/wrong.png",
+      "altText": ""
+    }
+  ],
+  "imgCollage": {
+    "desktop": [
+      {
+        "imageSRC": "",
+        "altText": ""
+      }
+    ],
+    "portrait": [
+      {
+        "imageSRC": "",
+        "altText": ""
+      }
+    ]
+  },
+  "sections": [
+    {
+      "slideTitle": "Course Objectives",
+      "headerTitle": "Heavy - Light",
+      "headerImg": "pages/module_1/page_8/images/header_bg.png",
+      "headerText": "pages/module_1/page_8/images/header_title.png",
+      "infoAudio": "pages/module_1/page_8/audios/info_audio.mp3",
+      "infoImg": "pages/module_1/page_8/images/fun_game.png",
+      "ost": "",
+      "iText": "Look at the numbers. <span>Drag</span> the cups in and put them in order. <span class='audio'></span>",
+      "endAudio": "",
+      "backBtnSrc": "pages/module_1/page_8/images/back.png",
+      "introAudio": "pages/module_1/page_8/audios/intro_audio.mp3",
+      "correctAudio": "pages/module_1/page_8/audios/good_job.mp3",
+      "wrongAudio": "pages/module_1/page_8/audios/try_again.mp3",
+      "finalAudio": "pages/module_1/page_8/audios/final_audio.mp3",
+      "content": {
+        "btnAudios": [
+          "pages/module_1/page_8/audios/click.mp3",
+          "pages/module_1/page_8/audios/bg_music.mp3"
+        ],
+        "numberObjects": [
+          {
+            "patternId": 1,
+            "sequence": [
+              4,
+              5,
+              6
+            ],
+            "items": [
+              {
+                "value": 4,
+                "img": "pages/module_1/page_8/images/4.png"
+              },
+              {
+                "value": 5,
+                "img": "pages/module_1/page_8/images/5.png"
+              },
+              {
+                "value": 6,
+                "img": "pages/module_1/page_8/images/6.png"
+              }
+            ]
+          },
+          {
+            "patternId": 2,
+            "sequence": [
+              7,
+              8,
+              9
+            ],
+            "items": [
+              {
+                "value": 7,
+                "img": "pages/module_1/page_8/images/7.png"
+              },
+              {
+                "value": 8,
+                "img": "pages/module_1/page_8/images/8.png"
+              },
+              {
+                "value": 9,
+                "img": "pages/module_1/page_8/images/9.png"
+              }
+            ]
+          },
+          {
+            "patternId": 3,
+            "sequence": [
+              11,
+              12,
+              13
+            ],
+            "items": [
+              {
+                "value": 11,
+                "img": "pages/module_1/page_8/images/11.png"
+              },
+              {
+                "value": 12,
+                "img": "pages/module_1/page_8/images/12.png"
+              },
+              {
+                "value": 13,
+                "img": "pages/module_1/page_8/images/13.png"
+              }
+            ]
+          },
+          {
+            "patternId": 4,
+            "sequence": [
+              18,
+              19,
+              20
+            ],
+            "items": [
+              {
+                "value": 18,
+                "img": "pages/module_1/page_8/images/18.png"
+              },
+              {
+                "value": 19,
+                "img": "pages/module_1/page_8/images/19.png"
+              },
+              {
+                "value": 20,
+                "img": "pages/module_1/page_8/images/20.png"
+              }
+            ]
+          },
+          {
+            "patternId": 5,
+            "sequence": [
+              15,
+              16,
+              17
+            ],
+            "items": [
+              {
+                "value": 15,
+                "img": "pages/module_1/page_8/images/15.png"
+              },
+              {
+                "value": 16,
+                "img": "pages/module_1/page_8/images/16.png"
+              },
+              {
+                "value": 17,
+                "img": "pages/module_1/page_8/images/17.png"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "transcriptText": [
+    [
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    ]
+  ],
+  "ccText": [
+    [
+      {
+        "text": "",
+        "startTime": 0,
+        "endTime": 6.2
+      }
+    ]
+  ]
+}

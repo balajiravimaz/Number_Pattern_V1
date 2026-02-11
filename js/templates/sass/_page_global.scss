@@ -1,0 +1,445 @@
+@import "../../../sass/mixin";
+@import "../../../sass/variables";
+@import '../../../sass/scrollbar';
+$instruction-color: rgba(158, 64, 110, 1);
+$instruction-size: 16px;
+$popup-close-width: 25px;
+$popup-close-height: 25px;
+$popup-close-bgcolor: rgba(0, 0, 0, 1);
+$popup-close-text-color: #ffffff;
+$page-content-color: $primary-text-color;
+$page-heading-color: $page-content-color;
+$page-padding: 40px;
+$page-mobile-padding: 20px;
+
+/*
+----------------- image style ----------------*/
+
+$image-border-color: #ed8000;
+$image-border-width: 4px;
+$image-shadow: 5px;
+$image-shadow-color: rgba(106, 106, 106, 0.4);
+
+/*---------- main css ---------- */
+
+.f_page_content {
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   color: $page-content-color;
+   opacity: 0;
+   left: 0;
+   top: 0;
+   overflow: hidden;
+
+   @include ipad-portrait {}
+
+   @include ipad-landscape {}
+
+   @include mobile-portrait {
+      position: relative;
+      height: auto;
+      overflow-y: auto;
+   }
+
+   @include mobile-landscape {
+      position: relative;
+      height: auto;
+      overflow-y: auto;
+   }
+
+   @include mobile-landscape-big {
+      position: relative;
+      height: auto;
+      overflow-y: auto;
+   }
+
+   .scroll_holder {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      overflow: hidden;
+
+      @include ipad-portrait {
+         overflow-y: auto;
+      }
+
+      @include ipad-landscape {
+         overflow-y: auto;
+      }
+
+      @include mobile-portrait {
+         position: relative;
+         height: auto;
+         overflow-y: auto;
+      }
+
+      @include mobile-landscape {
+         position: relative;
+         height: auto;
+         overflow-y: auto;
+      }
+
+      @include mobile-landscape-big {
+         position: relative;
+         height: auto;
+         overflow-y: auto;
+      }
+   }
+}
+
+.page_heading {
+   float: left;
+   width: calc(100% - #{$page-padding * 2});
+   height: auto;
+   margin-bottom: 20px;
+   padding: $page-padding $page-padding 0;
+
+   @include mobile-portrait {
+      width: calc(100% - #{$page-mobile-padding * 2});
+      padding: $page-mobile-padding $page-mobile-padding 0;
+   }
+
+   @include mobile-landscape {
+      width: calc(100% - #{$page-mobile-padding * 2});
+      padding: $page-mobile-padding $page-mobile-padding 0;
+   }
+
+   @include mobile-landscape-big {
+      width: calc(100% - #{$page-mobile-padding * 2});
+      padding: $page-mobile-padding $page-mobile-padding 0;
+   }
+
+   p {
+      float: left;
+      font-size: 18px;
+      font-weight: bold;
+      font-family: Arial;
+      color: $page-heading-color;
+      margin-bottom: 0 !important;
+   }
+}
+
+.cc_content {
+   float: left;
+   width: calc(100% - #{$page-padding * 2});
+   padding: 0 $page-padding;
+
+   @include mobile-portrait {
+      width: calc(100% - #{$page-mobile-padding * 2});
+      padding: 0 $page-mobile-padding $page-mobile-padding;
+   }
+
+   @include mobile-landscape {
+      width: calc(100% - #{$page-mobile-padding * 2});
+      padding: 0 $page-mobile-padding $page-mobile-padding;
+   }
+
+   @include mobile-landscape-big {
+      width: calc(100% - #{$page-mobile-padding * 2});
+      padding: 0 $page-mobile-padding $page-mobile-padding;
+   }
+
+
+   @include ipad-portrait {
+      padding: 0 $page-padding $page-mobile-padding $page-padding;
+   }
+}
+
+.instruction {
+   position: relative;
+   width: 100%;
+   height: auto;
+   color: $instruction-color;
+   font-style: italic;
+   font-size: $instruction-size;
+   font-weight: bold;
+   clear: left;
+
+   span {
+      vertical-align: text-bottom;
+   }
+
+   .tipIconSmall {
+      position: relative;
+      width: 11px;
+      height: 16px;
+      background-repeat: no-repeat;
+      display: inline-block;
+      vertical-align: text-bottom;
+   }
+}
+
+.popupCloseBtn {
+   position: absolute;
+   width: $popup-close-width;
+   height: $popup-close-height;
+   top: 0;
+   right: 0;
+   background-color: $popup-close-bgcolor;
+   color: $popup-close-text-color;
+}
+
+.highlightBox {
+   position: absolute;
+   width: 50px;
+   height: 26px;
+   border: 3px solid #981313;
+   background-color: transparent;
+   left: 86px;
+   top: 30px;
+   display: none;
+}
+
+//------------ list style -----------
+.list_items,
+.list_items_number {
+   // float: left;
+   margin-bottom: 15px;
+   clear: left;
+
+   li {
+      position: relative;
+      margin-bottom: 15px;
+      padding-left: 0;
+      margin-left: 40px;
+      text-align: left;
+      line-height: normal;
+      word-wrap: break-word;
+      // clear: both;
+
+      &:last-child {
+         margin-bottom: 0 !important;
+      }
+
+      ol,
+      ul {
+         margin-top: 15px;
+
+         li {
+            margin-left: 20px;
+         }
+      }
+
+      ul {
+         list-style-type: circle;
+      }
+   }
+}
+
+//------------ image border -----------
+.image_Frame {
+   box-shadow: $image-shadow-color $image-shadow $image-shadow 0 0;
+   border: $image-border-width solid $image-border-color;
+   margin-bottom: 19px !important;
+
+   @include mobile-landscape {
+      margin-bottom: 5px !important;
+   }
+
+   @include mobile-portrait {
+      margin-bottom: 5px !important;
+   }
+
+   @include mobile-landscape-big {
+      margin-bottom: 5px !important;
+   }
+}
+
+.decorative-image {
+   position: relative;
+   float: left;
+   background-size: 100% auto;
+   background-repeat: no-repeat;
+   background-color: #000;
+}
+
+//------------ link style -----------
+.redirectLink {
+   float: left;
+   width: 100%;
+   height: auto;
+   margin-top: 5px;
+
+   a {
+      float: left;
+      width: auto;
+      height: auto;
+   }
+}
+
+.popupBtnStyle_1 {
+   width: auto;
+   height: auto;
+   @include gradient($button-gradient-from, $button-gradient-to, vertical);
+   box-shadow: $button-shadow 0 4px 0 0;
+   border-style: 0 solid rgb(255, 194, 49);
+   border-radius: 6px;
+   padding: 10px;
+   margin-bottom: 5px;
+   cursor: pointer;
+   // &:hover {
+   //     @include gradient($button-gradient-from-over, $button-gradient-to-over, vertical);
+   // }
+}
+
+.submit_normal {
+   @include gradient($button-gradient-from, $button-gradient-to, vertical);
+   box-shadow: $button-shadow 0 4px 0 0;
+   border-style: 0 solid rgb(255, 194, 49);
+   border-radius: 6px;
+   padding: 10px;
+   width: auto;
+   min-width: 70px;
+   font-size: 16px;
+   text-align: center;
+   font-weight: bold;
+   text-decoration: none;
+   color: rgb(0, 0, 0);
+   margin-top: 15px;
+   opacity: 0.5;
+   margin-bottom: 5px;
+   cursor: default;
+
+   @include desktop {}
+
+   @include ipad-landscape {}
+
+   @include ipad-portrait {}
+
+   @include mobile-landscape {}
+
+   @include mobile-portrait {}
+}
+
+.submit_over {
+   @include gradient($button-gradient-from-over, $button-gradient-to-over, vertical);
+}
+
+.hyperlinks,
+.linkPopup {
+   color: blue;
+   text-decoration: underline;
+   cursor: pointer;
+
+   &.visited {
+      color: $instruction-color !important;
+   }
+}
+
+
+
+//-------------- underline ---------------------
+.underline {
+   text-decoration: underline;
+}
+
+.doubleUnderline {
+   text-decoration: underline;
+   border-bottom: 1px solid #000;
+}
+
+//-------------- table settings ---------------------
+$table-border-color: #000000;
+$table-head-bgcolor: #333333;
+$table-head-color: #ffffff;
+$table-body-bgcolor: transparent;
+$table-body-alter-bgcolor: #f2f2f2;
+
+.table_container {
+   float: left;
+   width: 50%;
+   height: auto;
+   margin-bottom: 15px;
+
+   @include ipad-portrait {}
+
+   @include mobile-landscape {}
+
+   @include mobile-portrait {}
+
+   .cc_table {
+      width: auto;
+      background-color: #fff;
+      border-collapse: collapse;
+      border: 1px solid $table-border-color;
+      table-layout: auto;
+
+      td,
+      th {
+         padding: 7px 20px;
+         border: 1px solid $table-border-color;
+         border-collapse: collapse;
+      }
+
+      th {
+         text-align: left;
+      }
+
+      thead {
+         tr {
+            background-color: $table-head-bgcolor;
+            color: $table-head-color;
+         }
+      }
+
+      tbody {
+         background-color: transparent;
+         color: $table-border-color;
+
+         tr {
+            background-color: $table-body-bgcolor;
+
+            td {
+               text-align: center;
+            }
+         }
+      }
+   }
+
+   .even {
+      tbody {
+         tr {
+            &:nth-child(even) {
+               background-color: $table-body-alter-bgcolor;
+            }
+         }
+      }
+   }
+
+   .left {
+      tbody {
+         tr {
+            td {
+               text-align: left;
+            }
+         }
+      }
+   }
+}
+
+.textBold {
+   font-weight: bold;
+}
+
+//---------------- equation -----------
+.equation {
+   display: inline-block;
+   vertical-align: middle;
+}
+
+.equationBorder {
+   border: 1px solid #000;
+   padding: 10px;
+}
+
+
+//---------------- Zoom Btn -----------
+.zoom_btn_holder {
+   float: right;
+   position: relative;
+   width: auto;
+   height: auto;
+}

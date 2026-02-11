@@ -1,0 +1,395 @@
+#f_header {
+  // background-color: $header-bgcolor;
+
+  #f_companyLogo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 130px;
+    height: auto;
+    // margin-right: 10px;
+    justify-content: center;
+    gap: 10px;
+
+    @include tablet-landscape-height {
+      width: 100px;
+
+      img {
+        width: 100px;
+      }
+    }
+
+    @include mobile-landscape {
+      width: 80px;
+      justify-content: flex-end;
+    }
+
+    /*  &:after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        top: 0%;
+        left: 5%;
+        width: 100%;
+        height: 100%;
+        background: #ffe600;
+    }*/
+    .logo-bg-patch {
+      img {
+        position: relative;
+        width: 130px;
+        height: auto;
+
+        @include tablet-landscape-height {
+          width: 100px;
+        }
+
+        @include mobile-landscape {
+          width: 80px;
+        }
+      }
+    }
+  }
+
+  .full-screen {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    transition: transform 0.5s ease-in-out;
+    cursor: pointer;
+    top: 2px;
+
+    @include tablet-landscape-height {
+      width: 40px;
+      height: 40px;
+    }
+
+    @include mobile-landscape {
+      width: 35px;
+      height: 35px;
+      top: 0px;
+    }
+
+    // @include ipad-landscape {
+    //   width: 35px;
+    //   top: 0px;
+    //   background-position: center;
+    // }
+
+    &:disabled {
+      pointer-events: none;
+    }
+
+    &:hover {
+      transform: scale(1.125);
+    }
+
+    &.fullScreen {
+      background: url("../assets/images/nav-fullscreen-on.png") no-repeat;
+      background-size: contain;
+
+      // @include ipad-landscape{
+      //   background-position: center;
+      // }
+      @include tablet-landscape-height {
+        // background-position: center;
+      }
+
+      // background-position: center;
+    }
+
+    &.offScreen {
+      background: url("../assets/images/nav-fullscreen-off.png") no-repeat;
+      background-size: contain;
+
+      // @include ipad-landscape{
+      //   background-position: center;
+      // }
+      @include tablet-landscape-height {
+        // background-position: center;
+      }
+
+      // background-position: center;
+    }
+
+    &::after {
+      content: attr(data-tooltip);
+      /* tooltip text from attribute */
+      position: absolute;
+      top: 100%;
+      /* below the button */
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.85);
+      font-weight: bold;
+      white-space: nowrap;
+      box-shadow: 0 2px 19px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-size: 10px;
+      padding: 3px 5px;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      font-family: "Times New Roman", Times, serif;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      margin-top: 4px;
+      z-index: 10;
+
+      @include mobile-landscape {
+        font-size: 8px;
+        left: calc(100% - 20px);
+      }
+    }
+
+    /* Show tooltip on hover */
+    &:hover::after {
+      opacity: 1;
+    }
+  }
+
+  #f_courseTitle {
+    position: relative;
+    width: 300px;
+    height: 100%;
+    margin: 0px 0px 0 8px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    /* background-color: #ffe600; */
+    /* padding: 20px; */
+    text-align: center;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+
+    p {
+      position: relative;
+      width: auto;
+      display: none !important;
+      height: auto;
+      font-size: 1.2rem;
+      margin-bottom: 0px;
+      color: #ffe600;
+      text-align: center;
+      font-family: "EYInterstateRegular";
+    }
+  }
+
+  .nav_btns {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 20px;
+
+    .music {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      background-size: contain;
+      background-repeat: no-repeat !important;
+      cursor: pointer;
+
+      &.playing {
+        background: url(../assets/images/nav/music.png);
+        background-size: contain;
+      }
+
+      &.mute {
+        background: url(../assets/images/nav/bg_pause.png) no-repeat;
+        background-size: contain;
+      }
+    }
+
+    .introInfo {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      background: url(../assets/images/nav/info.png);
+      background-size: contain;
+      background-repeat: no-repeat;
+      cursor: pointer;
+    }
+
+    .home_btn {
+      position: relative;
+      width: 50px;
+      height: 50px;
+      background: url(../assets/images/nav/home.png);
+      background-size: contain;
+      // margin: 15px;
+      background-repeat: no-repeat;
+      cursor: pointer;
+    }
+
+    button {
+      // background: transparent;  
+      border: none;
+      transition: transform 0.5s ease-in;
+      animation: none !important;
+
+      @include tablet-landscape-height {
+        width: 35px;
+        height: 35px;
+      }
+
+      &:hover {
+        transform: scale(1.125);
+      }
+
+      &::after {
+        content: attr(data-tooltip);
+        /* tooltip text from attribute */
+        position: absolute;
+        top: 100%;
+        /* below the button */
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.85);
+        font-weight: bold;
+        white-space: nowrap;
+        box-shadow: 0 2px 19px rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #fff;
+        font-size: 10px;
+        padding: 3px 5px;
+        border-radius: 4px;
+        white-space: nowrap;
+        font-family: "Times New Roman", Times, serif;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        margin-top: 4px;
+        z-index: 10;
+      }
+
+      &:hover::after {
+        opacity: 1;
+      }
+    }
+
+    .information-icon:hover,
+    .music:hover,
+    .header-container-play:hover,
+    .instruction_1:hover,
+    .instruction_2:hover,
+    .instruction_3:hover,
+    .home-go-to:hover,
+    .ins_3:hover,
+    .ins_2:hover,
+    .ins_1:hover {
+      animation: slowInFastOut 0.5s ease-in-out;
+    }
+
+    @keyframes slowInFastOut {
+      0% {
+        transform: scale(1);
+      }
+
+      65% {
+        transform: scale(1.1);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes beat {
+      0% {
+        transform: scale(1);
+      }
+
+      25% {
+        transform: scale(1.1);
+      }
+
+      50% {
+        transform: scale(1);
+      }
+
+      75% {
+        transform: scale(1.1);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+  }
+
+  #f_hMenu {
+    position: relative;
+    display: block;
+    /*float: left;*/
+    top: 20px;
+    margin-left: 95px;
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: rgba(0, 0, 0, 0);
+
+      li {
+        float: left;
+        margin-bottom: 0px;
+
+        a {
+          display: block;
+          color: $white;
+          text-align: center;
+          padding: 14px 16px;
+          text-decoration: none;
+          cursor: pointer;
+          font-size: 1.3rem;
+
+          &:hover {
+            color: $secondary-color;
+            text-decoration: underline;
+            text-decoration-color: $white;
+            -webkit-text-underline-position: under;
+            -ms-text-underline-position: below;
+            text-underline-position: under;
+            /*border-bottom: 2px solid $white;*/
+          }
+
+          &.active {
+            color: $secondary-color;
+            text-decoration: underline;
+            text-decoration-color: $secondary-color;
+            -webkit-text-underline-position: under;
+            -ms-text-underline-position: below;
+            text-underline-position: under;
+          }
+        }
+      }
+    }
+  }
+
+  #f_rightMenu {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    height: 40px;
+    right: 0px;
+    justify-content: space-between;
+    gap: 2rem;
+    bottom: 100%;
+    padding: 7px 20px 7px 60px;
+    /* border-radius: 20px 0px 0px 20px; */
+    top: 20px;
+
+    button {
+      position: relative;
+      cursor: pointer;
+      border: none;
+    }
+  }
+}

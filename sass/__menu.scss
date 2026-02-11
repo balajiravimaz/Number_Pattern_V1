@@ -1,0 +1,284 @@
+//----- menu style -----
+$menu-box-w: 700px;
+$menu-box-h: 600px;
+$menu-bgcolor: $popup-bg-color;
+$menu-header-w: 100%;
+$menu-header-h: 40px;
+$menu-closebtn-w: $menu-header-h;
+$menu-closebtn-h: $menu-header-h;
+$menu-content-w: 100%;
+$menu-content-h: $menu-box-h - 3;
+$menu-content-bgcolor: $white;
+$menu-level-1-width: $menu-box-w;
+$menu-level-1-height: auto;
+$menu-level-2-width: $menu-level-1-width - 15;
+$menu-level-2-height: auto;
+$menu-level-2-left: 0;
+$menu-level-3-width: $menu-level-2-width - 15;
+$menu-level-3-height: auto;
+$menu-level-3-left: 30px; //---- menu ----
+$menu-level-1-bgcolor: $primary-color;
+$menu-level-2-bgcolor: #bdb36f !important;
+$menu-level-3-bgcolor: $popup-bg-color;
+$menu-level-1-bordercolor: rgba(20, 105, 161, 1);
+$menu-level-2-bordercolor: rgba(96, 98, 101, 1);
+$menu-level-3-bordercolor: rgba(111, 113, 115, 1);
+$accord-container_bgcolor: #1e252b;
+$menu-notstarted-color: rgba(255, 255, 255, 1);
+$menu-inprogress-color: rgba(252, 239, 211, 1);
+$menu-completed-color: #000;
+$menu-notstarted-textcolor: #000;
+$menu-inprogress-textcolor: #000;
+$menu-completed-textcolor: #000;
+$menu-text-color: rgba(255, 255, 255, 1); // ------- menu container -------
+
+.menuPlusIcon {
+    @include bgImage("../assets/images/f_plus.png", 100% 100%, no-repeat);
+}
+
+.menuMinusIcon {
+    @include bgImage("../assets/images/f_minus.png", 100% 100%, no-repeat);
+}
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    #f_menuPopup{
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+#f_menuPopup {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 100% !important;
+    height: 100%;
+   // background-color: $popup-overlay-color;
+    overflow: hidden;
+
+    @include mobile-portrait {
+        width: 100%;
+        height: 100%;
+    }
+
+    @include mobile-landscape {
+        width: 100%;
+        height: 100%;
+        z-index: 10800 !important;
+    }
+
+    @include ipad-portrait {
+        width: 100%;
+        height: 100%;
+    }
+
+    #f_menuContainer {
+        position: absolute;
+        float: right;
+        top: -497px;
+        /*left: 0;*/
+		right: 0;
+        display: block;
+        width: auto;
+        max-width: 350px;
+        min-width: 280px;
+        height: 100%;
+        background-color: $white;
+        overflow: hidden;
+        border: 1px solid rgba(26, 36, 61, 0.5);
+        border-top: 0;
+        border-left: 0;
+        box-shadow: rgba(158, 158, 158, 0.3) 10px 10px 10px 0;
+
+        @include mobile-portrait {
+            height: calc(100% - 10px);
+        }
+
+        @include mobile-landscape {
+            height: calc(100% - 10px);
+        }
+
+        #f_menuHeader {
+            position: relative;
+            /*float: left;*/
+            width: 100%;
+            height: $menu-header-h - 1;
+            margin: 0;
+            cursor: pointer;
+            /*border-bottom: 1px solid $popup-close-btn-bg;*/
+            background-color: #0a1627;
+
+            #f_menuTitle {
+                font-family: $popup-title-text-font;
+                font-size: $popup-title-text-size;
+                line-height: $menu-header-h;
+                float: left;
+                width: auto;
+                height: auto;
+                margin-left: 10px;
+                cursor: pointer;
+                color: $popup-title-text-color;
+                @extend .displayTableCell;
+            }
+
+            #f_menuClose {
+                font-family: $icon-font;
+                font-size: 24px;
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: $menu-closebtn-w;
+                height: $menu-closebtn-h;
+                cursor: pointer;
+                color: #fff;
+                border-left: 1px solid $popup-close-btn-bg;
+                background-color: #0a1627;
+            }
+        }
+    }
+
+  #f_menuContent {
+        position: relative;
+        top: 0;
+        left: 0;
+        width: 100% !important;
+        //height: $menu-content-h;
+		height: calc(100% - 55px);
+        background-color: $menu-content-bgcolor;
+        overflow: hidden;
+        overflow-y: scroll;
+        @media (-webkit-max-device-pixel-ratio: 1.5) {
+                //height: 437px;
+			height: calc(100% - 40px);
+        }
+
+        @include mobile-portrait {
+            height: 100%;
+        }
+
+        @include mobile-landscape {
+            height: 100%;
+        }
+
+        .f_statusBar {
+			float: left;
+			width: 0px;
+			height: 0px;
+			margin: 7px 0px 0px 0px;
+			border-top: 5px solid transparent;
+			border-bottom: 4px solid transparent;
+			border-left: 6px solid #343030;
+            
+        }
+
+        .f_menuText {
+            font-size: 14px;
+            position: relative;
+            display: table-cell;
+            width: 100%;
+            height: auto;
+            margin: 0;
+            padding: 5px 0 5px 5px;
+            text-align: left;
+            vertical-align: middle;
+            color: #000;
+            @media (-webkit-max-device-pixel-ratio: 1.5) {
+               font-size: 12px;  
+            }
+        }
+
+        .f_openClose {
+            position: absolute;
+            top: 13px;
+            right: 15px;
+            width: 15px;
+            height: 15px;
+            display: none;
+        }
+
+        .f_accordContainer {
+            background-color: #fff;
+            padding: 0 5px;
+        }
+
+        .f_menuLevel_1 {
+            position: relative;
+            display: table;
+            width: 100%;
+            height: $menu-level-1-height;
+            margin-bottom: 0;
+            padding: 0 5px;
+            border-top: 0 solid $popup-bg-color;
+            background: $white;
+            cursor: pointer;
+
+            .f_menuText {
+                font-family: 'EYInterstatebold';
+                font-size: 16px;
+            }
+        }
+
+        .f_menuLevel_2 {
+            position: relative;
+            left: $menu-level-2-left;
+            display: table;
+            width: 100%;
+            height: $menu-level-2-height;
+            margin: 3px 0;
+            padding: 0 10px;
+            border-top: 0 solid $menu-level-2-bordercolor;
+         	/*background: $menu-level-2-bgcolor;*/
+            cursor: pointer;
+
+            &:first-child {
+                border-top: 0;
+            }
+        }
+
+        .f_menuLevel_3 {
+            position: relative;
+            left: $menu-level-3-left;
+            display: table;
+            width: calc(100% - 30px);
+            height: $menu-level-3-height;
+            margin-bottom: 1px;
+            padding: 0 13px;
+            border-top: 0 solid $menu-level-3-bordercolor;
+            background: $menu-level-3-bgcolor;
+            cursor: pointer;
+
+            &:last-child {
+                border-bottom: 0;
+            }
+        }
+    }
+}
+
+.f_pageCompleted {
+    color: $menu-completed-color !important;
+}
+
+.f_pageInprogress {
+    background-color: $menu-inprogress-color !important;
+    box-shadow: rgba(216, 196, 149, 0.75) 0 0 5px 0 inset;
+}
+
+.f_pageInprogressText {
+    background: rgb(252, 239, 211) !important;
+    box-shadow: rgba(216, 196, 149, 0.75) 0 0 5px 0 inset;
+    font-family: 'EYInterstatebold';
+
+    .f_pageCompleted {
+        color: #000 !important;
+    }
+}
+
+.f_pageNotStarted {
+    background-color: $menu-notstarted-color !important;
+}
+
+#f_moduleToggle_0 {
+    display: none;
+}

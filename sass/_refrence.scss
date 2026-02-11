@@ -1,0 +1,276 @@
+$refrences-box-w: 700px;
+$refrences-box-h: 425px;
+$refrences-bgcolor: #747480;
+$refrences-header-w: 100%;
+$refrences-header-h: 40px;
+$refrences-closebtn-w: $refrences-header-h;
+$refrences-closebtn-h: $refrences-header-h;
+$refrences-content-w: 100%;
+$refrences-content-h: $refrences-box-h - $refrences-header-h;
+$refrences-content-bgcolor: #C4C4CD;
+//---- refrences ----
+$refrence-bgcolor: #747480;
+;
+$refrence-bordercolor: rgba(42, 50, 61, 1);
+$refrence-link-color: #ffb46a;
+$refrence-definition-color: rgba(255, 255, 255, 1);
+$refrence-split-color: rgba(255, 255, 255, 0.2);
+$refrences-text-color: rgba(255, 255, 255, 1);
+
+// ------- refrence container -------
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    #f_refrencePopup {
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+#f_refrencePopup {
+    position: absolute;
+    z-index: 10801;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 100% !important;
+    height: 100%;
+
+    #f_refrenceContainer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        display: none;
+        width: $refrences-box-w;
+        height: $refrences-box-h;
+        margin-top: -1 * $refrences-box-h / 2;
+        margin-left: -1 * $refrences-box-w / 2;
+        background-color: $refrences-bgcolor;
+
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+
+       
+        #f_refrenceHeader {
+            position: relative;
+            float: left;
+            width: 100%;
+            //height: $menu-header-h - 1;
+            height: 40px;
+            margin: 0;
+            // border-bottom: 1px solid $popup-close-btn-bg;
+            border-bottom: 1px solid #fee600;
+            background-color: #2e2e38;
+
+            #f_refrenceTitle {
+                font-family: 'EYInterstatebold';
+                font-size: 16px;
+                line-height: $menu-header-h;
+                float: left;
+                width: auto;
+                height: auto;
+                margin-left: 10px;
+                color: #fee600;
+                @extend .displayTableCell;
+            }
+
+            /*    #f_refrenceClose {
+                font-family: $icon-font;
+                font-size: 24px;
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: $refrences-closebtn-w;
+                height: $refrences-closebtn-h;
+                cursor: pointer;
+                color: #fff;
+                border-left: 1px solid $popup-close-btn-bg;
+                background-color: $popup-close-btn-bg;
+            }*/
+        }
+
+        .ost-txt {
+            color: #fff;
+            font-size: 15.36px;
+            margin-left: 10px;
+            position: relative;
+            display: block;
+        }
+
+        &>#f_refrenceFooter {
+            position: absolute;
+            display: block;
+            width: 40px;
+            height: 40px;
+            top: 0px;
+            right: 0px;
+
+            &>#f_refrenceClose {
+                font-family: "LineAwesome";
+                font-size: 24px;
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 40px;
+                height: 40px;
+                cursor: pointer;
+                color: #fff;
+                background-color: transparent;
+
+                &:hover {
+                    color: #fee600;
+                }
+            }
+        }
+    }
+
+    #f_refrenceContent {
+        position: relative;
+        width: calc(100% - 0px);
+        height: calc(100% - 75px);
+        display: block;
+        margin: 0px auto;
+        color: #fff;
+        overflow: hidden !important;
+        @include mobile-portrait {
+            //height: 100%;
+            overflow-y: auto !important;
+        }
+
+        @include mobile-landscape {
+            height: 100%;
+            overflow-y: auto !important;
+        }
+
+        @include ipad-portrait {
+            //height: 100%;
+            overflow-y: auto !important;
+        }
+
+        @include ipad-landscape {
+            height: 100%;
+            overflow-y: auto !important;
+        }
+
+        .f_refrenceRow {
+            font-family: "EYInterstateLight", sans-serif;
+            font-size: 1rem;
+            line-height: 20px;
+            float: left;
+            height: auto;
+            padding: 3px 0;
+            text-align: left;
+            color: #fff;
+            // border-bottom: 1px solid #d0d0d0;
+            width: calc(100% - 10px);
+            margin-left: 0px;
+            font-size: 15.36px;
+            padding: 10px 0;
+            border-top: 1px solid #d0d0d0;
+            &:nth-child(10) {
+                .f_refrenceColumn1 {
+                p{
+                text-indent: -28px;
+                font-size: 15.36px;
+                padding-left: 1.5rem;
+                }
+            }
+            }
+
+            &:nth-child(11) {
+                .f_refrenceColumn1 {
+                p{
+                text-indent: -28px;
+                font-size: 15.36px;
+                padding-left: 1.5rem;
+                }
+            }
+            }
+
+            &:nth-child(12) {
+                .f_refrenceColumn1 {
+                p{
+                text-indent: -28px;
+                font-size: 15.36px;
+                padding-left: 1.5rem;
+                }
+            }
+            }
+            .f_refrenceColumn1 {
+                position: relative;
+                display: table;
+                float: left;
+                //width: calc(30% - 20px);
+                width: 100%;
+                height: auto;
+                padding: 3px 15px;
+                
+                p {
+                    position: relative;
+                    display: table-cell;
+                    width: auto;
+                    vertical-align: middle;
+                    text-indent: -17px;
+                    font-size: 15.36px;
+                    padding-left: 1.5rem;
+
+                 
+                }
+
+                a {
+                    //text-decoration: none;
+                    //color: #2e2e38;
+                    color: $refrence-link-color;
+                    font-size: 15.36px;
+
+                    &:hover {
+                        color: #fff;
+                    }
+                }
+            }
+
+            .f_refrenceColumn2 {
+                position: relative;
+                display: table;
+                float: left;
+                width: 70%;
+                height: auto;
+                padding: 5px 10px;
+                border-left: 1px solid $refrence-split-color;
+
+                p {
+                    position: relative;
+                    display: table-cell;
+                    width: auto;
+                    vertical-align: middle;
+
+                    a {
+                        text-decoration: underline;
+                        color: $white;
+                        font-size: 15.36px;
+
+                        &:hover {
+                            color: $refrence-link-color;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+.mainText {
+    margin-left: -10px;
+    color: #fee600;
+    font-weight: bold;
+}
+
+// ------------- Resource style -------------
+.refrenceTrack {
+    @include scrollTrack($scrollbar-track-w, $scrollbar-handle-margin, $popup-scrollbar-trackcolor, $refrences-content-h);
+}
+
+.refrenceHandle {
+    @include scrollHandle($scrollbar-handle-w, 80px, $popup-scrollbar-handlecolor, $scrollbar-handle-margin);
+}

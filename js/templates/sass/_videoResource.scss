@@ -1,0 +1,61 @@
+.cc_content {
+   .left_side {
+      float: left;
+      width: 100%;
+      height: auto;
+
+      @include ipad-landscape {
+         width: 100%;
+      }
+
+      @include ipad-portrait {
+         width: 100%;
+      }
+
+      @include mobile-portrait {
+         width: 100%;
+      }
+
+      @include mobile-landscape {
+         width: 100%;
+      }
+
+      .questionContainer {
+         float: left;
+         width: 100%;
+         height: auto;
+
+         p {
+            float: left;
+            width: calc(100% - 35px);
+         }
+
+         .qNo {
+            float: left;
+            width: 35px;
+            font-weight: bold;
+         }
+      }
+   }
+}
+
+//-------------- youtube video link page start ---------------------
+.videoLinkHolder {
+   width: 100%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin: 5px 0;
+
+   .videoLink {
+      width: 280px;
+      height: 184px;
+      border: 4px solid #ffffff;
+      box-shadow: rgba(0, 0, 0, 0.5) 0 0 20px 0;
+      margin-bottom: 15px;
+      background-image: url("../../../../assets/images/global/video_thumbnail_img.png");
+      background-size: 100% auto;
+      background-color: transparent;
+      cursor: pointer;
+   }
+}

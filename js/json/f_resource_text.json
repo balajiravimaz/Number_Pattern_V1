@@ -1,0 +1,27 @@
+[
+	{
+		"col1": "<a tabindex='-1' href='https://sites.ey.com/sites/DS_Consulting/GRC/Pages/Home.aspx' target='_blank'>Home | Governance, Risk and Compliance (G R C) | Discover (e y.com)</a>",
+			"type":"pdf"
+	},
+	{
+		"col1": "<a tabindex='-1' href='https://sites.ey.com/sites/DS_Consulting/GRC/Pages/Home.aspx' target='_blank'>Risk Academy – Internal Controls – Control Testing Deep Dive – Course Guide</a>",
+			"type":"pdf"
+	},
+	{
+		"col1": "<a tabindex='-1' href='https://www.sap.com/products.html' target='_blank'>https://www.sap.com/products.html</a>",
+			"type":"link"
+		
+	},
+	{
+		"col1": "<a tabindex='-1' href='https://www.oracle.com/' target='_blank'>https://www.oracle.com/</a>",
+			"type":"pdf"
+	},
+	{
+		"col1": "<a tabindex='-1' href='https://www.servicenow.com/' target='_blank'>https://www.servicenow.com/</a>",
+			"type":"link"
+	},
+	{
+		"col1": "<a tabindex='-1' href='https://www.archerirm.com/' target='_blank'>https://www.archerirm.com/</a>",
+			"type":"pdf"
+	}
+]

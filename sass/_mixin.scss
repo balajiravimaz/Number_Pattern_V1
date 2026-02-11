@@ -1,0 +1,223 @@
+@mixin box-shadow($top, $left, $blur, $spread, $color, $inset: false) {
+    @if $inset {
+        box-shadow: inset $top $left $blur $spread $color;
+        -moz-box-shadow: inset $top $left $blur $spread $color;
+        -webkit-box-shadow: inset $top $left $blur $spread $color;
+    }
+
+    @else {
+        box-shadow: $top $left $blur $spread $color;
+        -moz-box-shadow: $top $left $blur $spread $color;
+        -webkit-box-shadow: $top $left $blur $spread $color;
+    }
+}
+
+@mixin font-size($size, $base: 16) {
+    font-size: $size; // fallback for old browsers
+    font-size: ($size / $base) * 1rem;
+}
+
+@mixin gradient($start-color, $end-color, $orientation) {
+    background-color: $start-color;
+
+    @if $orientation=='vertical' {
+        background-image: -moz-linear-gradient(top, $start-color, $end-color);
+        background-image: -webkit-linear-gradient(top, $start-color, $end-color);
+        background-image: linear-gradient(to bottom, $start-color, $end-color);
+    }
+
+    @else if $orientation=='horizontal' {
+        background-image: -moz-linear-gradient(left, $start-color, $end-color);
+        background-image: -webkit-linear-gradient(left, $start-color, $end-color);
+        background-image: linear-gradient(to right, $start-color, $end-color);
+    }
+
+    @else if $orientation=='diagnal-bottom-top' {
+        background-image: -moz-linear-gradient(left top, $start-color, $end-color);
+        background-image: -webkit-linear-gradient(left top, $start-color, $end-color);
+        background-image: linear-gradient(to bottom right, $start-color, $end-color);
+    }
+
+    @else if $orientation=='diagnal-top-bottom' {
+        background-image: -moz-linear-gradient(right bottom, $start-color, $end-color);
+        background-image: -webkit-linear-gradient(right bottom, $start-color, $end-color);
+        background-image: linear-gradient(to top left, $start-color, $end-color);
+    }
+
+    @else {
+        background-color: -moz-linear-gradient(center, $start-color, $end-color);
+        background-color: -webkit-radial-gradient(center, ellipse cover, $start-color, $end-color);
+        background-color: radial-gradient(ellipse at center, $start-color, $end-color);
+    }
+}
+
+@mixin bgImage($url, $size, $repeat) {
+    background-image: url($url);
+    background-size: $size;
+    background-repeat: $repeat;
+}
+
+@mixin FbgImage($url, $repeat) {
+    background-image: url($url);
+    background-repeat: $repeat;
+}
+
+/*scroll*/
+@mixin scrollTrack($_w, $_m, $_c, $_h) {
+    width: $_w;
+    margin: $_m;
+    background-color: rgba(0, 0, 0, 0.2);
+    height: $_h;
+    top: 0;
+}
+
+@mixin scrollHandle($_w, $_h, $_c, $_m) {
+    width: $_w;
+    height: $_h;
+    background-color: $primary-color;
+    margin: $_m;
+    border-radius: 0;
+}
+
+/*
+  ##Device = Desktops
+  ##Screen = 1281px to higher resolution desktops
+*/
+// @mixin desktop-big {
+//     @media (min-width: 1281px) {
+//         @content;
+//     }
+// }
+
+@mixin desktop-big {
+    @media (min-width: 1440px) {
+        @content;
+    }
+}
+
+/*
+  ##Device = Laptops, Desktops
+  ##Screen = B/w 1025px to 1280px
+*/
+@mixin desktop {
+    @media (min-width: 1025px) and (max-width: 1200px) {
+        @content;
+    }
+}
+
+/*
+  ##Device = Tablets, Ipads (portrait)
+  ##Screen = B/w 768px to 1024px
+*/
+@mixin ipad-portrait {
+    @media (min-width: 320px) and (max-width: 1024px) and (orientation: portrait) {
+        @content;
+    }
+}
+
+/*
+  ##Device = Tablets, Ipads (landscape)
+  ##Screen = B/w 768px to 1024px
+*/
+@mixin ipad-landscape {
+    @media (orientation: landscape) and (min-width: 768px) {
+        @content;
+    }
+}
+
+@mixin tablet-landscape-height{
+  @media screen and (orientation: landscape) and (min-width: 951px) and (max-height: 550px){
+    @content;
+  }
+}
+/*
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+
+@mixin mobile-landscape {
+    @media (min-width: 320px) and (max-width: 950px) and (orientation: landscape) {
+        @content;
+    }
+}
+
+@mixin mobile-landscape-big {
+    @media (min-width: 737px) and (max-width: 1024px) and (orientation: landscape) {
+        @content;
+    }
+}
+
+/*
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+@mixin mobile-portrait {
+    @media (min-width: 320px) and (max-width: 480px) and (orientation: portrait) {
+        @content;
+    }
+}
+
+
+
+/* Add Breakpoint between specified device-widths.
+/// @param {String} $point
+/// @param {Number} $bp-mobile-width [640px]
+/// @param {Number} $bp-tablet-width [1024px]
+
+/// @example
+///   .selector {
+///     @include x-breakpoints(mobile,  320px) { width: 100%; }
+///   }
+*/
+@mixin x-breakpoints($point, $bp-mobile-width: 640px, $bp-tablet-width: 1024px) {
+    $bp-mobile: '(max-width: #{$bp-mobile-width})';
+    $bp-tablet: '(min-width: #{$bp-mobile-width}) and (max-width: #{$bp-tablet-width})';
+    $bp-desktop: '(min-width: #{$bp-tablet-width})';
+
+    @if $point==mobile {
+        @media #{$bp-mobile} {
+            @content;
+        }
+    }
+
+    @else if $point==tablet {
+        @media #{$bp-tablet} {
+            @content;
+        }
+    }
+
+    @else if $point==desktop {
+        @media #{$bp-desktop} {
+            @content;
+        }
+    }
+
+    @else {
+        @warn "You are requesting an invalid breakpoint: `#{$point}`.";
+    }
+}
+
+/* Generates `calc` function which allows mathematical expressions for a given property.
+/// @example
+///  .selector {
+///    @include x-calc(width, "600px - 2em");
+///  }
+*/
+@mixin x-calc ($property, $expression) {
+    #{$property}: -webkit-calc(#{$expression});
+    #{$property}: calc(#{$expression});
+}
+
+/*
+----------------- Linear Gradient -----------------
+@include x-linear-gradient('to bottom', #ccc, #ddd, #bbb);
+*/
+@mixin x-linear-gradient ($direction: 'to bottom', $fallback: #ccc, $from: #ccc, $to: #aaa) {
+    $directions: helper-gradient-angle($direction);
+    // Provide a fallback-color
+    background-color: $fallback;
+    // Cross-browser linear-gradients
+    background-image: -webkit-gradient(linear, unquote(nth($directions, 2)), from($from), to($to)); // Android 2.1-3.0
+    background-image: -webkit-linear-gradient(unquote(nth($directions, 1)), $from, $to);
+    background-image: linear-gradient(unquote($direction), $from, $to);
+}

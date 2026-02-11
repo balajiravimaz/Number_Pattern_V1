@@ -1,0 +1,705 @@
+//---- glossary -----
+$glossary-content-bgcolor: $popup-bg-color;
+$glossary-text-color: rgba(255, 255, 255, 1);
+$glossary-alphabet-normal: $primary-color;
+$glossary-alphabet-active: $secondary-color;
+$glossary-alphabet-deactive: rgba(107, 107, 107, 1);
+$glossary-alphabet-normalborder: rgba(20, 105, 161, 1);
+$glossary-alphabet-activeborder: rgba(34, 69, 95, 1);
+$glossary-alphabet-deactiveborder: rgba(107, 107, 107, 1);
+$glossary-alphabet-normaltext: rgba(255, 255, 255, 1);
+$glossary-alphabet-activetext: rgba(255, 255, 255, 1);
+$glossary-alphabet-deactivetext: rgba(136, 136, 136, 1);
+$glossary-keyword-normal: rgba(3, 34, 56, 1);
+$glossary-keyword-active: $secondary-color;
+$glossary-keyword-deactive: rgba(107, 107, 107, 1);
+$glossary-keyword-normalborder: rgba(20, 105, 161, 1);
+$glossary-keyword-activeborder: rgba(34, 69, 95, 1);
+$glossary-keyword-deactiveborder: rgba(107, 107, 107, 1);
+$glossary-keyword-normaltext: rgba(255, 255, 255, 1);
+$glossary-keyword-activetext: rgba(255, 255, 255, 1);
+$glossary-keyword-deactivetext: rgba(136, 136, 136, 1);
+$glossary-definition-bgcolor: #c4c4cc;
+//----- glossary style -----
+$glossary-box-w: 1000px;
+$glossary-box-h: 450px;
+$glossary-bgcolor: rgba(46, 46, 56, 0.5);
+$glossary-header-w: 100%;
+$glossary-header-h: 40px;
+$glossary-closebtn-w: $glossary-header-h;
+$glossary-closebtn-h: $glossary-header-h;
+$glossary-content-w: 100%;
+$glossary-content-h: $glossary-box-h - $glossary-header-h;
+$glossary-col-1-width: 40px;
+$glossary-col-1-height: $glossary-content-h;
+$glossary-col-1-bgcolor: $glossary-alphabet-normal;
+$glossary-col-2-width: 220px;
+$glossary-col-2-height: $glossary-content-h;
+$glossary-col-3-width: $glossary-box-w - ($glossary-col-1-width + $glossary-col-2-width);
+$glossary-col-3-height: $glossary-content-h;
+// ------- glossary container -------
+/* @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    #f_glossaryPopup{
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  } */
+#f_glossaryPopup {
+    position: absolute;
+    z-index: 9950;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+
+    //background-color: $popup-overlay-color;
+    @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+        #f_glossaryContainer {
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+    & > #f_glossaryContainer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        display: none;
+        padding: 20px 20px;
+        width: $glossary-box-w;
+        height: $glossary-box-h;
+        margin-top: -1 * $glossary-box-h / 2;
+        margin-left: -1 * $glossary-box-w / 2;
+        //background-color: $glossary-bgcolor;
+        overflow: hidden;
+
+        &::before {
+            content: "";
+            position: absolute;
+            width: 5px;
+            height: 100%;
+            left: 0px;
+            top: 0px;
+            display: block;
+        }
+        #glossaryIndicator {
+            position: absolute;
+            bottom: 5px;
+            width: 90%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            #glossaryPrev {
+                position: relative;
+                background-image: url(../assets/images/ui/m_next.png);
+                background-repeat: no-repeat;
+                background-size: cover;
+                width: 20px;
+                height: 20px;
+                transform: scaleX(-1);
+                margin-right: 15px;
+                background-color: transparent;
+                cursor: pointer;
+                &:hover:enabled {
+                    background-image: url(../assets/images/ui/m_next_hover.png);
+                }
+                &:disabled {
+                    background-image: url(../assets/images/ui/m_next.png);
+                    opacity: 0.5;
+                    pointer-events: none;
+                }
+                // &:disabled:hover {
+                //     pointer-events: none;
+                //     cursor: default;
+                //     background-color: inherit;
+                //     border-color: inherit;
+                //     color: inherit;
+                // }
+            }
+            #glossaryNext {
+                position: relative;
+                background-image: url(../assets/images/ui/m_next.png);
+                background-repeat: no-repeat;
+                background-size: cover;
+                width: 20px;
+                height: 20px;
+                background-color: transparent;
+                cursor: pointer;
+                &:hover:enabled {
+                    pointer-events: auto;
+                    background-image: url(../assets/images/ui/m_next_hover.png);
+                }
+                &:disabled {
+                    pointer-events: none;
+                    opacity: 0.5;
+                }
+                // &:disabled:hover {
+                //     pointer-events: none;
+                //     cursor: default;
+                //     background-color: inherit;
+                //     border-color: inherit;
+                //     color: inherit;
+                // }
+            }
+        }
+        & > #f_glossaryHeader {
+            position: relative;
+            display: flex;
+            width: $glossary-header-w;
+            height: $glossary-header-h;
+            flex-direction: row;
+            justify-content: normal;
+            align-items: center;
+            margin-bottom: 15px;
+            & > #f_glossaryTitle {
+                font-family: "EYInterstatebold";
+                font-size: $popup-title-text-size;
+                //line-height: $glossary-header-h;
+                line-height: 35px;
+                float: left;
+                width: auto;
+                height: auto;
+                // margin-left: 10px;
+                color: $popup-title-text-color;
+
+                @extend .displayTableCell;
+                //margin-bottom: 15px;
+                   &:after {
+                    content: "";
+                    position: absolute;
+                    left: 0px;
+                    height: 2px;
+                    width: 45px;
+                    background-color: #ffe600;
+                    display: block;
+                    margin-top: -7px;
+                }
+            }
+        }
+        & > #f_glossaryFooter {
+            position: absolute;
+            display: block;
+            width: 40px;
+            height: 40px;
+            top: 0px;
+            right: 0px;
+            & > #f_glossaryClose {
+                font-family: "LineAwesome";
+                font-size: 24px;
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 40px;
+                height: 40px;
+                cursor: pointer;
+                color: #fff;
+                //border-left: 1px solid #ffe600;
+                background-color: transparent;
+                transition:
+                    transform 0.25s,
+                    opacity 0.25s;
+                &:hover {
+                    color: #fee600;
+                    transform: rotate(90deg);
+                }
+            }
+        }
+        & > #f_glossaryContent {
+            position: relative;
+            // width: 80%;
+            height: calc(100% - 80px);
+            display: flex;
+            align-items: flex-start;
+            margin: 0px auto;
+            color: #fff;
+            flex-direction: column;
+
+            /*  */
+            #glossarybtns {
+                .wrap {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    gap: 10px;
+                    margin-top: 20px;
+                    margin-bottom: 20px;
+
+                    .btn {
+                        display: inline-block;
+                        background: #2e2e38;
+                        color: #fee600;
+                        padding: 10px;
+                        box-shadow: 1px 2px 5px 2px rgba(0, 0, 0, 0.3);
+                        border: 1px solid transparent;
+                        cursor: pointer;
+                        width: 100px;
+                        position: relative;
+
+                        &.active {
+                            background: #fee600;
+                            color: #2e2e38;
+                        }
+
+                        &:hover {
+                            border: 1px solid #fee600;
+                        }
+                    }
+                }
+            }
+
+            #glossaryPopup {
+                & > table {
+                    border-collapse: collapse;
+                    margin: 0px auto;
+                    //  background-color: gray;
+                    // width: 100%;
+                    // margin-left: 12px;
+
+                    & > thead {
+                        display: block;
+                        background-color: rgba(46, 46, 56, 0.5);
+                        //background-color: gray;
+
+                        & > tr {
+                            & > th {
+                                text-align: left;
+                                padding: 12px;
+                                font-size: 14px;
+                                color: #fff;
+                                font-weight: 700;
+                                // border: 0.5px solid #d0d0d0;
+                                // border-bottom: 0;
+
+                                &:nth-of-type(1) {
+                                    width: 196px;
+                                    display: block;
+                                    border-right: 0;
+                                }
+
+                                &:nth-of-type(2) {
+                                    width: 1098px;
+                                    // border-left: 1px solid #d0d0d0;
+                                }
+                            }
+
+                            & > th[scope="row"] {
+                                z-index: 1;
+                            }
+                        }
+                    }
+
+                    tbody {
+                        position: relative;
+                        display: block;
+                        width: 100%;
+                        height: 300px;
+                        // background-color: gray;
+                        overflow-y: auto;
+
+                        @include mobile-landscape {
+                            height: 230px;
+                            overflow-y: auto;
+                        }
+
+                        tr {
+                            td {
+                                padding: 10px;
+                                // border: 1px solid #d0d0d0;
+                                text-align: left;
+                                font-size: 14px;
+                                color: #fff;
+                                width: 920px;
+                                line-height: 20px;
+                                border-top: 0;
+                                border-bottom: 1px solid #2e2e38;
+                                & > ul {
+                                    list-style-type: none;
+                                    margin-bottom: 12px;
+
+                                    & > li {
+                                        position: relative;
+                                        line-height: 24px;
+                                        margin-left: 20px;
+                                        font-size: 15.36px;
+                                        line-height: 19px;
+                                        margin-top: 12px;
+                                        margin-bottom: 12px;
+
+                                        &:before {
+                                            content: "\A";
+                                            position: absolute;
+                                            border-top: 5px solid transparent;
+                                            left: -18px;
+                                            top: 6px;
+                                            border-bottom: 5px solid transparent;
+                                            border-left: 10px solid #2e2e38;
+                                        }
+
+                                        & > ul {
+                                            list-style-type: none;
+                                            margin-bottom: 12px;
+
+                                            & > li {
+                                                position: relative;
+                                                line-height: 19px;
+                                                margin-left: 20px;
+                                                font-size: 15.36px;
+                                                line-height: 19px;
+                                                margin-top: 12px;
+                                                margin-bottom: 12px;
+
+                                                &:before {
+                                                    content: "\A";
+                                                    position: absolute;
+                                                    border-top: 5px solid transparent;
+                                                    left: -18px;
+                                                    top: 6px;
+                                                    border-bottom: 5px solid transparent;
+                                                    border-left: 10px solid #2e2e38;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                &:nth-of-type(1) {
+                                    width: 254px;
+                                }
+                            }
+                        }
+
+                        th {
+                            // background: #3498db;
+                            color: #2e2e38;
+                            font-weight: bold;
+                            text-align: left;
+                        }
+                    }
+                    .mCS-dark.mCSB_scrollTools .mCSB_draggerRail {
+                        background-color: #2e2e38;
+                    }
+                }
+
+                #table-1 {
+                    tbody {
+                        tr {
+                            td {
+                                &:nth-of-type(1) {
+                                    width: 280px;
+                                    border-right: 0;
+                                }
+
+                                &:nth-of-type(2) {
+                                    width: 1098px;
+                                    // border-left: 1px solid #d0d0d0;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                h1 {
+                    font-size: 1.5rem;
+                    margin-bottom: 15px;
+                }
+
+                p {
+                    font-size: 15.36px;
+                }
+            }
+
+            & > .menu-list {
+                position: relative;
+                display: block;
+                margin-left: 50px;
+
+                & > .f_pageBtn {
+                    text-align: left;
+                    width: 100%;
+                    height: 40px;
+                    color: #fff;
+                    font-size: 15.36px;
+                    background-color: transparent;
+                    pointer-events: auto;
+
+                    &.active {
+                        color: #ffe600;
+                    }
+
+                    &.viewed {
+                        color: #fff;
+                    }
+
+                    &.visited {
+                        color: #fff;
+                    }
+
+                    &.deactive {
+                        color: #fff;
+                        opacity: 0.5;
+                        cursor: default;
+                        pointer-events: none;
+                    }
+                }
+            }
+        }
+    }
+    /*#f_glossaryContainer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        display: none;
+        width: $glossary-box-w;
+        height: $glossary-box-h;
+        margin-top: -1 * $glossary-box-h / 2;
+        margin-left: -1 * $glossary-box-w / 2;
+        background-color: $glossary-bgcolor;
+        @include mobile-portrait {
+            width: 90%;
+            height: 400px;
+            margin-top: -200px;
+            margin-left: -45%;
+        }
+        #f_glossaryHeader {
+            position: relative;
+            float: left;
+            width: $glossary-header-w;
+            height: $glossary-header-h;
+            margin: 0;
+            cursor: pointer;
+            border-bottom: 1px solid $popup-close-btn-bg;
+            background-color: $popup-title-bg-color;
+            #f_glossaryTitle {
+                font-family: 'EYInterstateLight',sans-serif;
+                font-size: $popup-title-text-size;
+				font-weight: bold;
+                line-height: $glossary-header-h;
+                float: left;
+                width: auto;
+                height: auto;
+                margin-left: 10px;
+                cursor: pointer;
+                color: $popup-title-text-color;
+                @extend .displayTableCell;
+            }
+            #f_glossaryClose {
+                font-family: $icon-font;
+                font-size: 24px;
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: $glossary-closebtn-w;
+                height: $glossary-closebtn-h;
+                cursor: pointer;
+                color: #fff;
+                border-left: 1px solid $popup-close-btn-bg;
+                background-color: $popup-close-btn-bg;
+            }
+        }
+        #f_glossaryContent {
+            position: relative;
+            overflow: hidden;
+            width: $glossary-content-w;
+            height: $glossary-content-h;
+            #f_glossaryCol1 {
+                float: left;
+                width: $glossary-col-1-width;
+                height: $glossary-col-1-height;
+                margin: 0;
+                @include mobile-portrait {
+                    width: 100%;
+                }
+                ul {
+                    clear: both;
+                    list-style: none;
+                    li {
+                        float: left;
+                        width: $glossary-col-1-width;
+                        height: $glossary-col-1-width;
+                        color: #737373;
+                        background-color: #333;
+                        margin-bottom: 0px !important;
+                        button {
+                            font-family: 'EYInterstateLight',sans-serif;
+                            font-size: 20px;
+                            position: relative;
+                            width: 100%;
+                            height: 100%;
+                            color: #888;
+                            border: none;
+                            //border-bottom: 1px solid $glossary-alphabet-normalborder;
+                            background-color: #6b6b6b;
+                        }
+                        .glossaryEnabled {
+                            cursor: pointer;
+                            color: #fff;
+                            //border-bottom: 1px solid #18557a;
+                            background-color: #51515B;
+                        }
+                        .selected {
+							color: #2e2e38;
+                            background-color: $secondary-color;
+                        }
+                    }
+                }
+            }
+            #f_glossaryCol2 {
+                position: relative;
+                float: left;
+                overflow: hidden;
+                width: $glossary-col-2-width;
+                height: $glossary-col-2-height;
+                margin: 0;
+				background-color: $glossary-definition-bgcolor;
+                @include mobile-portrait {
+                    width: 100%;
+                }
+                ul {
+                    clear: both;
+                    list-style: none;
+                    li {
+                        float: left;
+                        clear: both;
+                        width: $glossary-col-2-width;
+                        height: 39px;
+                        color: #737373;
+                        //border-bottom: 1px solid #22455f;
+                        margin-bottom: 0px !important;
+                        button {
+                            font-family: 'EYInterstateLight',sans-serif;
+                            font-size: 14px;
+                            position: relative;
+                            overflow: hidden;
+                            width: 100%;
+                            height: 100%;
+                            padding: 0 20px;
+                            text-align: left;
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                            color: #2e2e38;
+                            border: none;
+							background-color: $glossary-definition-bgcolor;
+                            //background-color: $glossary-keyword-normal;
+                        }
+                        .selected {
+                            color: #2e2e38;
+							font-weight: bold;
+                            //background-color: #2a7fb9;
+                        }
+                    }
+                }
+            }
+            @include mobile-portrait {
+                width: 100%;
+            }
+            #f_glossaryCol3 {
+                font-family: 'EYInterstateLight',sans-serif;
+                position: relative;
+                float: left;
+                overflow: hidden;
+                width: $glossary-col-3-width;
+                height: $glossary-col-3-height;
+                color: #fff;
+                //background-color: $glossary-definition-bgcolor;
+                #f_g_heading {
+                    float: left;
+                    clear: both;
+                    width: auto;
+                    height: auto;
+                    padding: 10px;
+                    p {
+                        font-size: 20px;
+						color: $popup-title-text-color;
+                    }
+                }
+                #f_g_description {
+                    float: left;
+                    clear: both;
+                    width: auto;
+                    height: auto;
+                    margin-bottom: 10px;
+                    padding: 0 10px;
+                    p {
+                        font-size: 14px;
+                        line-height: 18px;
+                        text-align: left;
+                    }
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+        }
+    }*/
+}
+
+// ------------- Glossary style -------------
+.glossaryTrack {
+    @include scrollTrack($scrollbar-track-w, $scrollbar-track-margin, $popup-scrollbar-trackcolor, $glossary-content-h);
+}
+
+.glossaryHandle {
+    @include scrollHandle($scrollbar-handle-w, 80px, $popup-scrollbar-handlecolor, $scrollbar-handle-margin);
+}
+
+.glossaryPage {
+    display: none;
+}
+
+.glossaryPage.active {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.glossaryColumn {
+    flex: 1 1 45%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.glossaryItem {
+    display: flex;
+    //   flex-direction: column;
+    // gap: 10px;
+}
+
+.glossaryTerm {
+    //   font-weight: bold;
+    text-align: left;
+}
+
+.glossaryDefinition {
+    color: #fff;
+    text-align: left;
+    font-size: 14px;
+    font-family: "EYInterstateLight";
+    margin-bottom: 15px;
+}
+
+.glossaryNoteRow {
+    text-align: center;
+    background: #747480;
+    color: #fff;
+    padding: 10px;
+}
+.glossaryColumn {
+    &:first-child {
+        border-right: 0.1px solid #747480;
+        padding-right: 15px;
+
+        /*   &:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: -28px;
+            width: 1px;
+            height: 100%;
+            background: #fff;
+        } */
+    }
+}

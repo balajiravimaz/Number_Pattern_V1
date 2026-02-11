@@ -1,0 +1,356 @@
+@import "../../templates/sass/page_global";
+$popup-container-bg-color: rgba(255, 255, 255, 0.8);
+$popup-holder-bg-color: rgba(255, 255, 255, 1);
+$popup-border-color: rgba(0, 0, 0, 1);
+$popup-border-size: 4px;
+$popup-bg-img: url("../../../../assets/images/global/popup_bg.png");
+$popup-close-img: url("../../../../assets/images/global/popup_close.png");
+
+
+.popup_container {
+     position: absolute;
+     width: 100%;
+     height: 100%;
+     background-color: $popup-container-bg-color;
+     left: 0;
+     top: 0;
+     display: none;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     opacity: 0;
+     overflow: hidden;
+     overflow-y: auto;
+     z-index: 100;
+
+     .popup_holder {
+          position: relative;
+          background-color: $popup-holder-bg-color;
+          background-image: $popup-bg-img;
+          background-size: cover;
+          box-shadow: rgba(0, 0, 0, 0.25) 0 0 15px 0;
+          border: $popup-border-size solid $popup-border-color;
+          // overflow: hidden;
+          // overflow-y: auto;
+
+          width: auto;
+          height: auto;
+
+          min-width: 20%;
+          max-width: 60%;
+
+          min-height: 10%;
+          // max-height: 90%;
+
+          z-index: 100;
+
+          &.test {
+               max-height: unset;
+               float: left;
+               margin-left: 20%;
+
+               @include mobile-landscape {
+                    margin-left: 20%;
+               }
+
+               @include mobile-portrait {
+                    margin-left: 10%;
+               }
+          }
+
+          @include mobile-portrait {
+               // position: absolute;
+               max-width: 90%;
+               // top: 100px;
+          }
+
+          @include mobile-landscape {
+               // position: absolute;
+               max-width: 80%;
+               // top: 20px;
+          }
+
+          @include ipad-portrait {
+               max-width: 80%;
+          }
+
+          @include ipad-landscape {
+               max-width: 80%;
+          }
+
+
+          .popup_close {
+               position: absolute;
+               width: 22px;
+               height: 22px;
+               right: 10px;
+               top: 10px;
+               background-image: $popup-close-img;
+               background-color: transparent;
+               cursor: pointer;
+          }
+
+          .popup_header {
+               float: left;
+               width: auto;
+               height: auto;
+               max-width: 100%;
+               margin: 0;
+               padding: 20px 40px 0 20px;
+               clear: both;
+
+               .popup_title {
+                    float: left;
+                    width: auto;
+
+                    p {
+                         float: left;
+                         margin-bottom: 0;
+                         font-size: 17px;
+                         font-weight: bold;
+                    }
+               }
+          }
+
+          .scrollbar_outer {
+               float: left;
+               width: calc(100% - 40px);
+               height: auto;
+               margin: 20px 0;
+               padding: 0 20px;
+               clear: both;
+
+               @include ipad-portrait {}
+
+               @include ipad-landscape {}
+
+               @include mobile-portrait {}
+
+               @include mobile-landscape {}
+
+               .popup_section {
+                    float: left;
+                    width: 100%;
+                    height: auto;
+
+                    p {
+                         &:last-child {
+                              margin-bottom: 0;
+                         }
+                    }
+
+                    ul,
+                    ol {
+                         &:last-child {
+                              margin-bottom: 0;
+                         }
+
+                         li {
+                              &:last-child {
+                                   margin-bottom: 0;
+                              }
+                         }
+                    }
+
+                    img {
+                         max-width: 90%;
+                    }
+               }
+          }
+     }
+
+     .zoom_holder {
+          background-image: unset;
+
+          .scrollbar_outer {
+               max-width: 100%;
+               margin: 0;
+               padding: 0;
+          }
+     }
+
+
+     &.big_holder {
+          height: auto;
+     }
+}
+
+
+//------------- zoom ----------
+.zoom_container {
+     position: absolute;
+     width: 100%;
+     height: 100%;
+     background-color: $popup-container-bg-color;
+     left: 0;
+     top: 0;
+     display: none;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     opacity: 0;
+     overflow: hidden;
+     overflow-y: auto;
+     z-index: 100;
+
+     .mCustomScrollBox {
+          height: auto !important;
+     }
+
+     .zoom_holder {
+          position: relative;
+          float: left;
+          background-color: #fff;
+          box-shadow: rgba(0, 0, 0, 0.25) 0 0 15px 0;
+          border: $popup-border-size solid $popup-border-color;
+          // overflow: hidden;
+          // overflow-y: auto;
+
+          width: auto;
+          height: auto;
+          min-width: 20%;
+          max-width: 90%;
+          // min-height: 10%;
+          z-index: 100;
+
+          &.test {
+               max-height: unset;
+               float: left;
+               margin-left: 20%;
+
+               @include mobile-landscape {
+                    margin-left: 20%;
+               }
+
+               @include mobile-portrait {
+                    margin-left: 10%;
+               }
+          }
+
+          @include mobile-portrait {
+               // position: absolute;
+               max-width: 90%;
+               margin-left: 0%;
+               // top: 100px;
+          }
+
+          @include mobile-landscape {
+               // position: absolute;
+               max-width: 90%;
+               margin-left: 0%;
+               // top: 20px;
+          }
+
+          @include ipad-portrait {
+               max-width: 90%;
+               margin-left: 0%;
+          }
+
+          @include ipad-landscape {
+               max-width: 90%;
+               margin-left: 0%;
+          }
+
+          .scrollbar_outer {
+               float: left;
+               width: auto;
+               height: auto;
+               margin: 20px;
+               // max-width: calc(100% - 20px);
+               clear: both;
+
+               @include ipad-portrait {}
+
+               @include ipad-landscape {}
+
+               @include mobile-portrait {
+                    margin: 10px 0;
+                    padding: 0px 10px;
+               }
+
+               @include mobile-landscape {
+                    margin: 10px 0;
+                    padding: 0px 10px;
+               }
+
+               .zoom_section {
+                    float: left;
+                    width: max-content;
+                    height: auto;
+
+                    p {
+                         &:last-child {
+                              margin-bottom: 0;
+                         }
+                    }
+
+                    img {
+                         width: auto;
+                         height: auto;
+                    }
+
+                    @include ipad-portrait {
+                         width: 100%;
+
+                         img {
+                              width: 100%;
+                         }
+                    }
+
+                    @include mobile-portrait {
+                         width: 100%;
+
+                         img {
+                              width: 100%;
+                         }
+                    }
+
+                    @include mobile-landscape {
+                         width: 100%;
+
+                         img {
+                              width: 100%;
+                         }
+                    }
+
+               }
+          }
+     }
+}
+
+
+
+.zoom_btn_holder {
+     float: left;
+     position: relative;
+     width: auto;
+     height: auto;
+     // cursor: pointer;
+
+     .zoomIcon {
+          position: absolute;
+          width: 28px;
+          height: 28px;
+          right: 0px;
+          bottom: 0px;
+
+          @include mobile-portrait {
+               display: none;
+          }
+     }
+
+     .zoomBtn {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          left: 0;
+          top: 0;
+          background-color: rgba(0, 0, 0, 0);
+          border: none;
+          cursor: pointer;
+
+          @include mobile-portrait {
+               display: none;
+          }
+     }
+}

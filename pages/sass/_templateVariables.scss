@@ -1,0 +1,132 @@
+/*********Globle variables*******/
+$black:#000;
+$white:#FFF;
+$ey-black:#2e2e38;
+$ey-gray:#747480;
+$ey-yellow:#ffe600;
+$ey-light-gray:#C4C4CD;
+$ey-red: #ff4136;
+$ey-secondary-blue:#1777cf;
+$link-hover-color:$ey-secondary-blue;
+$primary-title-text-color: $white;
+$bgn-popup-bg:#1a1a1a;
+$secondary-title-text-color: $ey-yellow;
+$primary-color: #333;
+$background-patch-color: rgba(0, 0, 0, 0.5);
+$background-patch-border-color: $ey-yellow;
+$secondary-font-color:$ey-black;
+$feedback-bg-color:#6AADE4;
+$secondary-text-color:#6AADE4;
+$primary-bg-color: #42424C;
+$globle-font-size:1rem;
+$bias-font-size:1.2rem;
+$globlal-title-text-color: #fff;
+$page-font-size:1rem;
+$devider-page-font-size: 60px;
+$global-title-color: #fff;
+$page-title-font-size:1.2rem;
+$page-sub-title-font-size:1rem;
+$page-mobile-title-font-size:1.2rem;
+$global-box-shadow: transparent;
+$content-holder-bg-color:transparent;
+$global-popup-bgcolor:$ey-black;
+$global-list-number-bg-color:rgba(0, 0, 0, 0.2);
+$global-list-number-color:$ey-yellow;
+$global-bullet-list-bg-color:$ey-yellow;
+$page-text-color:$white;
+$feedback-bg-color:$ey-black;
+$buttonlink-hover-color:$ey-gray;
+$inline-text-color:#ffe600;
+//$global-body-bg-color:rgba(162, 162, 173, 0.4);
+$global-body-bg-color:$ey-black;
+/*Globle variables End*/
+/*Start MAMC SAMC Option color and feedback color*/
+
+$option-bg-color:#000;
+$option-border-color:#ffe600;
+$feedback-bg-color:#2e2e38;
+$btn-bg-color-primary: #2e2e2e;
+$btn-border-normal: #bc2f00;
+$btn-border-visited: #eb4f00;
+
+/*End MAMC SAMC Option color and feedback color*/
+
+/*buttons styles*/
+
+//$button-normal-state: #6AADE4;
+$button-normal-state-color:$ey-gray;
+$button-select-state-color: $ey-yellow;
+$button-hover-state-color:$ey-yellow;;
+$button-normal-color:$white;
+$button-bg-color:transparent;
+
+$button-text-normal-state-color: $white;
+$button-text-select-state-color: $ey-black;
+$button-text-hover-state-color: $ey-black;
+
+
+$button-text-visited-state-color: $white;
+
+
+$button-hover-state-color:$ey-yellow;
+
+$button-visited-state-color:$ey-yellow;
+/*buttons styles End */
+$submit-button-normal-state-bg-color:#ffe600;
+$submit-button-select-state-bg-color:#2e2e38;
+$submit-button-hover-state-bg-color:rgba(0, 0, 0, 0.75);
+$submit-button-normal-state-color:#2e2e38;
+$submit-button-hover-state-color:#fff;
+/* instrution text Styles*/
+
+$instruction-text-color: $ey-yellow;
+
+/* instrution text Styles End*/
+
+
+
+$close-button-normal:#fff;
+$close-button-hover:$ey-yellow;
+/*KC MAMC - SAMC*/
+$kc-feedback-bgcolor:$ey-black;
+$kc-feedback-bgcolorshadow:inset 0px 0px 3px 1px #474d58;
+$option-color: rgba(255, 181, 46, 1);
+$optionSelectedColor: #ffe600;
+$option-over-color: rgba(255, 255, 255, 0.1);
+$optiontype-bg-color:#74747f;
+
+/*KC MAMC - SAMC End*/
+
+
+
+
+/*Assesment*/
+$question-text-color:$white;
+$background-patch-color: #2e2e38;
+$section-patch-color: #6AADE4;
+$mcq-option-color: rgba(255, 255, 255, 0.2);
+$mcq-option-border :rgba(255, 255, 255, 0.1);
+$button-active-color: #fff;
+$button-inactive-color: #ccc;
+$button-secondary-active-color: #ffe600;
+$resultpage-bg-color: rgba(46, 46, 56, 0.59);		
+$correct: #3B7A57;
+$partially-correct: #FF7E00;
+$incorrect: #ff0000;
+$text-select-state: #ffe600;
+$submit-button-bg-color: #2e2e38;
+/*Assesment End*/
+    /*theme 3 boxtheme*/
+/*$dark-bgcolor-theme-blue:linear-gradient(90deg, rgba(48,104,142,1) 0%, rgba(147,190,224,1) 35%, rgba(147,190,224,1) 100%);
+$dark-bg-round-image:  radial-gradient(rgba(196, 196, 205, 0.24), rgba(176, 196, 222, 0) 50px), radial-gradient(rgba(196, 196, 205, 0.24), #2e2e38 200px);*/
+    /*theme 3 boxtheme*/
+/*$bg-size: 250px 250px;
+$bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
+
+$dark-bgcolor-theme-blue:none;
+$dark-bg-round-image: none;
+    /*theme 3 boxtheme*/
+$bg-size: inherit;
+$bg-position: inherit;
+$page-bg-color-theme:$dark-bg-round-image;
+

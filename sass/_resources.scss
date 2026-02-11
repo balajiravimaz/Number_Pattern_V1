@@ -1,0 +1,254 @@
+$resources-box-w: 1000px;
+$resources-box-h: 425px;
+$resources-bgcolor: #747480;
+$resources-header-w: 100%;
+$resources-header-h: 40px;
+$resources-closebtn-w: $resources-header-h;
+$resources-closebtn-h: $resources-header-h;
+$resources-content-w: 100%;
+$resources-content-h: $resources-box-h - $resources-header-h;
+$resources-content-bgcolor: #c4c4cd;
+//---- resources ----
+$resource-bgcolor: #747480;
+$resource-bordercolor: rgba(42, 50, 61, 1);
+$resource-link-color: #ffe600;
+$resource-definition-color: rgba(255, 255, 255, 1);
+$resource-split-color: rgba(255, 255, 255, 0.2);
+$resources-text-color: rgba(255, 255, 255, 1);
+
+// ------- resource container -------
+/* @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    #f_resourcePopup {
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+} */
+
+#f_resourcePopup {
+    position: absolute;
+    z-index: 10801;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 100% !important;
+    height: 100%;
+
+        @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+        #f_resourceContainer {
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+    #f_resourceContainer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        display: none;
+        width: $resources-box-w;
+        height: $resources-box-h;
+        margin-top: -1 * $resources-box-h / 2;
+        margin-left: -1 * $resources-box-w / 2;
+        //background-color: $resources-bgcolor;
+        background-position: center;
+
+        #f_resourceHeader {
+            position: relative;
+            float: left;
+            width: 100%;
+            //height: $menu-header-h - 1;
+            height: 40px;
+            margin: 0;
+            background-color: transparent;
+            margin-bottom: 10px;
+
+            #f_resourceTitle {
+                font-family: "EYInterstatebold";
+                font-size: 16px;
+                line-height: 50px;
+                float: left;
+                width: auto;
+                height: auto;
+                margin-left: 50px;
+                color: #fff;
+                @extend .displayTableCell;
+                   &:after {
+                    content: "";
+                    position: absolute;
+                    left: 0px;
+                    height: 2px;
+                    width: 45px;
+                    background-color: #ffe600;
+                    display: block;
+                    margin-top: -7px;
+                }
+            }
+        }
+
+        .ost-txt {
+            color: #fff;
+            font-size: 15.36px;
+            margin-left: 10px;
+            position: relative;
+            display: block;
+        }
+
+        & > #f_resourceFooter {
+            position: absolute;
+            display: block;
+            width: 40px;
+            height: 40px;
+            top: 0px;
+            right: 0px;
+
+            & > #f_resourceClose {
+                font-family: "LineAwesome";
+                font-size: 24px;
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 40px;
+                height: 40px;
+                cursor: pointer;
+                color: #fff;
+                background-color: transparent;
+
+                transition:
+                    transform 0.25s,
+                    opacity 0.25s;
+                &:hover {
+                    color: #fee600;
+                    transform: rotate(90deg);
+                }
+            }
+        }
+    }
+
+    #f_resourceContent {
+        position: relative;
+        width: calc(100% - 70px);
+        height: calc(100% - 75px);
+        display: block;
+        margin: 0px auto;
+        color: #fff;
+        overflow: hidden !important;
+
+        .f_resourceRow {
+            font-family: "EYInterstateLight", sans-serif;
+            font-size: 1.2rem;
+            line-height: 20px;
+            float: left;
+            height: auto;
+            text-align: left;
+            color: #fff;
+            // border-bottom: 1px solid #d0d0d0;
+            width: calc(100% - 10px);
+            margin-left: 0px;
+            font-size: 15.36px;
+            padding: 0px 0;
+
+            &:first-child {
+                border: none;
+            }
+
+            .f_resourceColumn1 {
+                position: relative;
+                display: flex;
+                float: left;
+                width: 100%;
+                height: 45px;
+                padding: 10px 15px;
+                display: flex;
+                justify-content: normal;
+                align-items: center;
+                .pdf {
+                    background-image: url(../assets/images/pdf.png);
+                    background-repeat: no-repeat;
+                    width: 28px;
+                    height: 32px;
+                    background-size: contain;
+                    padding-right: 40px;
+                }
+
+                .link {
+                    background-image: url(../assets/images/link.png);
+                    background-repeat: no-repeat;
+                    width: 21px;
+                    height: 21px;
+                    background-size: contain;
+                    padding-right: 40px;
+                }
+                p {
+                    position: relative;
+                    display: table-cell;
+                    width: auto;
+                    vertical-align: middle;
+                    margin-bottom: 0px !important;
+                    span {
+                        font-family: "EYInterstateBold";
+                        color: #ffe600;
+                        padding-bottom: 5px;
+                    }
+                }
+
+                a {
+                    //text-decoration: none;
+                    //color: #2e2e38;
+                    color: #188ce5;
+                    font-size: 14px;
+
+                    &:hover {
+                        color: #4ebeeb;
+                    }
+                }
+            }
+
+            .f_resourceColumn2 {
+                position: relative;
+                display: table;
+                float: left;
+                width: 70%;
+                height: auto;
+                padding: 5px 10px;
+
+                p {
+                    position: relative;
+                    display: table-cell;
+                    width: auto;
+                    vertical-align: middle;
+
+                    a {
+                        text-decoration: underline;
+                        color: $white;
+                        font-size: 15.36px;
+
+                        &:hover {
+                            color: $resource-link-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.mainText {
+    margin-left: -10px;
+    color: #fee600;
+    font-weight: bold;
+}
+
+// ------------- Resource style -------------
+.resourceTrack {
+    @include scrollTrack(
+        $scrollbar-track-w,
+        $scrollbar-handle-margin,
+        $popup-scrollbar-trackcolor,
+        $resources-content-h
+    );
+}
+
+.resourceHandle {
+    @include scrollHandle($scrollbar-handle-w, 80px, $popup-scrollbar-handlecolor, $scrollbar-handle-margin);
+}

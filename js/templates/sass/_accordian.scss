@@ -1,0 +1,98 @@
+@import 'popup';
+$accordian-button-color: rgba(10, 107, 150, 1);
+$accordian-button-selected-color: rgba(1, 84, 119, 1);
+$accordian-button-text-color: rgba(255, 255, 255, 1);
+$accordian-content-bgcolor: rgba(255, 255, 255, 1);
+
+.accordian_container {
+    float: left;
+    margin: 0 0 15px 0;
+    padding: 0;
+    width: 70%;
+    height: auto;
+
+
+
+    .accordion-trigger {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: 20px;
+        background-color: $accordian-button-color;
+        border: none;
+        border-radius: 5px 5px 5px 5px;
+        padding: 10px;
+        color: $accordian-button-text-color;
+        display: inline-block;
+        cursor: pointer;
+        font-weight: bold;
+        text-align: left;
+        z-index: 1;
+        margin-top: 2px;
+
+        .accordion-title {
+            display: block;
+            pointer-events: none;
+            border: transparent 2px solid;
+            outline: none;
+        }
+
+        .accordion-icon {
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            height: 8px;
+            pointer-events: none;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-60%) rotate(45deg);
+            width: 8px;
+            margin-top: -2px;
+            display: none;
+        }
+
+        &[aria-expanded="true"] {
+            background-color: $accordian-button-selected-color;
+
+            .accordion-icon {
+                transform: translateY(-50%) rotate(-135deg);
+                margin-top: 0px;
+            }
+        }
+    }
+
+    .accordion-panel {
+        float: left;
+        position: relative;
+        width: 100%;
+        height: 0;
+        border-radius: 0 0 5px 5px;
+        background-color: $accordian-content-bgcolor;
+        @include box-shadow(0, 0, 30px, 0, rgba(40, 40, 40, 0.25), true);
+        overflow: hidden;
+        display: none;
+        margin-top: -3px;
+
+        .panel_left_side {
+            float: left;
+            max-width: 100%;
+            width: auto;
+            height: auto;
+            padding: 18px 15px 0 15px;
+        }
+
+        .panel_right_side {
+            position: relative;
+            float: left;
+            width: calc(100% - 30px);
+            height: auto;
+            padding: 0 15px 15px 15px;
+
+            img {
+                position: relative;
+                max-width: 90%;
+                height: auto;
+            }
+        }
+    }
+}

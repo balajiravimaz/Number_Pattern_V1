@@ -1,0 +1,92 @@
+{
+	"mainAudio": {
+		"audioSRC": "assets/audios/5sec.mp3",
+		"isEmptyAudio": false,
+		"audioIndex": 0
+	},
+	"bgImgs": [],
+	"imgCollage": {
+		"desktop": [
+			{
+				"imageSRC": "",
+				"altText": ""
+			}
+		],
+		"portrait": [
+			{
+				"imageSRC": "",
+				"altText": ""
+			}
+		]
+	},
+	"bgVid": {
+		"videoSRC": "pages/module_1/page_1/videos/video_1.mp4"
+	},
+	"sections": [
+		{
+			"slideType": "overview",
+			"slideTitle": "overview",
+			"headerTitle": "Explore & Learn: <span>Area and Perimeter</span>",
+			"infoPopAudio":"pages/module_1/page_1/audios/info_audio.mp3",
+			"infoPopImage":"pages/module_1/page_1/images/home_info.png",
+			"homeBtnSrc":"pages/module_1/page_1/images/home.png",
+			"ost": "",
+			"insText": "​",
+			"content": {
+				"text": [
+					""
+				],
+				"sectionArray": [
+					{
+						"sectionID": 1,
+						"sectionIndx": 1,
+						"infoAudio": "pages/module_1/page_1/audios/audio1.mp3",
+						"isEmptyAudio": false,
+						"audioIndex": 0,
+						"infoImg": "pages/module_1/page_1/images/Story_Time_Info.png"
+					},
+					{
+						"sectionID": 2,
+						"sectionIndx": 2,
+						"infoAudio": "pages/module_1/page_1/audios/audio2.mp3",
+						"isEmptyAudio": false,
+						"audioIndex": 1,
+						"infoImg": "pages/module_1/page_1/images/Simulation_info.png"
+					},
+					{
+						"sectionID": 3,
+						"sectionIndx": 3,
+						"infoAudio": "pages/module_1/page_1/audios/audio3.mp3",
+						"isEmptyAudio": false,
+						"audioIndex": 2,
+						"infoImg": "pages/module_1/page_1/images/Game_Info.png"
+					}
+				]
+			}
+		}
+	],
+	"transcriptText": [
+		[
+			"There are several key elements that must be addressed during an internal control test. Each button here represents a fundamental aspect of the internal control testing process.",
+			"To learn more about each subject, Select the respective button."
+		],
+		[
+			""
+		],
+		[
+			""
+		],
+		[
+			""
+		]
+	],
+	"ccText": [
+		[
+			{
+				"text": "",
+				"startTime": 0,
+				"endTime": 6.2
+			}
+		]
+	]
+}

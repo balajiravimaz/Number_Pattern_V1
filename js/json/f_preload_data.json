@@ -1,0 +1,30 @@
+{
+  "__comment": "",
+  "images": [
+    {
+      "src": "assets/images/Main_BG.png"
+    },
+    {
+      "src": "assets/images/common_bg.png"
+    },
+    {
+      "src": "assets/images/preload_sprites.png"
+    },
+    {
+      "src": "assets/images/main_logo.png"
+    }
+  ],
+  "audios": [
+    {
+      "src": "assets/audios/1sec.mp3"
+    },
+    {
+      "src": "assets/audios/BG.mp3"
+    }
+  ],
+  "videos": [
+    {
+      "src": "assets/video/video_1.mp4"
+    }
+  ]
+}

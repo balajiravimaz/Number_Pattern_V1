@@ -1,0 +1,73 @@
+$image-holder-width: $image-width+$image-border-width+$image-shadow;
+$left-side-width: $image-holder-width+20px;
+
+.cc_content {
+   .left_side {
+      float: left;
+      width: 100%;
+      height: auto;
+
+      .table_container {
+         width: 70%;
+
+         @include ipad-portrait {
+            width: 100%;
+         }
+
+      }
+
+      @include mobile-portrait {
+         width: 100%;
+
+         .table_container {
+            width: 100%;
+            overflow: hidden;
+            overflow-x: auto;
+
+            .cc_table {
+               width: 500px;
+            }
+         }
+      }
+   }
+
+   .right_side {
+      float: right;
+      width: auto;
+      height: auto;
+      margin-left: 20px;
+      margin-top: 0;
+
+      @include mobile-portrait {
+         float: left;
+         width: 100%;
+         margin-left: 0;
+         display: flex;
+         justify-content: center;
+      }
+
+      @include mobile-landscape {
+         float: left;
+         width: 100%;
+         margin-left: 0;
+         display: flex;
+         justify-content: center;
+      }
+
+      @include mobile-landscape-big {
+         float: left;
+         width: 100%;
+         margin-left: 0;
+         display: flex;
+         justify-content: center;
+      }
+
+      img {
+         float: right;
+         position: relative;
+         width: $image-width - ($image-border-width + $image-shadow);
+         height: auto;
+         margin: 0;
+      }
+   }
+}

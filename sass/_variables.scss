@@ -1,0 +1,91 @@
+@import 'fonts';
+$colors: (primary: #2e2e38,
+    secondary: #ffe600,
+    white: #ffffff,
+);
+
+@function color($color-name) {
+    @return map-get($colors, $color-name);
+}
+
+$primary-color: #2e2e38;
+$secondary-color: #ffe600;
+$accent-color: #032237 !default;
+$white: #FFFFFF;
+$button-shadow: #d59600;
+$button-gradient-from: #ffc231;
+$button-gradient-to: #f8c242;
+$button-gradient-from-over: #ffd675;
+$button-gradient-to-over: #ffc231;
+$primary-text-color: #2e2e38;
+/*
+------------- WRAPPER ----------------*/
+$wrapper-width: 100%;
+$wrapper-height: 100vh;
+$wrapper-bgcolor: $white;
+$calc-height: 100%;
+
+/*
+---------------- HEADER ----------------*/
+$header-width: 100%;
+$header-height: 60px;
+$header-bgcolor: $primary-color;
+$header-height-mobile: 40px;
+$logo-bgcolor: rgba(255, 255, 255, 1);
+$title-bgcolor: rgba(255, 255, 255, 0.5);
+$course-title-text-color: $white;
+$title-text-color: $white;
+/*
+---------------- FOOTER ----------------*/
+$footer-width: 100%;
+$footer-height: 50px;
+$footer-width-mobile: 100%;
+$footer-height-mobile: 34px;
+$footer-bgcolor: $primary-color;
+$footer-nav-color1: $primary-color;
+$footer-nav-color2: $secondary-color;
+$footer-tablet-width: 460px;
+$footer-mobile-width: 320px;
+$gadget-btn-width: 40px;
+$gadget-btn-width-mobile: 40px;
+/*
+---------------- PRELOADER ----------------*/
+$preloader-width: 60px;
+$margin: -1 * ($preloader-width / 2);
+$preloader-img-w: 60px;
+$preloader-img-h: 60px;
+/*
+---------------- popup colors ----------------*/
+$popup-overlay-color: rgba(246, 246, 250, 0.9);
+$popup-bg-color: #C4C4CD;
+$popup-title-bg-color: $primary-color;
+$popup-title-text-color: #fff;
+$popup-close-btn-bg: $secondary-color;
+$popup-close-color: $primary-color;
+$popup-title-text-font: bold;
+$popup-title-text-size: 16px;
+/*
+----- scroll style -----*/
+$scrollbar-w: 4px;
+$scrollbar-track-w: $scrollbar-w;
+$scrollbar-track-margin: 0 0 0 -1 * $scrollbar-w;
+$scrollbar-track-color: rgba(0, 0, 0, 0.2);
+$scrollbar-handle-w: $scrollbar-w;
+$scrollbar-handle-margin: 0 0 0 (-1 * $scrollbar-w)/2;
+$scrollbar-handle-color: $secondary-color;
+//---------------- NAVIGATION BUTTONS ----------------
+$navbtn-over-color: $primary-color;
+$progress-bar-color: #FFE800;
+
+$dark-bgcolor-theme-blue:linear-gradient(90deg, rgba(48,104,142,1) 0%, rgba(147,190,224,1) 35%, rgba(147,190,224,1) 100%);
+$dark-bg-round-image:  radial-gradient(rgba(196, 196, 205, 0.24), rgba(176, 196, 222, 0) 50px), radial-gradient(rgba(196, 196, 205, 0.24), #2e2e38 200px);
+    /*theme 3 boxtheme*/
+$bg-size: 250px 250px;
+$bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;
+
+
+$page-bg-color-theme:$dark-bg-round-image;
+
+
+
+

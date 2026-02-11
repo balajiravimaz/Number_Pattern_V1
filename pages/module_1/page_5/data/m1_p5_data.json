@@ -1,0 +1,201 @@
+{
+  "mainAudio": {
+    "audioSRC": "pages/module_1/page_5/audios/intro_audio.mp3",
+    "isEmptyAudio": false,
+    "audioIndex": 0
+  },
+  "bgImgs": [
+    {
+      "imageSRC": "pages/module_1/page_5/images/down.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/top.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/left.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/right.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/simulation.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/fun_game.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/great_job.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/back.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/bg_music.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/bg_pause.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/bg_music.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/close.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/bg_pause.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/header_bg.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/header_title.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/info.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/info_disabled.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/music.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/mute.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/pause.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/reload.png",
+      "altText": ""
+    },
+    {
+      "imageSRC": "pages/module_1/page_5/images/replay.png",
+      "altText": ""
+    }
+  ],
+  "imgCollage": {
+    "desktop": [
+      {
+        "imageSRC": "",
+        "altText": ""
+      }
+    ],
+    "portrait": [
+      {
+        "imageSRC": "",
+        "altText": ""
+      }
+    ]
+  },
+  "sections": [
+    {
+      "slideTitle": "Course Objectives",
+      "headerTitle": "Heavy - Light",
+      "headerImg": "pages/module_1/page_5/images/header_bg.png",
+      "headerText": "pages/module_1/page_5/images/header_title.png",
+      "ost": "",
+      "iText": [
+        "Hello! Let's help the caterpillar follow the number pattern!",
+        "Look at the numbers and find what comes next."
+      ],
+      "finalText": "Great job! You are a Patten Star!",
+      "greatJobAudio": "pages/module_1/page_5/audios/great_job.mp3",
+      "infoImg": "pages/module_1/page_5/images/fun_game.png",
+      "backBtnSrc": "assets/images/back.png",
+      "infoAudio": "pages/module_1/page_5/audios/info_audio.mp3",
+      "introAudio": "pages/module_1/page_5/audios/intro_audio.mp3",
+      "correctAudio": "pages/module_1/page_5/audios/good_job.mp3",
+      "idleAudio": "pages/module_1/page_5/audios/idle.mp3",
+      "wrongAudio": "pages/module_1/page_5/audios/try_again.mp3",
+      "finalAudio": "pages/module_1/page_5/audios/final_audio.mp3",
+      "content": {
+        "btnAudios": [
+          "pages/module_1/page_5/audios/click.mp3",
+          "pages/module_1/page_5/audios/bg_music.mp3"
+        ],
+        "numberObjects": [
+          {
+            "patternId": 1,
+            "sequence": [
+              4,
+              5,
+              6
+            ],
+            "items": [
+              {
+                "value": 4,
+                "img": "pages/module_1/page_5/images/4.png"
+              },
+              {
+                "value": 5,
+                "img": "pages/module_1/page_5/images/5.png"
+              },
+              {
+                "value": 6,
+                "img": "pages/module_1/page_5/images/6.png"
+              }
+            ]
+          },
+          {
+            "patternId": 2,
+            "sequence": [
+              7,
+              8,
+              9
+            ],
+            "items": [
+              {
+                "value": 7,
+                "img": "pages/module_1/page_5/images/7.png"
+              },
+              {
+                "value": 8,
+                "img": "pages/module_1/page_5/images/8.png"
+              },
+              {
+                "value": 9,
+                "img": "pages/module_1/page_5/images/9.png"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "transcriptText": [
+    [
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+    ]
+  ],
+  "ccText": [
+    [
+      {
+        "text": "",
+        "startTime": 0,
+        "endTime": 6.2
+      }
+    ]
+  ]
+}

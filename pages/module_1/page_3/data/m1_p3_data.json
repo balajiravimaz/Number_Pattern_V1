@@ -1,0 +1,84 @@
+{
+	"mainAudio": {
+		"audioSRC": "assets/audios/5sec.mp3",
+		"isEmptyAudio": false,
+		"audioIndex": 0
+	},
+	"bgImgs": [],
+	"imgCollage": {
+		"desktop": [
+			{
+				"imageSRC": "",
+				"altText": ""
+			}
+		],
+		"portrait": [
+			{
+				"imageSRC": "",
+				"altText": ""
+			}
+		]
+	},
+	"bgVid": {
+		"videoSRC": "pages/module_1/page_3/videos/video_1.mp4"
+	},
+	"sections": [
+		{
+			"slideType": "overview",
+			"slideTitle": "overview",
+			"headerTitle": "Explore & Learn: <span>Area and Perimeter</span>",
+			"infoPopAudio":"pages/module_1/page_3/audios/info_audio.mp3",
+			"infoPopImage":"pages/module_1/page_3/images/home_info.png",
+			"ost": "",
+			"backBtnSrc": "assets/images/back.png",
+			"insText": "​",
+			"content": {
+				"text": [
+					""
+				],
+				"sectionArray": [
+					{
+						"sectionID": 1,
+						"sectionIndx": 1,
+						"infoAudio": "pages/module_1/page_3/audios/info_audio.mp3",
+						"isEmptyAudio": false,
+						"audioIndex": 0,
+						"infoImg": "pages/module_1/page_3/images/home_info.png"
+					},
+						{
+						"sectionID": 2,
+						"sectionIndx": 2,
+						"infoAudio": "pages/module_1/page_3/audios/info_audio.mp3",
+						"isEmptyAudio": false,
+						"audioIndex": 0,
+						"infoImg": "pages/module_1/page_3/images/home_info.png"
+					}
+				]
+			}
+		}
+	],
+	"transcriptText": [
+		[
+			"There are several key elements that must be addressed during an internal control test. Each button here represents a fundamental aspect of the internal control testing process.",
+			"To learn more about each subject, Select the respective button."
+		],
+		[
+			""
+		],
+		[
+			""
+		],
+		[
+			""
+		]
+	],
+	"ccText": [
+		[
+			{
+				"text": "",
+				"startTime": 0,
+				"endTime": 6.2
+			}
+		]
+	]
+}

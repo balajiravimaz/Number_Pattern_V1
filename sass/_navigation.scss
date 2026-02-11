@@ -1,0 +1,701 @@
+$progress-bar-holder: 260px;
+$progress-bar-holder-mobile: $progress-bar-holder;
+$progress-scrubber-width: 226px;
+$progress-scrubber-height: 6px;
+$progress-scrubber-width-mobile: $progress-scrubber-width;
+$progress-scrubber-color: $progress-bar-color;
+
+#f_progressBarContainer {
+    float: left;
+    width: auto;
+    height: auto;
+    display: none;
+}
+
+#f_progresBarHolder {
+    position: relative;
+    float: left;
+    width: 18px;
+    height: 170px;
+
+    #f_scrubber {
+        position: relative;
+        width: 5px;
+        height: 158px;
+        margin: 8px 6px;
+        background-color: #fff;
+        cursor: pointer;
+        border-radius: 9px;
+        overflow: hidden;
+
+        #f_progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 50px;
+            width: 100%;
+            background-color: $progress-scrubber-color;
+            cursor: pointer;
+        }
+    }
+}
+
+#f_reviewBtn {
+    margin-top: 15px;
+    border-bottom: 0 !important;
+}
+
+.f_navBtn {
+    font-family: "LineAwesome";
+    font-size: 30px;
+    float: right;
+    width: 30px !important;
+    height: 30px !important;
+    cursor: pointer;
+    color: #fff;
+    border: none;
+    opacity: 0;
+    background-color: transparent;
+    background-position: center;
+    background-size: cover;
+    p {
+        font-size: 14px;
+        font-family: "EYInterstateRegular";
+        margin-bottom: 0px;
+
+        &:hover {
+            color: #ffe600;
+        }
+    }
+}
+
+.gadget_bottom {
+    .f_navBtn {
+        width: 35px !important;
+        height: 35px !important;
+        margin-left: 4px !important;
+    }
+}
+
+.f_unmute {
+    @include FbgImage("../assets/images/ui/f_unmute.png", no-repeat);
+    width: 30px !important;
+    height: 30px !important;
+
+    &.over {
+        @include FbgImage("../assets/images/ui/f_unmute_hover.png", no-repeat);
+    }
+}
+
+.f_mute {
+    @include FbgImage("../assets/images/ui/f_mute.png", no-repeat);
+    width: 30px !important;
+    height: 30px !important;
+
+    &.over {
+        @include FbgImage("../assets/images/ui/f_mute_hover.png", no-repeat);
+    }
+}
+#f_mediaBtn {
+    position: relative;
+    width: 30px !important;
+    height: 30px !important;
+    margin-bottom: 0px !important;
+    margin-right: 0px;
+
+    &.f_play {
+        @include FbgImage("../assets/images/ui/f_play.png", no-repeat);
+
+        &.over {
+            @include FbgImage("../assets/images/ui/f_play_hover.png", no-repeat);
+        }
+    }
+
+    &.f_pause {
+        @include FbgImage("../assets/images/ui/f_pause.png", no-repeat);
+
+        &.over {
+            @include FbgImage("../assets/images/ui/f_pause_hover.png", no-repeat);
+        }
+    }
+
+    &.f_replay {
+        @include FbgImage("../assets/images/ui/f_replay.png", no-repeat);
+
+        &.over {
+            @include FbgImage("../assets/images/ui/f_replay_hover.png", no-repeat);
+        }
+    }
+}
+
+/*#f_nextBtn {
+    @include bgImage("../assets/images/arrow_normal.png", 100% 100%, no-repeat);
+
+    &:hover {
+        @include bgImage("../assets/images/arrow_normal_over.png", 100% 100%, no-repeat);
+    }
+}*/
+
+#f_backBtn {
+    @extend #f_nextBtn;
+    //transform: rotateX(180deg);
+}
+
+#f_mediaBtn {
+    // background-color: $primary-color !important;
+}
+
+/*.f_play {
+    @include bgImage("../assets/images/f_play.png", 100% 100%, no-repeat);
+}
+
+.f_pause {
+    @include bgImage("../assets/images/f_pause.png", 100% 100%, no-repeat);
+}
+
+.f_replay {
+    @include bgImage("../assets/images/f_replay.png", 100% 100%, no-repeat);
+}*/
+
+#f_volumeBtn {
+    display: none;
+    margin-top: 10px !important;
+    margin-bottom: 15px;
+    //border-left: 1px solid rgba(255, 255, 255, 0.2);
+    //background-color: #f5c04e;
+
+    &:disabled {
+        pointer-events: none !important;
+        &:hover {
+            pointer-events: none;
+        }
+    }
+}
+
+#f_nextIndicator {
+    position: absolute;
+    top: -30px;
+    right: 10px;
+    display: none;
+    visibility: hidden;
+    width: auto;
+    height: auto;
+
+    p {
+        font-size: 14px;
+        position: relative;
+        padding: 5px 10px;
+        background-color: #202430;
+        color: #fff;
+
+        .nav_arrow {
+            position: absolute;
+            right: 10px;
+            bottom: -5px;
+            display: inline-block !important;
+            width: 0;
+            height: 0;
+            border-top: 6px solid #202430;
+            border-right: 4px solid transparent;
+            border-left: 4px solid transparent;
+        }
+    }
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes arrowAni {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(10px, 0);
+    }
+}
+
+/* Standard syntax */
+@keyframes arrowAni {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(10px, 0);
+    }
+}
+
+@-webkit-keyframes arrowAni_ipad {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(0px, 10px);
+    }
+}
+
+/* Standard syntax */
+@keyframes arrowAni_ipad {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(0px, 10px);
+    }
+}
+
+/*
+.blueColor {
+    //background-color: $footer-nav-color1 !important;
+    //background-color: $navbtn-over-color !important;
+    background-color: $blue-color !important;
+}*/
+
+.navOverOne {
+    /*background-color: $blue-color !important;*/
+}
+
+#f_gadgetBtn {
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    @include FbgImage("../assets/images/ui/gadgetBtn_normal.png", no-repeat);
+    background-position: center;
+    background-size: cover;
+
+    &.over {
+        @include FbgImage("../assets/images/ui/gadgetBtn_hover.png", no-repeat);
+    }
+}
+
+// .f_gadgetnavBtn{
+//     width: 29px;
+//     height: 21px;
+//         @include FbgImage("../assets/images/ui/setting_normal.png", no-repeat);
+//        // background-position: -502px 0px;
+
+//         &.over {
+//         @include FbgImage("../assets/images/ui/setting_hover.png", no-repeat);
+//         //background-position: -387px 0px;
+
+//         }
+// }
+#f_gadgetBtn_bottom {
+    float: left;
+    width: 35px;
+    height: 32px;
+    margin-left: 6px;
+    background-color: $primary-color;
+    display: none;
+    @include bgImage("../assets/images/f_setting.png", auto 100%, no-repeat);
+    background-position: 4px 0;
+    /*@include mobile-portrait {
+        display: block;
+    }
+    @include mobile-landscape {
+        display: block;
+    }*/
+}
+
+// #f_gadgetPopup {
+//     position: absolute;
+//     z-index: 9941;
+//     display: none;
+//     overflow: hidden;
+//     width: auto;
+//     height: 0;
+//     padding: 0;
+//     background-color: $primary-color;
+//     @include mobile-portrait {
+
+// 	}
+//     @include mobile-landscape {
+
+// 	}
+
+//     /*#f_menuOver {
+//         line-height: 20px;
+//         position: absolute;
+//         width: auto;
+//         height: 20px;
+//         padding: 5px 10px;
+//         text-align: center;
+//         color: #fff;
+//         background-color: $primary-color;
+//     }*/
+// }
+
+#f_gadgetPopup {
+    position: absolute;
+    /* top: 20px !important; */
+    z-index: 9941;
+    display: none;
+    overflow: hidden;
+    width: 100% !important;
+    height: 100%;
+    padding: 0;
+    margin: 0px 0px;
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    .g_popup {
+        font-size: 2.7rem;
+        margin-bottom: 10px;
+        width: 300px !important;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        &:last-child {
+            border-bottom: 0;
+        }
+
+        &:hover {
+            color: #ffe600;
+            /*  &::after {
+            content: "";
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-left: 10px solid #ffe600;
+            border-bottom: 5px solid transparent;
+            position: absolute;
+            margin-left: 260px;
+            top: 28% 245.828px;
+             right: 0px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        } */
+        }
+    }
+    & > #f_gadgetPopupFooter {
+        position: absolute;
+        display: block;
+        width: 40px;
+        height: 40px;
+        top: 15px;
+        right: 15px;
+        & > #f_gadgetPopupClose {
+            font-family: "LineAwesome";
+            font-size: 30px;
+            position: absolute;
+            top: 0;
+            right: 5px;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            color: #fff;
+            background-image: url(../assets/images/ui/close_normal.png);
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            background-color: transparent;
+            &:hover {
+                background-image: url(../assets/images/ui/close_hover.png);
+            }
+        }
+    }
+}
+
+.gadget_top {
+    top: 0px;
+    height: 50px;
+    left: 0px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.gadget_bottom {
+    width: 43px !important;
+    bottom: $footer-height !important;
+    /*left: 50%;
+    margin-left: -160px;*/
+}
+
+#f_gadgetPatch {
+    position: absolute;
+    width: 50px;
+    height: 0;
+    background-color: $primary-color;
+    top: 34px;
+    right: 0;
+}
+
+#f_gadgetPatch_bottom {
+    position: absolute;
+    width: 43px;
+    height: 0;
+    background-color: $primary-color;
+    bottom: 35px;
+    left: 50%;
+    margin-left: -160px;
+}
+
+#f_homeBtn {
+    /*float: left;*/
+    width: 35px;
+    height: 32px;
+    display: none;
+    @include FbgImage("../assets/images/ui/nav_icons.png", no-repeat);
+    background-position: -264px 0px;
+
+    &.over {
+        @include FbgImage("../assets/images/ui/nav_icons.png", no-repeat);
+        background-position: -350px 0px;
+    }
+
+    /*@include mobile-portrait {
+        width: 27px;
+        height: 27px;
+        display: none;
+    }
+    @include mobile-landscape {
+        width: 27px;
+        height: 27px;
+        display: none;
+    }*/
+}
+
+#f_homeBtn_bottom {
+    /*float: left;*/
+    width: 35px;
+    height: 32px;
+    margin-left: 6px;
+    background-color: $primary-color;
+    display: none;
+
+    @include bgImage("../assets/images/f_home.png", 100% 100%, no-repeat);
+
+    &:hover {
+        background-color: $secondary-color !important;
+    }
+
+    /*@include mobile-portrait {
+        width: 27px;
+        height: 27px;
+        display: none;
+    }
+    @include mobile-landscape {
+        width: 27px;
+        height: 27px;
+        display: none;
+    }*/
+}
+
+#f_menuBtn {
+    display: none;
+    width: 100% !important;
+    height: auto !important;
+    /*  margin-right: 20px;
+    @include FbgImage("../assets/images/ui/f_menu_normal.png", no-repeat);
+    background-size: 100%; */
+    // background-position: -502px 0px;
+
+    &.over {
+        // @include FbgImage("../assets/images/ui/f_menu_hover.png", no-repeat);
+
+        // background-position: -588px 0px;
+    }
+}
+
+#f_helpBtn {
+    display: block !important;
+    margin-top: 0;
+    width: 100% !important;
+    height: auto !important;
+    /* margin-right: 20px;
+    @include FbgImage("../assets/images/ui/f_help_normal.png", no-repeat);
+    background-size: 100%; */
+    // background-position: 1px 0px;
+
+    &.over {
+        // @include FbgImage("../assets/images/ui/f_help_hover.png", no-repeat);
+        // background-position: -66px 0px;
+    }
+}
+
+#f_transcriptBtn {
+    // display: none;
+    margin-top: 0;
+    margin-bottom: 15px !important;
+    // background-color: $primary-color;
+    @include FbgImage("../assets/images/ui/f_transcriptBtn.png", no-repeat);
+    width: 30px !important;
+    height: 30px !important;
+
+    &.over {
+        @include FbgImage("../assets/images/ui/f_transcriptBtn_hover.png", no-repeat);
+    }
+}
+
+#f_ccBtn {
+    display: none;
+    @include bgImage("../assets/images/f_cc.png", 100% 100%, no-repeat);
+}
+
+#f_glossaryBtn {
+    display: none;
+    width: 100% !important;
+    height: auto !important;
+    /*    @include FbgImage("../assets/images/ui/f_glossary_normal.png", no-repeat);
+    background-size: 100%;
+    opacity: 1 !important; */
+
+    // pointer-events: none;
+    &.over {
+        // @include FbgImage("../assets/images/ui/f_glossary_hover.png", no-repeat);
+    }
+}
+
+// #f_glossaryBtn {
+//     //display: none;
+
+//     background-image: url(../assets/images/f_glossary.png);
+
+//     background-size: 100% 100%;
+
+//     background-repeat: no-repeat;
+// }
+#f_resourceBtn {
+    display: none;
+    //background: url("../assets/images/ui/f_resource_normal.png") no-repeat;
+    width: 100% !important;
+    height: auto !important;
+    // height: auto;
+    //  background-size: contain;
+
+    &.over {
+        //@include bgImage("../assets/images/ui/f_resource_hover.png", 100% 100%, no-repeat);
+    }
+}
+
+#f_refrenceBtn {
+    width: 25px;
+    height: 25px;
+    margin-bottom: 20px;
+    background-image: url("../assets/images/ui/nav_icons.png") !important;
+    background-repeat: no-repeat;
+    background-position: -540px 0px !important;
+
+    &.over {
+        background-image: url("../assets/images/ui/nav_icons.png") !important;
+        background-repeat: no-repeat;
+        background-position: -580px 0px !important;
+    }
+}
+
+.f_gadgetClosenavBtn {
+    width: 30px !important;
+    height: 30px !important;
+    background-image: url("../assets/images/ui/gadgetClosenavBtn_normal.png") !important;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    display: none !important;
+
+    &.over {
+        background-image: url("../assets/images/ui/gadgetClosenavBtn_hover.png") !important;
+        background-repeat: no-repeat;
+    }
+}
+
+#f_gadgetBtn,
+#f_mediaBtn,
+#f_progresBarHolder {
+    display: none;
+}
+
+/*--- resume n restart block ---*/
+
+#resumeBlock {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    top: 0;
+    left: 0;
+    z-index: 11001;
+    display: none;
+
+    #resumePopup {
+        position: absolute;
+        width: 560px;
+        height: 170px;
+        background-color: #ffffff;
+        left: 50%;
+        top: 50%;
+        margin-top: -85px;
+        margin-left: -280px;
+        box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+
+        .topPatch {
+            width: 100%;
+            height: 10px;
+            background-color: #ffe600;
+        }
+
+        p {
+            float: left;
+            width: 100%;
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 30px 20px;
+            color: #000;
+            margin-bottom: 0;
+        }
+
+        #restart_button {
+            float: right;
+            margin-right: 175px;
+            width: 100px;
+            height: 40px;
+            margin-bottom: 15px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.75);
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 2px 0 0 #ffe600;
+            border-radius: 0px;
+            padding: 0px;
+
+            &:hover {
+                color: #000 !important;
+                background-color: #ffe600;
+            }
+        }
+
+        #resume_button {
+            float: right;
+            margin-right: 25px;
+            width: 100px;
+            height: 40px;
+            margin-bottom: 15px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.75);
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 2px 0 0 #ffe600;
+            border-radius: 0px;
+            padding: 0px;
+
+            &:hover {
+                color: #000 !important;
+                background-color: #ffe600;
+            }
+        }
+    }
+}
+
+/*--- resume n restart block end ---*/

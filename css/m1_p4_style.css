@@ -1,0 +1,203 @@
+/*********Globle variables*******/
+/*Globle variables End*/
+/*Start MAMC SAMC Option color and feedback color*/
+/*End MAMC SAMC Option color and feedback color*/
+/*buttons styles*/
+/*buttons styles End */
+/* instrution text Styles*/
+/* instrution text Styles End*/
+/*KC MAMC - SAMC*/
+/*KC MAMC - SAMC End*/
+/*Assesment*/
+/*Assesment End*/
+/*theme 3 boxtheme*/
+/*$dark-bgcolor-theme-blue:linear-gradient(90deg, rgba(48,104,142,1) 0%, rgba(147,190,224,1) 35%, rgba(147,190,224,1) 100%);
+$dark-bg-round-image:  radial-gradient(rgba(196, 196, 205, 0.24), rgba(176, 196, 222, 0) 50px), radial-gradient(rgba(196, 196, 205, 0.24), #2e2e38 200px);*/
+/*theme 3 boxtheme*/
+/*$bg-size: 250px 250px;
+$bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
+/*theme 3 boxtheme*/
+.f_page_content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  text-align: left;
+  color: #FFF;
+}
+
+.dark {
+  background-color: rgba(46, 46, 56, 0.8);
+}
+
+#section-1 {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+#section-1 .bg-img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  transform: scale(1);
+  transform-origin: left top;
+  background-position: right;
+}
+#section-1 .content-holder {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 1366px;
+  height: 100%;
+  margin: 0px auto;
+  overflow: hidden;
+}
+#section-1 .content-holder .col-left {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0px auto;
+}
+#section-1 .content-holder .col-left .content {
+  position: relative;
+  display: block;
+  height: 100%;
+}
+#section-1 .content-holder .col-left .content .content-bg {
+  position: relative;
+  display: block;
+  height: 100%;
+}
+#section-1 .content-holder .col-left .content .content-bg > .main-text {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+}
+#section-1 .content-holder .col-left .content .content-bg > .main-text > h1 {
+  font-size: 3.5rem;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 1%;
+  font-family: system-ui;
+  font-weight: 700;
+  background-color: #5da661;
+  border-radius: 10px;
+  padding: 10px;
+  width: calc(100% - 700px);
+}
+#section-1 .content-holder .col-left .content .content-bg > .main-text .ost-txt {
+  opacity: 1;
+  width: calc(100% - 500px);
+}
+#section-1 .content-holder .col-left .content .content-bg > .main-text .ost-txt p {
+  font-size: 1.5rem;
+  text-align: center;
+  color: #fff;
+  font-weight: 600;
+}
+#section-1 .content-holder .col-left .content .content-bg .header {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  left: 0;
+  z-index: 11;
+  padding: 15px 20px;
+}
+#section-1 .content-holder .col-left .content .content-bg .header #home {
+  width: 50px;
+  height: 50px;
+  background: url("../images/back.png") no-repeat;
+  background-size: contain;
+  background-position: center;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  /* Show tooltip on hover */
+}
+#section-1 .content-holder .col-left .content .content-bg .header #home::after {
+  content: attr(data-tooltip);
+  /* tooltip text from attribute */
+  position: absolute;
+  top: 100%;
+  /* below the button */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 6px;
+  font-family: "Times New Roman", Times, serif;
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  margin-top: 4px;
+  z-index: 10;
+}
+#section-1 .content-holder .col-left .content .content-bg .header #home:hover::after {
+  opacity: 1;
+}
+#section-1 .content-holder .col-left .content .content-bg > .body {
+  position: relative;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: normal;
+  align-items: center;
+  width: 100% !important;
+  height: 100%;
+}
+#section-1 .content-holder .col-left .content .content-bg > .body .sub-section {
+  width: 100%;
+  height: 100%;
+}
+#section-1 .content-holder .col-left .content .content-bg > .body .sub-section .video-holder {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
+#section-1 .content-holder .col-left .content .content-bg > .body .sub-section .video-holder video {
+  pointer-events: auto;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+  background-color: #fff;
+}
+#section-1 .content-holder .col-left .content .content-bg > .body .sub-section .video-holder video::-webkit-media-controls {
+  display: flex !important;
+}
+
+.video-js {
+  width: 100% !important;
+  height: 100% !important;
+  background: #fff !important;
+}
+
+/* Optional: make the video cover the entire player without stretching */
+.vjs-tech {
+  background: #fff;
+  -o-object-fit: contain;
+     object-fit: contain;
+}b-section .video-holder video::-webkit-media-controls {
+  display: flex !important;
+}
+
+.video-js {
+  width: 100% !important;
+  height: 100% !important;
+  background: #fff !important;
+}
+
+/* Optional: make the video cover the entire player without stretching */
+.vjs-tech {
+  background: #fff;
+  -o-object-fit: contain;
+     object-fit: contain;
+}

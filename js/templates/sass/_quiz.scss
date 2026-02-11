@@ -1,0 +1,76 @@
+$image-width: 250px;
+$image-holder-width: $image-width+$image-border-width+$image-shadow;
+
+$image-mobile-width: 150px;
+$image-mobile-holder-width: $image-mobile-width+$image-border-width+$image-shadow;
+
+$left-side-width: $image-holder-width+20px;
+$left-side-mobile-width: $image-mobile-holder-width+20px;
+
+.cc_content {
+   .left_side {
+      float: left;
+      width: calc(100% - #{$left-side-width});
+      height: auto;
+
+      @include mobile-portrait {
+         width: 100%;
+      }
+
+      @include mobile-landscape {
+         width: 100%;
+      }
+
+      @include mobile-landscape-big {
+         width: calc(100% - #{$left-side-width});
+      }
+   }
+
+   .right_side {
+      float: right;
+      width: auto;
+      height: auto;
+      margin-left: 20px;
+      margin-top: 0;
+
+      @include mobile-portrait {
+         display: none;
+      }
+
+      @include mobile-landscape {
+         display: none;
+      }
+
+      img {
+         float: right;
+         position: relative;
+         width: $image-width - ($image-border-width + $image-shadow);
+         height: auto;
+         margin: 0;
+
+         // @include mobile-landscape {
+         //    width: $image-mobile-width - ($image-border-width + $image-shadow);
+         //    height: auto;
+         // }
+
+
+      }
+   }
+
+   .option_container {
+      width: 100%;
+      margin-bottom: 15px;
+
+      @include mobile-portrait {
+         margin-bottom: 0px;
+      }
+
+      @include mobile-landscape {
+         margin-bottom: 0px;
+      }
+
+      @include mobile-landscape-big {
+         margin-bottom: 0px;
+      }
+   }
+}
