@@ -1,6 +1,6 @@
 {
   "mainAudio": {
-    "audioSRC": "pages/module_1/page_4/audios/intro_audio.mp3",
+    "audioSRC": "assets/audios/1sec.mp3",
     "isEmptyAudio": false,
     "audioIndex": 0
   },
@@ -137,7 +137,8 @@
         ],
         "replayAudios": [
           "pages/module_1/page_4/audios/replay_1.mp3",
-          "pages/module_1/page_4/audios/replay_2.mp3"
+          "pages/module_1/page_4/audios/replay_2.mp3",
+          "pages/module_1/page_4/audios/replay_3.mp3"
         ],
         "numberObjects": [
           {

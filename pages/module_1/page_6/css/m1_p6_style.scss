@@ -60,13 +60,13 @@
 					display: flex;
 					height: 100%;
 
-					&>.main-text {
+					& > .main-text {
 						display: flex !important;
 						align-items: center;
 						justify-content: center;
 						width: calc(100% - 400px);
 
-						&>h1 {
+						& > h1 {
 							position: relative;
 							font-weight: bold;
 							margin-bottom: 1% !important;
@@ -90,7 +90,7 @@
 					.ost-txt {
 						opacity: 0;
 
-						&>p {
+						& > p {
 							// opacity: 0;
 							color: $white;
 
@@ -99,7 +99,7 @@
 						}
 					}
 
-					&>.body {
+					& > .body {
 						position: relative;
 						display: flex;
 						flex-direction: column;
@@ -117,12 +117,12 @@
 							opacity: 0;
 						}
 
-						&>.text-container {
+						& > .text-container {
 							opacity: 0;
 							//padding: 20px;
 							//background: linear-gradient(125deg, rgb(85, 85, 86, 0.3) 48%, rgb(47, 47, 48, 0.3) 100%);
 
-							&>p {
+							& > p {
 								// opacity: 0;
 								color: $white;
 
@@ -142,11 +142,11 @@
 								}
 							}
 
-							&>ul {
+							& > ul {
 								margin-left: 40px;
 								list-style-type: none;
 
-								&>li {
+								& > li {
 									position: relative;
 									font-size: $page-font-size;
 									line-height: 19px;
@@ -167,15 +167,14 @@
 							}
 						}
 
-						&>.image-container {
+						& > .image-container {
 							display: flex;
 							position: relative;
 							flex-direction: column;
 							width: calc(100% - 200px);
 							align-items: center;
-							justify-content: flex-start;
+							justify-content: center;
 							height: 100%;
-							margin-right: 25px;
 
 							.btn_holder {
 								width: 50%;

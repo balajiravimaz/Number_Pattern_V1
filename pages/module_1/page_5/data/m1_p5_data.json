@@ -1,6 +1,6 @@
 {
   "mainAudio": {
-    "audioSRC": "pages/module_1/page_5/audios/intro_audio.mp3",
+    "audioSRC": "assets/audios/1sec.mp3",
     "isEmptyAudio": false,
     "audioIndex": 0
   },
@@ -119,7 +119,7 @@
         "Hello! Let's help the caterpillar follow the number pattern!",
         "Look at the numbers and find what comes next."
       ],
-      "finalText": "Great job! You are a Patten Star!",
+      "finalText": "Great job! You are a Number Star!",
       "greatJobAudio": "pages/module_1/page_5/audios/great_job.mp3",
       "infoImg": "pages/module_1/page_5/images/fun_game.png",
       "backBtnSrc": "assets/images/back.png",
@@ -133,6 +133,11 @@
         "btnAudios": [
           "pages/module_1/page_5/audios/click.mp3",
           "pages/module_1/page_5/audios/bg_music.mp3"
+        ],
+        "replayAudios": [
+          "pages/module_1/page_5/audios/replay_1.mp3",
+          "pages/module_1/page_5/audios/replay_2.mp3",
+          "pages/module_1/page_5/audios/replay_3.mp3"
         ],
         "numberObjects": [
           {

@@ -753,6 +753,7 @@ function toggleAudio(el) {
 }
 
 function closeIntroPop(selector) {
+    console.log(selector, "slector")
     if (!selector.startsWith('#') && !selector.startsWith('.')) {
         selector = '#' + selector;
     }

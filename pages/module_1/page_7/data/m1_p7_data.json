@@ -115,6 +115,7 @@
       "headerImg": "pages/module_1/page_7/images/header_bg.png",
       "headerText": "pages/module_1/page_7/images/header_title.png",
       "infoAudio": "pages/module_1/page_7/audios/intro_audio.mp3",
+      "replayBtnAudios": "pages/module_1/page_7/audios/ost_audio.mp3",
       "infoImg": "pages/module_1/page_7/images/fun_game.png",
       "ost": "",
       "iText": "<span>Tap</span> the correct bead to complete the pattern",

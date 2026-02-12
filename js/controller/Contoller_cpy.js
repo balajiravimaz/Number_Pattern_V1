@@ -2619,44 +2619,71 @@ document.addEventListener("fullscreenchange", () => {
     setButtonState(btn, !!document.fullscreenElement);
 });
 
-
-//------------------nav new global code added--------------------------
-
 function goHome(pageCount) {
-    var pageDetail = _menuView.getPageDetails(_controller.pageCnt);
-    var _pageType = pageDetail.type;
-    console.log("_pageType", _pageType)
-    playClickThen();
-    console.log(pageCount, "coutners;");
 
-    // 🔇 stop simulation audio
+    console.log("Incoming pageCount:", pageCount);
+
+    playClickThen();
+
+    // stop audio
     const audio = document.getElementById("simulationAudio");
-    if (audio) {
+    if (audio && typeof audio.pause === "function") {
         audio.pause();
         audio.currentTime = 0;
     }
 
-    _controller.pageCnt = pageCount;
-
-    console.log("Page type:", _pageType);
     sessionStorage.setItem("stopAudio", "true");
 
+    // HOME
     if (pageCount === -1) {
         location.reload();
-    } else if (_pageType === 'branching' || _pageType === 'video') {
-        $(".home_btn").css({ backgroundImage: `url(assets/images/home.png)` });
-        _controller.updateViewNow();
+        return;
     }
-    else if (_pageType === 'video') {
-        _controller.updateViewNow();
-    }
-    else if (_pageType === 'simulation' || _pageType === 'game') {
-        console.log("simuuuuuuuuu-----------");
+
+    // ✅ CHECK CURRENT PAGE TYPE (NOT TARGET)
+    var currentPageDetail = _menuView.getPageDetails(_controller.pageCnt);
+    var currentType = currentPageDetail?.type;
+
+    console.log("Current page type:", currentType);
+
+    // 👉 if leaving simulation/game → show popup
+    if (currentType === 'simulation' || currentType === 'game') {
+
+        console.log("Leaving simulation → show popup");
+
         $(".popup-home").css("display", "flex");
+
+        // store where user wanted to go
+        window.__nextPage = pageCount;
+
+        return;
     }
 
+    // normal navigation
+    _controller.pageCnt = Number(pageCount);
 
+    $(".home_btn").css({
+        backgroundImage: "url(assets/images/home.png)"
+    });
+
+    _controller.updateViewNow();
 }
+
+//------------------nav new global code added--------------------------
+$(".popup-continue").on("click", function () {
+
+    $(".popup-home").hide();
+
+    if (window.__nextPage != null) {
+        _controller.pageCnt = Number(window.__nextPage);
+        _controller.updateViewNow();
+    }
+});
+
+
+
+
+
 let simulationWasPlaying = false;
 
 

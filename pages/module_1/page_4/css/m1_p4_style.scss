@@ -126,6 +126,50 @@
 								display: none;
 							}
 
+							.wrapTextaudio {
+								position: relative;
+								width: 25px;
+								height: 25px;
+								min-width: 25px;
+								max-width: 25px;
+								cursor: pointer;
+								top: 3px;
+								margin-left: 5px;
+								background-position: center !important;
+								background-size: contain !important;
+								background-repeat: no-repeat !important;
+
+								@include mobile-landscape {
+									width: 15px;
+									height: 15px;
+									min-width: 15px;
+									max-width: 15px;
+									top: 0px;
+								}
+
+								&:disabled {
+									pointer-events: none;
+								}
+
+								&.playing {
+									background: url(../images/music.png) no-repeat;
+									background-size: contain;
+
+									&:disabled {
+										// background: url("../images/audio_disabled.png");
+									}
+								}
+
+								&.paused {
+									background: url(../images/pause.png) no-repeat;
+									background-size: contain;
+
+									&:disabled {
+										// background: url("../images/audio_mute_disabled.png");
+									}
+								}
+							}
+
 							p {
 								color: #000;
 								text-align: center;
@@ -369,11 +413,11 @@
 							align-items: center;
 							font-size: $globle-font-size;
 							padding-bottom: 1%;
-							height: 450px;
+							height: 100%;
 							width: 100%;
 							padding-left: 2%;
 							padding-right: 2%;
-							max-height: 450px;
+							// max-height: 450px;
 
 							.animations {
 								position: absolute;
@@ -925,7 +969,7 @@
 								}
 							}
 						}
-					
+
 
 						#home-popup {
 							display: none;

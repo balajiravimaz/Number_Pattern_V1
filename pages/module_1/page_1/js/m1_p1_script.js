@@ -55,12 +55,14 @@ function _pageLoaded() {
     }
     appState.pageCount = _controller.pageCnt - 1;
 
-    if (_controller._globalMusicPlaying) {
-        document.getElementById("audio_src").play();
-    }
+         if (_controller._globalMusicPlaying) {
+            document.getElementById("audio_src").play();
+        } 
 
+    
     $('.introInfo').attr('data-popup', 'introPopup-2');
     $("#f_header").find(".music, .introInfo").show();
+
     addSectionData();
     //assignAudio(_audioId, _audioIndex, _pageAudioSync, _forceNavigation, _videoId, _popupAudio, _reloadRequired);
     pagePreLoad();
@@ -68,7 +70,6 @@ function _pageLoaded() {
         initPageAnimations();
         showVisitedModule();
     }, 100)
-
 
 }
 
@@ -85,8 +86,6 @@ function addSectionData() {
 
 
             /*     $("#section-" + sectionCnt).find(".content-holder").find(".col-left").find(".content").find(".content-bg").append('<div class="main-text"><h1 aria-label="' + removeTags(_pageData.sections[sectionCnt - 1].headerTitle) + '" tabindex="0">' + _pageData.sections[sectionCnt - 1].headerTitle + '</h1></div>'); */
-
-
 
             let textObject = '', listObject = '';
             if (_pageData.sections[sectionCnt - 1].insText != "") {

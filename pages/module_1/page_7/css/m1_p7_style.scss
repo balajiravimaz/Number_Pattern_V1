@@ -121,21 +121,47 @@
 							justify-content: center;
 							align-items: center;
 							gap: 10px;
-							.intro-audio {
+							.wrapTextaudio {
+								position: relative;
 								width: 25px;
 								height: 25px;
-								background: url(../images/introAudio.png);
-								background-repeat: no-repeat;
-								background-size: contain;
+								min-width: 25px;
+								max-width: 25px;
 								cursor: pointer;
+								top: 3px;
 								margin-left: 5px;
-								border: none;
-								opacity: 1;
-								transition: opacity 0.2s ease;
+								background-position: center !important;
+								background-size: contain !important;
+								background-repeat: no-repeat !important;
+
+								@include mobile-landscape {
+									width: 15px;
+									height: 15px;
+									min-width: 15px;
+									max-width: 15px;
+									top: 0px;
+								}
 
 								&:disabled {
-									opacity: 0.5;
-									cursor: not-allowed;
+									pointer-events: none;
+								}
+
+								&.playing {
+									background: url(../images/music.png) no-repeat;
+									background-size: contain;
+
+									&:disabled {
+										// background: url("../images/audio_disabled.png");
+									}
+								}
+
+								&.paused {
+									background: url(../images/pause.png) no-repeat;
+									background-size: contain;
+
+									&:disabled {
+										// background: url("../images/audio_mute_disabled.png");
+									}
 								}
 							}
 							p {

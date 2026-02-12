@@ -187,6 +187,7 @@
       "endAudio": "",
       "infoImg": "pages/module_1/page_8/images/fun_game.png",      
       "backBtnSrc":"pages/module_1/page_8/images/back.png",
+      "replayBtnAudios":"pages/module_1/page_8/audios/intro_audio.mp3",
       "infoAudio": "pages/module_1/page_8/audios/info_audio.mp3",
       "introAudio": "pages/module_1/page_8/audios/intro_audio.mp3",
       "correctAudio":"pages/module_1/page_8/audios/good_job.mp3",

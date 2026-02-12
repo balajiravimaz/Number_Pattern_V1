@@ -131,6 +131,39 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   align-items: center;
   gap: 3px;
 }
+#section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  min-width: 25px;
+  max-width: 25px;
+  cursor: pointer;
+  top: 3px;
+  margin-left: 5px;
+  background-position: center !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+}
+@media (max-width: 950px) and (orientation: landscape) {
+  #section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+    max-width: 15px;
+    top: 0px;
+  }
+}
+#section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio:disabled {
+  pointer-events: none;
+}
+#section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio.playing {
+  background: url(../images/music.png) no-repeat;
+  background-size: contain;
+}
+#section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio.paused {
+  background: url(../images/pause.png) no-repeat;
+  background-size: contain;
+}
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst .intro-audio {
   width: 25px;
   height: 25px;

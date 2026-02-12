@@ -66,7 +66,7 @@ function _pageLoaded() {
   $(".home_btn").css({ backgroundImage: `url(${_pageData.sections[0].backBtnSrc})` });
   // playBtnSounds(_pageData.sections[sectionCnt - 1].endAudio);
   //   showEndAnimations();
-  checkGlobalAudio();
+  // checkGlobalAudio();
   assignAudio(
     _audioId,
     _audioIndex,
@@ -89,9 +89,10 @@ function addSectionData() {
     if (sectionCnt == 1) {
       playBtnSounds(_pageData.sections[sectionCnt - 1].introAudio);
       audioEnd(function () {
-        // $(".dummy-patch").hide();
+        $(".dummy-patch").hide();
         resetSimulationAudio();
-        $(".intro-audio").prop("disabled", false);
+        $(".wrapTextaudio").removeClass("playing")
+        $(".wrapTextaudio").addClass("paused")
       })
       $("#section-" + sectionCnt)
         .find(".content-holder")
@@ -99,13 +100,20 @@ function addSectionData() {
         .find(".content")
         .find(".content-bg")
         .find(".content-style")
-        .append(
-          '<div class="inst"><p tabindex="0" aria-label="' +
-          removeTags(_pageData.sections[sectionCnt - 1].iText) +
-          '">' +
-          _pageData.sections[sectionCnt - 1].iText +
-          "</p><button disabled class='intro-audio'  data-audio='" + _pageData.sections[sectionCnt - 1].introAudio + "'></div>"
-        );
+        .append(`
+  <div class="inst">    
+    <p tabindex="0" aria-label="${removeTags(_pageData.sections[sectionCnt - 1].iText)}">
+  ${_pageData.sections[sectionCnt - 1].iText} 
+  <button 
+    class='wrapTextaudio playing' 
+    id='wrapTextaudio_1' 
+    data-src="${_pageData.sections[sectionCnt - 1].replayBtnAudios}" 
+    onClick="replayLastAudio(this)">
+  </button>
+</p>
+  </div>
+`);
+
 
 
       /* $('#section-' + sectionCnt).find('.content-holder').find('.col-left').find('.content').find('.content-bg').find('.content-style').append(_pageData.sections[sectionCnt - 1].headerTitle);*/
@@ -188,41 +196,6 @@ function addSectionData() {
         );
 
 
-        $('.intro-audio').off('click').on('click', onClickAudioHandler);
-
-      // enableDragAndDrop({
-      //   cupsSelector: ".cups .cup",
-      //   slotsSelector: ".shelf .slot",
-
-      //   onCorrectDrop: (cup, slot) => {
-      //     cup.classList.remove("success");
-      //     void cup.offsetWidth;
-      //     cup.classList.add("success");
-      //     playFeedbackAudio(_pageData.sections[sectionCnt - 1].correctAudio);
-      //   },
-
-      //   onWrongDrop: (cup) => {
-      //     playFeedbackAudio(_pageData.sections[sectionCnt - 1].wrongAudio);
-      //   },
-
-      //   onGameCompleted: () => {
-      //     console.log("Game Completed");
-      //     setTimeout(function () {
-      //       playBtnSounds(_pageData.sections[sectionCnt - 1].finalAudio);
-      //       showEndAnimations();
-      //     }, 1000)
-      //   }
-      // });
-
-
-
-      // $(".flip-card").on("click", onClickHanlder);
-
-
-
-      // $("#refresh").on("click", restartActivity);
-      // $("#home,#homeBack").on("click", jumtoPage)        
-
       totalPatterns = _pageData.sections[sectionCnt - 1].content.numberObjects.length;
       allPatterns = _pageData.sections[sectionCnt - 1].content.numberObjects;
 
@@ -255,7 +228,7 @@ function addSectionData() {
       // });
       // _currentAudio = _pageData.sections[sectionCnt - 1].content.flipObjects[0].instAudio;
 
-      $(".flipTextAudio").on("click", replayLastAudio);
+      // $(".flipTextAudio").on("click", replayLastAudio);
 
       // document.querySelector("#info").addEventListener("click", function (event) {
       //   playClickThen();
@@ -286,38 +259,102 @@ function playFeedbackAudio(_audio) {
   })
 }
 
-function onClickAudioHandler(e) {
-  $(".intro-audio").prop("disabled", true);
-  $("#simulationAudio")[0].pause();
-  playClickThen();
-  $('.dummy-box').show();
-  e.stopPropagation();
-  const audioSrc = $(this).data('audio');
-  if (!audioSrc) {
-    console.log('No audio src found');
+var activeAudio = null;
+
+function playBtnSounds(soundFile) {
+  if (!soundFile) {
+    console.warn("Audio source missing!");
     return;
   }
 
-  const audio = document.getElementById('simulationAudio');
-  if (!audio) {
-    console.log('Audio element not found');
+  const audio = document.getElementById("simulationAudio");
+
+  // Stop previous audio if it exists
+  if (activeAudio && !activeAudio.paused) {
+    activeAudio.pause();
+  }
+
+  audio.loop = false;
+  audio.src = soundFile;
+  audio.load();
+
+  activeAudio = audio;
+
+  // Ensure we start with sound
+  audio.muted = false;
+
+  audio.play().catch((err) => {
+    console.warn("Audio play error:", err);
+  });
+}
+
+// --- UPDATED REPLAY FUNCTION ---
+function replayLastAudio(btn) {
+  const audio = document.getElementById("simulationAudio");
+  const audioSource = btn.getAttribute('data-src') || window.replayBtnAudio;
+
+  console.log("Replay/Toggle triggered");
+
+  // 1. RESTART: If audio has finished or isn't loaded
+  if (audio.ended || !audio.src || audio.src === "") {
+    console.log("Starting Audio Fresh");
+    
+    // Reset Mute to False (Play with sound)
+    audio.muted = false; 
+    
+    // SHOW patch on start
+    $(".dummy-patch").show(); 
+    
+    playBtnSounds(audioSource);
+    setButtonState(btn, "playing");
+
+    // Attach completion listener
+    audioEnd(() => {
+      setButtonState(btn, "paused");
+      $(".dummy-patch").hide(); // Always hide when done
+      console.log("Audio completed");
+    });
     return;
   }
 
-  audio.src = audioSrc;
-  audio.currentTime = 0;
+  // 2. TOGGLE Logic (While Playing)
+  if (audio.muted) {
+    // --- RESUME (UNMUTE) ---
+    console.log("Resuming Sound");
+    audio.muted = false;
+    setButtonState(btn, "playing");
+    
+    // SHOW patch because audio is audible now
+    $(".dummy-patch").show(); 
+  } else {
+    // --- MUTE (SILENT PLAY) ---
+    console.log("Muting Sound");
+    audio.muted = true;
+    setButtonState(btn, "paused");
+    
+    // HIDE patch because audio is silent (user wants to interact)
+    $(".dummy-patch").hide(); 
+  }
+}
 
-  audio.play().catch(err => {
-    console.error('Audio play failed:', err);
-  });
+// Helper to toggle classes
+function setButtonState(btn, state) {
+  if (state === "playing") {
+    btn.classList.remove("paused");
+    btn.classList.add("playing");
+  } else if (state === "paused") {
+    btn.classList.remove("playing");
+    btn.classList.add("paused");
+  }
+}
 
-  audio.addEventListener('ended', function () {
-    console.log('Audio finished playing');
-    $("dummy-patch").hide();
-    resetSimulationAudio();
-    $(".intro-audio").prop("disabled", false);
-    $('.dummy-box').hide();
-  });
+// Handle the end event
+function audioEnd(callback) {
+  const audio = document.getElementById("simulationAudio");
+  audio.onended = null;
+  audio.onended = () => {
+    if (typeof callback === "function") callback();
+  };
 }
 
 
@@ -509,8 +546,6 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
   // Store original positions for all cups
   cups.forEach(cup => {
     cup._originalParent = cup.parentElement;
-    // We don't strictly need data-startX/Y for the drag logic here 
-    // because we calculate offset dynamically on click, but keeping it as per your code.
     const rect = cup.getBoundingClientRect();
     cup.dataset.startX = rect.left + window.scrollX;
     cup.dataset.startY = rect.top + window.scrollY;
@@ -525,17 +560,16 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
     if (activeCup) return;
     e.preventDefault();
 
+    // NO AUDIO SHOULD PLAY HERE - just starting the drag
     activeCup = e.currentTarget;
     const img = activeCup.querySelector("img");
     const rect = img.getBoundingClientRect();
 
     // 1. Detect the scale of the game automatically
-    // We check the width of the wrapper vs its actual rendered width
     const wrapper = document.getElementById('f_wrapper') || document.body;
     currentScale = wrapper.getBoundingClientRect().width / wrapper.offsetWidth;
 
     // 2. Calculate the offset
-    // We must account for the scale here
     offsetX = (e.clientX - rect.left) / currentScale;
     offsetY = (e.clientY - rect.top) / currentScale;
 
@@ -544,7 +578,7 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
 
     // 4. Force Reset styles
     Object.assign(dragImg.style, {
-      position: "absolute", // Use absolute, not fixed, to stay inside the scaled coordinate system
+      position: "absolute",
       width: img.offsetWidth + "px",
       height: img.offsetHeight + "px",
       margin: "0",
@@ -555,8 +589,7 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
       zIndex: "99999"
     });
 
-    // 5. Append to the SAME container as the cup, not the body
-    // This ensures the ghost is subject to the same scaling as the cup
+    // 5. Append to the SAME container as the cup
     activeCup.parentElement.appendChild(dragImg);
     activeCup.style.opacity = "0";
 
@@ -570,10 +603,7 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
   function moveAt(x, y) {
     if (!dragImg || !activeCup) return;
 
-    // Get the container's position to calculate relative movement
     const parentRect = activeCup.parentElement.getBoundingClientRect();
-
-    // Math: (Mouse Pos - Container Pos) / Scale - Initial Offset
     const posX = (x - parentRect.left) / currentScale - offsetX;
     const posY = (y - parentRect.top) / currentScale - offsetY;
 
@@ -582,6 +612,7 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
   }
 
   function onMove(e) {
+    // NO AUDIO SHOULD PLAY HERE - just moving
     moveAt(e.clientX, e.clientY);
   }
 
@@ -596,8 +627,7 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
       dragImg = null;
     }
 
-    // Make the original visible again immediately.
-    // If we drop successfully, it moves. If we fail, it stays/animates.
+    // Make the original visible again
     if (activeCup) {
       activeCup.style.opacity = "1";
     }
@@ -612,11 +642,8 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
       }
     });
 
-    // Note: If droppedOnSlot is false, the activeCup (which is now opacity: 1)
-    // simply appears back at its original position because we never moved it in the DOM.
-    // This satisfies "otherwise it should go back original position".
-
     if (!droppedOnSlot) {
+      // Just releasing without dropping on a slot - no audio needed
       activeCup = null;
     }
   }
@@ -626,7 +653,7 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
 
     // STOP if slot already has a cup
     if (slot.children.length > 0) {
-      activeCup = null; // Reset if slot is full
+      activeCup = null;
       return;
     }
 
@@ -636,23 +663,25 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
     // Append cup to slot visually first
     slot.appendChild(activeCup);
 
-    // Disable dragging while cup is in slot (temporarily)
+    // Disable dragging while cup is in slot
     activeCup.style.pointerEvents = "none";
     activeCup.style.touchAction = "none";
     activeCup.removeEventListener("pointerdown", startDrag);
 
     if (cupValue === slotValue) {
-      onCorrectDrop?.(activeCup, slot); // <- call first
-      activeCup = null; // <- then null
+      // CORRECT DROP - play success audio here
+      onCorrectDrop?.(activeCup, slot);
+      activeCup = null;
       if (isGameCompleted(slots)) {
         onGameCompleted?.();
       }
     } else {
-      // Logic for Wrong Drop
+      // WRONG DROP - THIS IS THE ONLY PLACE onWrongDrop SHOULD BE CALLED
+      // This will play the wrong audio
       onWrongDrop?.(activeCup);
 
       const cupRef = activeCup;
-      activeCup = null; // Release reference so new drags can start if needed
+      activeCup = null;
 
       shakeCup(cupRef, () => {
         setTimeout(() => {
@@ -680,10 +709,10 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
     if (!cup || !cup._originalParent) return;
 
     const originalParent = cup._originalParent;
-    const DURATION = 800; // Reduced duration slightly for snappier feel
+    const DURATION = 800;
 
     const firstRect = cup.getBoundingClientRect();
-    originalParent.appendChild(cup); // Move back in DOM
+    originalParent.appendChild(cup);
     const lastRect = cup.getBoundingClientRect();
 
     const deltaX = firstRect.left - lastRect.left;
@@ -693,7 +722,6 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
     cup.style.transition = "none";
     cup.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
 
-    // Force reflow
     cup.getBoundingClientRect();
 
     requestAnimationFrame(() => {
@@ -708,13 +736,13 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
       cup.addEventListener("pointerdown", startDrag);
     }, DURATION);
   }
+
   function isGameCompleted(slots) {
     return [...slots].every(slot => {
       const cup = slot.querySelector(".cup");
       return cup && cup.dataset.value === slot.dataset.value;
     });
   }
-
 }
 
 
@@ -747,34 +775,6 @@ function jumtoPage(pageNo) {
 }
 
 
-var activeAudio = null;
-
-function playBtnSounds(soundFile) {
-  if (!soundFile) {
-    console.warn("Audio source missing!");
-    return;
-  }
-
-  console.log("calling audios");
-
-  const audio = document.getElementById("simulationAudio");
-
-  // Stop previous audio if it exists
-  if (activeAudio && !activeAudio.paused) {
-    activeAudio.pause();
-    // Do NOT reset src yet, let it finish
-  }
-
-  audio.loop = false;
-  audio.src = soundFile;
-  audio.load();
-
-  activeAudio = audio;
-
-  audio.play().catch((err) => {
-    console.warn("Audio play error:", err);
-  });
-}
 
 
 
@@ -799,15 +799,6 @@ function resetSimulationAudio() {
 
 
 
-
-
-function audioEnd(callback) {
-  const audio = document.getElementById("simulationAudio");
-  audio.onended = null;
-  audio.onended = () => {
-    if (typeof callback === "function") callback();
-  };
-}
 
 
 function toggleAudio(el) {
@@ -892,27 +883,19 @@ function showEndAnimations() {
   });
 }
 
-function closeIntroPop(ldx) {
-  playClickThen();
-  AudioController.play();
-  document.getElementById(ldx).style.display = 'none';
-  let audio = document.getElementById("popupAudio");
-  if (audio.src) {
-    audio.pause();
-    audio.currentTime = 0;
-  }
-}
+// function closeIntroPop(ldx) {
+//   playClickThen();
+//   // AudioController.play();
+//   document.getElementById(ldx).style.display = 'none';
+//   let audio = document.getElementById("popupAudio");
+//   if (audio.src) {
+//     audio.pause();
+//     audio.currentTime = 0;
+//   }
+// }
 
-function replayLastAudio() {
-  playClickThen();
-  console.log(_currentAudio, "Audio plaing");
-  playBtnSounds(_currentAudio);
-  disableButtons();
-  audioEnd(function () {
-    resetSimulationAudio();
-    enableButtons();
-  })
-}
+
+
 
 
 function enableButtons() {
@@ -1011,7 +994,7 @@ function withAudioSync() {
 
   _tweenTimeline.add(animateFadeIn($(".ost"), 0.5).play(), 0.1);
   _tweenTimeline.add(animateFadeOut($(".ost"), 0.5).play(), 4.5);
-  _tweenTimeline.add(animateFadeOut($(".dummy-patch"), 0.5).play(), 4);
+  _tweenTimeline.add(animateFadeOut($(".dummy-patch"), 0.5).play(), 5);
   // _tweenTimeline.add(animateFadeIn($(".inst"), 0.5).play(), 5);
 
   var box = [1, 2, 3];

@@ -131,21 +131,38 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   align-items: center;
   gap: 10px;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style .inst .intro-audio {
+#section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio {
+  position: relative;
   width: 25px;
   height: 25px;
-  background: url(../images/introAudio.png);
-  background-repeat: no-repeat;
-  background-size: contain;
+  min-width: 25px;
+  max-width: 25px;
   cursor: pointer;
+  top: 3px;
   margin-left: 5px;
-  border: none;
-  opacity: 1;
-  transition: opacity 0.2s ease;
+  background-position: center !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
 }
-#section-1 .content-holder .col-left .content .content-bg .content-style .inst .intro-audio:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+@media (max-width: 950px) and (orientation: landscape) {
+  #section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio {
+    width: 15px;
+    height: 15px;
+    min-width: 15px;
+    max-width: 15px;
+    top: 0px;
+  }
+}
+#section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio:disabled {
+  pointer-events: none;
+}
+#section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio.playing {
+  background: url(../images/music.png) no-repeat;
+  background-size: contain;
+}
+#section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio.paused {
+  background: url(../images/pause.png) no-repeat;
+  background-size: contain;
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst p {
   color: #819da7;
@@ -1113,4 +1130,4 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   100% {
     transform: scale(1);
   }
-}
+}/*# sourceMappingURL=m1_p7_style.css.map */

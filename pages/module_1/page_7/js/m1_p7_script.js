@@ -65,7 +65,7 @@ function _pageLoaded() {
   $(".home_btn").css({ backgroundImage: `url(${_pageData.sections[0].backBtnSrc})` });
   // playBtnSounds(_pageData.sections[sectionCnt - 1].endAudio);
   //   showEndAnimations();
-  checkGlobalAudio();
+  //checkGlobalAudio();
   assignAudio(
     _audioId,
     _audioIndex,
@@ -86,9 +86,11 @@ function addSectionData() {
   for (let n = 0; n < _pageData.sections.length; n++) {
     sectionCnt = n + 1;
     if (sectionCnt == 1) {
-      playBtnSounds(_pageData.sections[sectionCnt - 1].introAudio);
+      playBtnSounds(_pageData.sections[sectionCnt - 1].replayBtnAudios);
       audioEnd(function () {
         $(".dummy-patch").hide();
+           $(".wrapTextaudio").removeClass("playing")
+        $(".wrapTextaudio").addClass("paused")
         resetSimulationAudio();
       })
       $("#section-" + sectionCnt)
@@ -97,13 +99,19 @@ function addSectionData() {
         .find(".content")
         .find(".content-bg")
         .find(".content-style")
-        .append(
-          '<div class="inst"><p tabindex="0" aria-label="' +
-          removeTags(_pageData.sections[sectionCnt - 1].iText) +
-          '">' +
-          _pageData.sections[sectionCnt - 1].iText +
-          "</p><button disabled class='intro-audio'  data-audio='" + _pageData.sections[sectionCnt - 1].introAudio + "'> </button></div>"
-        );
+        .append(`
+        <div class="inst">    
+        <p tabindex="0" aria-label="${removeTags(_pageData.sections[sectionCnt - 1].iText)}">
+        ${_pageData.sections[sectionCnt - 1].iText} 
+        <button 
+        class='wrapTextaudio playing' 
+        id='wrapTextaudio_1' 
+        data-src="${_pageData.sections[sectionCnt - 1].replayBtnAudios}" 
+        onClick="replayLastAudio(this)">
+        </button>
+        </p>
+        </div>
+        `);
 
 
       /* $('#section-' + sectionCnt).find('.content-holder').find('.col-left').find('.content').find('.content-bg').find('.content-style').append(_pageData.sections[sectionCnt - 1].headerTitle);*/
@@ -240,7 +248,7 @@ function addSectionData() {
       //     toggleAudio(el);
       // });
       // _currentAudio = _pageData.sections[sectionCnt - 1].content.flipObjects[0].instAudio;
-      $(".flipTextAudio").on("click", replayLastAudio);
+     // $(".flipTextAudio").on("click", replayLastAudio);
       // document.querySelector("#info").addEventListener("click", function (event) {
       //   playClickThen();
       //   AudioController.pause();
@@ -272,7 +280,7 @@ function playFeedbackAudio(_audio) {
 
 
 function onClickAudioHandler(e) {
-  $(".intro-audio").prop("disabled", true);
+
   $("#simulationAudio")[0].pause();
   playClickThen();
   $('.dummy-box').show();
@@ -300,7 +308,7 @@ function onClickAudioHandler(e) {
     console.log('Audio finished playing');
     $("dummy-patch").hide();
     resetSimulationAudio();
-    $(".intro-audio").prop("disabled", false);
+
     $('.dummy-box').hide();
 
   });
@@ -376,23 +384,17 @@ function getShelfHTML(pattern) {
 function getCupHTML(pattern) {
   if (!pattern) return "";
 
-  const correctItem = pattern.items.find(
-    i => i.value === pattern.correctNextValue
-  );
+  // clone items so original isn't modified
+  const shuffled = [...pattern.items];
 
-  const incorrectItem = pattern.items.find(
-    i => i.value !== pattern.correctNextValue
-  );
+  // Fisher–Yates shuffle (true random)
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
 
-  if (!correctItem || !incorrectItem) return "";
-
-  // RANDOMIZE position: sometimes correct left, sometimes right
-  const options =
-    Math.random() < 0.5
-      ? [correctItem, incorrectItem]
-      : [incorrectItem, correctItem];
-
-  return options.map(item => `
+  // render all cups (correct + wrong mixed)
+  return shuffled.map(item => `
     <div class="cupContain">
       <div class="round_bg">
         <div class="cup" data-value="${item.value}">
@@ -426,36 +428,62 @@ $(document).on("pointerdown", ".cup", function (e) {
 function fillNextSlot(value) {
   const $slot = $(".slot.empty").first();
   const item = currentPattern.items.find(i => i.value === value);
-  if (!$slot.length || !item) return;
+  const $cup = $(`.cup[data-value="${value}"]`);
 
-  // Fill the empty slot with the selected value
-  $slot
-    .removeClass("empty")
-    .addClass("filled sparkle")
-    .attr("data-value", value)
-    .html(`<img src="${item.img}" alt="${item.value}">`);
+  if (!$slot.length || !item || !$cup.length) return;
 
-  setTimeout(() => $slot.removeClass("sparkle"), 600);
+  $(".cup").css("pointer-events", "none"); // lock clicking during animation
 
-  // Track progression
-  dataValue.push(value);
+  const $img = $cup.find("img").clone();
 
-  // Update next expected value
-  updateCorrectNextValue();
+  const cupOffset = $cup.offset();
+  const slotOffset = $slot.offset();
 
-  // If all slots are filled, load a new pattern
-  currentIndex++;
+  // floating animation element
+  const $anim = $img.css({
+    position: "absolute",
+    top: cupOffset.top,
+    left: cupOffset.left,
+    width: $cup.width(),
+    height: $cup.height(),
+    zIndex: 9999,
+    pointerEvents: "none"
+  }).appendTo("body");
 
-  if (currentIndex === 3) {
-    //setTimeout(loadNewPattern, 800);
-    playBtnSounds(_pageData.sections[sectionCnt - 1].finalAudio);
-    showEndAnimations();
-    // Optionally disable further interaction
-    $(".cup").css("pointer-events", "none");
-  } else {
-    renderCups();
-  }
+  // animate movement
+  $anim.animate({
+    top: slotOffset.top,
+    left: slotOffset.left,
+    width: $slot.width(),
+    height: $slot.height()
+  }, 400, "swing", function () {
+
+    // 👉 NOW fill slot AFTER animation
+    $slot
+      .removeClass("empty")
+      .addClass("filled sparkle")
+      .attr("data-value", value)
+      .html(`<img src="${item.img}" alt="${item.value}">`);
+
+    $anim.remove();
+    setTimeout(() => $slot.removeClass("sparkle"), 600);
+
+    // continue logic AFTER animation completes
+    dataValue.push(value);
+    updateCorrectNextValue();
+    if ($(".slot.empty").length === 0) {
+      setTimeout(function () {
+        showEndAnimations();
+        playBtnSounds(_pageData.sections[sectionCnt - 1].finalAudio);
+      }, 500)
+      $(".cup").css("pointer-events", "none");
+    } else {
+      renderCups();
+      $(".cup").css("pointer-events", "auto");
+    }
+  });
 }
+
 
 /* ---------------- Feedback ---------------- */
 function correctFeedback(cup) {
@@ -466,7 +494,10 @@ function correctFeedback(cup) {
 }
 
 function wrongFeedback(cup) {
-  $(cup).addClass("shake");
+  cup.classList.remove("shake");   // remove first
+  void cup.offsetWidth;            // force reflow (reset animation)
+  cup.classList.add("shake");      // add again
+
   playFeedbackAudio(_pageData.sections[sectionCnt - 1].wrongAudio);
 }
 
@@ -725,7 +756,7 @@ function playBtnSounds(soundFile) {
     activeAudio.pause();
     // Do NOT reset src yet, let it finish
   }
-  $(".intro-audio").prop("disabled", true);
+
   audio.loop = false;
   audio.src = soundFile;
   audio.load();
@@ -735,9 +766,7 @@ function playBtnSounds(soundFile) {
   audio.play().catch((err) => {
     console.warn("Audio play error:", err);
   });
-  audio.onended = function () {
-    $(".intro-audio").prop("disabled", false);
-  };
+
 }
 
 
@@ -760,7 +789,7 @@ function resetSimulationAudio() {
   audioElement.load();
   audioElement.onended = null;
   // ✅ ensure button enabled
-  $(".intro-audio").prop("disabled", false);
+
 }
 
 
@@ -858,26 +887,85 @@ function showEndAnimations() {
   });
 }
 
-function closeIntroPop(ldx) {
-  playClickThen();
-  AudioController.play();
-  document.getElementById(ldx).style.display = 'none';
-  let audio = document.getElementById("popupAudio");
-  if (audio.src) {
-    audio.pause();
-    audio.currentTime = 0;
+// function closeIntroPop(ldx) {
+//   playClickThen();
+//   // AudioController.play();
+//   document.getElementById(ldx).style.display = 'none';
+//   let audio = document.getElementById("popupAudio");
+//   if (audio.src) {
+//     audio.pause();
+//     audio.currentTime = 0;
+//   }
+// }
+
+
+// --- UPDATED REPLAY FUNCTION ---
+function replayLastAudio(btn) {
+  const audio = document.getElementById("simulationAudio");
+  const audioSource = btn.getAttribute('data-src') || window.replayBtnAudio;
+
+  console.log("Replay/Toggle triggered");
+
+  // 1. RESTART: If audio has finished or isn't loaded
+  if (audio.ended || !audio.src || audio.src === "") {
+    console.log("Starting Audio Fresh");
+    
+    // Reset Mute to False (Play with sound)
+    audio.muted = false; 
+    
+    // SHOW patch on start
+    $(".dummy-patch").show(); 
+    
+    playBtnSounds(audioSource);
+    setButtonState(btn, "playing");
+
+    // Attach completion listener
+    audioEnd(() => {
+      setButtonState(btn, "paused");
+      $(".dummy-patch").hide(); // Always hide when done
+      console.log("Audio completed");
+    });
+    return;
+  }
+
+  // 2. TOGGLE Logic (While Playing)
+  if (audio.muted) {
+    // --- RESUME (UNMUTE) ---
+    console.log("Resuming Sound");
+    audio.muted = false;
+    setButtonState(btn, "playing");
+    
+    // SHOW patch because audio is audible now
+    $(".dummy-patch").show(); 
+  } else {
+    // --- MUTE (SILENT PLAY) ---
+    console.log("Muting Sound");
+    audio.muted = true;
+    setButtonState(btn, "paused");
+    
+    // HIDE patch because audio is silent (user wants to interact)
+    $(".dummy-patch").hide(); 
   }
 }
 
-function replayLastAudio() {
-  playClickThen();
-  console.log(_currentAudio, "Audio plaing");
-  playBtnSounds(_currentAudio);
-  disableButtons();
-  audioEnd(function () {
-    resetSimulationAudio();
-    enableButtons();
-  })
+// Helper to toggle classes
+function setButtonState(btn, state) {
+  if (state === "playing") {
+    btn.classList.remove("paused");
+    btn.classList.add("playing");
+  } else if (state === "paused") {
+    btn.classList.remove("playing");
+    btn.classList.add("paused");
+  }
+}
+
+// Handle the end event
+function audioEnd(callback) {
+  const audio = document.getElementById("simulationAudio");
+  audio.onended = null;
+  audio.onended = () => {
+    if (typeof callback === "function") callback();
+  };
 }
 
 

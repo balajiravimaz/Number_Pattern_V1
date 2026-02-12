@@ -162,9 +162,8 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   flex-direction: column;
   width: calc(100% - 200px);
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   height: 100%;
-  margin-right: 25px;
 }
 #section-1 .content-holder .col-left .content .content-bg > .body > .image-container .btn_holder {
   width: 50%;
