@@ -298,13 +298,13 @@ function replayLastAudio(btn) {
   // 1. RESTART: If audio has finished or isn't loaded
   if (audio.ended || !audio.src || audio.src === "") {
     console.log("Starting Audio Fresh");
-    
+
     // Reset Mute to False (Play with sound)
-    audio.muted = false; 
-    
+    audio.muted = false;
+
     // SHOW patch on start
-    $(".dummy-patch").show(); 
-    
+    $(".dummy-patch").show();
+
     playBtnSounds(audioSource);
     setButtonState(btn, "playing");
 
@@ -323,17 +323,17 @@ function replayLastAudio(btn) {
     console.log("Resuming Sound");
     audio.muted = false;
     setButtonState(btn, "playing");
-    
+
     // SHOW patch because audio is audible now
-    $(".dummy-patch").show(); 
+    $(".dummy-patch").show();
   } else {
     // --- MUTE (SILENT PLAY) ---
     console.log("Muting Sound");
     audio.muted = true;
     setButtonState(btn, "paused");
-    
+
     // HIDE patch because audio is silent (user wants to interact)
-    $(".dummy-patch").hide(); 
+    $(".dummy-patch").hide();
   }
 }
 
@@ -532,6 +532,236 @@ function resetCupPosition(cup) {
   cup.style.top = `${cup.dataset.startY}px`;
 }
 
+
+
+// function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrongDrop, onGameCompleted }) {
+//   const cups = document.querySelectorAll(cupsSelector);
+//   const slots = document.querySelectorAll(slotsSelector);
+
+//   let activeCup = null;
+//   let dragImg = null;
+//   let offsetX = 0;
+//   let offsetY = 0;
+
+//   // Store original positions for all cups
+//   cups.forEach(cup => {
+//     cup._originalParent = cup.parentElement;
+//     const rect = cup.getBoundingClientRect();
+//     cup.dataset.startX = rect.left + window.scrollX;
+//     cup.dataset.startY = rect.top + window.scrollY;
+
+//     cup.addEventListener("pointerdown", startDrag);
+//   });
+
+//   // Global variable to store the scale
+//   let currentScale = 1;
+
+//   function startDrag(e) {
+//     if (activeCup) return;
+//     e.preventDefault();
+
+//     activeCup = e.currentTarget;
+//     const img = activeCup.querySelector("img");
+//     const rect = img.getBoundingClientRect();
+
+//     // 1. Detect the scale of the game automatically
+//     const wrapper = document.getElementById('f_wrapper') || document.body;
+//     currentScale = wrapper.getBoundingClientRect().width / wrapper.offsetWidth;
+
+//     // 2. Calculate the offset
+//     offsetX = (e.clientX - rect.left) / currentScale;
+//     offsetY = (e.clientY - rect.top) / currentScale;
+
+//     // 3. Create the ghost
+//     dragImg = img.cloneNode(true);
+
+//     // 4. Force Reset styles
+//     Object.assign(dragImg.style, {
+//       position: "absolute",
+//       width: img.offsetWidth + "px",
+//       height: img.offsetHeight + "px",
+//       margin: "0",
+//       transform: "none",
+//       bottom: "auto",
+//       right: "auto",
+//       pointerEvents: "none",
+//       zIndex: "99999"
+//     });
+
+//     // 5. Append to the SAME container as the cup
+//     activeCup.parentElement.appendChild(dragImg);
+//     activeCup.style.opacity = "0";
+
+//     // Initial position
+//     moveAt(e.clientX, e.clientY);
+
+//     document.addEventListener("pointermove", onMove);
+//     document.addEventListener("pointerup", endDrag);
+//   }
+
+//   function moveAt(x, y) {
+//     if (!dragImg || !activeCup) return;
+
+//     const parentRect = activeCup.parentElement.getBoundingClientRect();
+//     const posX = (x - parentRect.left) / currentScale - offsetX;
+//     const posY = (y - parentRect.top) / currentScale - offsetY;
+
+//     dragImg.style.left = posX + "px";
+//     dragImg.style.top = posY + "px";
+//   }
+
+//   function onMove(e) {
+//     moveAt(e.clientX, e.clientY);
+//   }
+
+//   function endDrag(e) {
+//     document.body.classList.remove("dragging-active");
+//     document.removeEventListener("pointermove", onMove);
+//     document.removeEventListener("pointerup", endDrag);
+
+//     // Remove drag image visually
+//     if (dragImg) {
+//       dragImg.remove();
+//       dragImg = null;
+//     }
+
+//     // Make the original visible again
+//     if (activeCup) {
+//       activeCup.style.opacity = "1";
+//     }
+
+//     let droppedOnSlot = false;
+
+//     slots.forEach(slot => {
+//       const rect = slot.getBoundingClientRect();
+//       if (e.clientX > rect.left && e.clientX < rect.right && e.clientY > rect.top && e.clientY < rect.bottom) {
+//         droppedOnSlot = true;
+//         handleDrop(slot);
+//       }
+//     });
+
+//     if (!droppedOnSlot) {
+//       activeCup = null;
+//     }
+//   }
+
+//   function handleDrop(slot) {
+//     if (!activeCup) return;
+
+//     // STOP if slot already has a cup
+//     if (slot.children.length > 0) {
+//       activeCup = null;
+//       return;
+//     }
+
+//     const cupValue = activeCup.dataset.value;
+//     const slotValue = slot.dataset.value;
+
+//     if (cupValue === slotValue) {
+//       // CORRECT DROP - actually append to slot
+//       slot.appendChild(activeCup);
+      
+//       // Disable dragging while cup is in slot
+//       activeCup.style.pointerEvents = "none";
+//       activeCup.style.touchAction = "none";
+//       activeCup.removeEventListener("pointerdown", startDrag);
+      
+//       onCorrectDrop?.(activeCup, slot);
+//       activeCup = null;
+//       if (isGameCompleted(slots)) {
+//         onGameCompleted?.();
+//       }
+//     } else {
+//       // WRONG DROP - DON'T append to slot, keep it where it is temporarily
+//       const cupRef = activeCup;
+      
+//       // Capture current position (where user dropped it)
+//       const wrongPositionRect = cupRef.getBoundingClientRect();
+      
+//       // Store this for animation
+//       cupRef._wrongDropRect = wrongPositionRect;
+      
+//       // Disable dragging temporarily
+//       cupRef.style.pointerEvents = "none";
+//       cupRef.style.touchAction = "none";
+//       cupRef.removeEventListener("pointerdown", startDrag);
+      
+//       onWrongDrop?.(cupRef);
+//       activeCup = null;
+
+//       shakeCup(cupRef, () => {
+//         setTimeout(() => {
+//           animateBack(cupRef);
+//         }, 500);
+//       });
+//     }
+//   }
+
+//   function shakeCup(cup, onComplete) {
+//     if (!cup) return;
+
+//     cup.style.transition = "transform 0.08s ease";
+//     cup.style.transform = "translateX(-5px)";
+
+//     setTimeout(() => { cup.style.transform = "translateX(5px)"; }, 80);
+//     setTimeout(() => { cup.style.transform = "translateX(0)"; }, 160);
+//     setTimeout(() => {
+//       cup.style.transition = "";
+//       onComplete && onComplete();
+//     }, 200);
+//   }
+
+//   function animateBack(cup) {
+//     if (!cup || !cup._originalParent) return;
+
+//     const originalParent = cup._originalParent;
+//     const DURATION = 1000;
+
+//     // Use the stored wrong drop position if available, otherwise get current position
+//     const startRect = cup._wrongDropRect || cup.getBoundingClientRect();
+    
+//     // Move back to original parent
+//     originalParent.appendChild(cup);
+    
+//     // Get final position
+//     const endRect = cup.getBoundingClientRect();
+
+//     // Calculate delta
+//     const deltaX = startRect.left - endRect.left;
+//     const deltaY = startRect.top - endRect.top;
+
+//     // Clean up stored position
+//     delete cup._wrongDropRect;
+
+//     // Setup animation
+//     cup.style.pointerEvents = "none";
+//     cup.style.transition = "none";
+//     cup.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+
+//     // Force reflow
+//     cup.getBoundingClientRect();
+
+//     // Animate
+//     requestAnimationFrame(() => {
+//       cup.style.transition = `transform ${DURATION}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+//       cup.style.transform = "translate(0, 0)";
+//     });
+
+//     setTimeout(() => {
+//       cup.style.transition = "";
+//       cup.style.transform = "";
+//       cup.style.pointerEvents = "";
+//       cup.addEventListener("pointerdown", startDrag);
+//     }, DURATION);
+//   }
+
+//   function isGameCompleted(slots) {
+//     return [...slots].every(slot => {
+//       const cup = slot.querySelector(".cup");
+//       return cup && cup.dataset.value === slot.dataset.value;
+//     });
+//   }
+// }
 
 
 function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrongDrop, onGameCompleted }) {
@@ -733,6 +963,7 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
       cup.style.transition = "";
       cup.style.transform = "";
       cup.style.pointerEvents = "";
+      cup.style.touchAction = "";
       cup.addEventListener("pointerdown", startDrag);
     }, DURATION);
   }
@@ -747,23 +978,36 @@ function enableDragAndDrop({ cupsSelector, slotsSelector, onCorrectDrop, onWrong
 
 
 
-
-
 function stayPage() {
-  playClickThen();
-  // AudioController.play();
-  $("#home-popup").hide();
+    playClickThen();
+    // AudioController.play();
+    
+    // Resume simulation audio if it was playing before popup
+    if (typeof resumeSimulationAudio === 'function') {
+        resumeSimulationAudio();
+    }
+    
+    $("#home-popup").hide();
 }
-function leavePage() {
-  playClickThen();
-  var audio = document.getElementById("simulationAudio");
-  if (audio) {
-    // Stop audio whether it's playing or paused
-    audio.pause();
-    audio.currentTime = 0;
-  }
 
-  jumtoPage(5);
+function leavePage() {
+    playClickThen();    
+    var audio = document.getElementById("simulationAudio");
+    if (audio) {
+        // Stop audio whether it's playing or paused
+        audio.pause();
+        audio.currentTime = 0;
+    }
+    
+    // Clear the manual pause flag since we're leaving
+    if (typeof isManuallyPaused !== 'undefined') {
+        isManuallyPaused = false;
+    }
+    if (typeof simulationWasPlaying !== 'undefined') {
+        simulationWasPlaying = false;
+    }
+    
+    jumtoPage(5);
 }
 
 function jumtoPage(pageNo) {

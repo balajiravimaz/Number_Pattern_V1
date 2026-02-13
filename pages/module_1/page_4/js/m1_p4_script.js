@@ -1534,29 +1534,42 @@ function playFeedbackAudio(_audio) {
   })
 }
 
-
-
-
 function stayPage() {
   playClickThen();
-  AudioController.play();
+  // AudioController.play();
+
+  // Resume simulation audio if it was playing before popup
+  if (typeof resumeSimulationAudio === 'function') {
+    resumeSimulationAudio();
+  }
+
   $("#home-popup").hide();
 }
+
 function leavePage() {
   playClickThen();
-  var audio = document.getElementById("simulationAudio");
+
   if (window.stopIdleSoundNow) {
     window.stopIdleSoundNow();
   }
+
+  var audio = document.getElementById("simulationAudio");
   if (audio) {
     // Stop audio whether it's playing or paused
     audio.pause();
     audio.currentTime = 0;
   }
 
+  // Clear the manual pause flag since we're leaving
+  if (typeof isManuallyPaused !== 'undefined') {
+    isManuallyPaused = false;
+  }
+  if (typeof simulationWasPlaying !== 'undefined') {
+    simulationWasPlaying = false;
+  }
+
   jumtoPage(2);
 }
-
 function jumtoPage(pageNo) {
   playClickThen();
 
@@ -1571,6 +1584,8 @@ var activeAudio = null;
 
 function playBtnSounds(soundFile, callback) {
   const audio = document.getElementById("simulationAudio");
+
+  audio.muted = false;
 
   if (!soundFile) {
     console.warn("Audio source missing!");
@@ -1788,16 +1803,16 @@ function showEndAnimations() {
 
 
 
-function closeIntroPop(ldx) {
-  playClickThen();
-  // AudioController.play();
-  document.getElementById(ldx).style.display = 'none';
-  let audio = document.getElementById("popupAudio");
-  if (audio.src) {
-    audio.pause();
-    audio.currentTime = 0;
-  }
-}
+// function closeIntroPop(ldx) {
+//   playClickThen();
+//   // AudioController.play();
+//   document.getElementById(ldx).style.display = 'none';
+//   let audio = document.getElementById("popupAudio");
+//   if (audio.src) {
+//     audio.pause();
+//     audio.currentTime = 0;
+//   }
+// }
 
 function replayLastAudio(btnElement) {
   playClickThen();
@@ -1994,8 +2009,8 @@ function withAudioSync() {
   _tweenTimeline.add(animateFadeIn($("h1"), 0.5).play(), 0.5);
 
   _tweenTimeline.add(animateFadeIn($(".inst").find("#inst_1"), 0.5).play(), 0.5);
-  _tweenTimeline.add(animateFadeOut($(".inst").find("#inst_1"), 0.5).play(), 4);
-  _tweenTimeline.add(animateFadeIn($(".inst").find("#inst_2"), 0.5).play(), 4.2);
+  // _tweenTimeline.add(animateFadeOut($(".inst").find("#inst_1"), 0.5).play(), 4);
+  // _tweenTimeline.add(animateFadeIn($(".inst").find("#inst_2"), 0.5).play(), 4.2);
   _tweenTimeline.add(animateFadeOut($(".ost"), 0.5).play(), 4.5);
   _tweenTimeline.add(animateFadeOut($(".dummy-patch"), 0.5).play(), 7);
   // _tweenTimeline.add(animateFadeIn($(".inst"), 0.5).play(), 5);

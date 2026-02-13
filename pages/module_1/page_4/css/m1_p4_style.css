@@ -131,7 +131,6 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst #inst_1,
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst #inst_2 {
-  opacity: 0;
   display: none;
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio {

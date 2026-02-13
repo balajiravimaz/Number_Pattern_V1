@@ -432,33 +432,40 @@ function fillNextSlot(value) {
 
   if (!$slot.length || !item || !$cup.length) return;
 
-  $(".cup").css("pointer-events", "none"); // lock clicking during animation
+  $(".cup").css("pointer-events", "none");
 
-  const $img = $cup.find("img").clone();
+  const wrapper = document.getElementById("f_wrapper") || document.body;
+  const wrapperRect = wrapper.getBoundingClientRect();
+  const scale = wrapperRect.width / wrapper.offsetWidth;
 
-  const cupOffset = $cup.offset();
-  const slotOffset = $slot.offset();
+  const cupRect = $cup[0].getBoundingClientRect();
+  const slotRect = $slot[0].getBoundingClientRect();
 
-  // floating animation element
-  const $anim = $img.css({
+  // relative positions inside wrapper
+  const startX = (cupRect.left - wrapperRect.left) / scale;
+  const startY = (cupRect.top - wrapperRect.top) / scale;
+
+  const endX = (slotRect.left - wrapperRect.left) / scale;
+  const endY = (slotRect.top - wrapperRect.top) / scale;
+
+  const $anim = $cup.find("img").clone().css({
     position: "absolute",
-    top: cupOffset.top,
-    left: cupOffset.left,
-    width: $cup.width(),
-    height: $cup.height(),
+    left: startX,
+    top: startY,
+    width: cupRect.width / scale,
+    height: cupRect.height / scale,
     zIndex: 9999,
     pointerEvents: "none"
-  }).appendTo("body");
+  }).appendTo(wrapper);
 
-  // animate movement
+  // animate
   $anim.animate({
-    top: slotOffset.top,
-    left: slotOffset.left,
-    width: $slot.width(),
-    height: $slot.height()
+    left: endX,
+    top: endY,
+    width: slotRect.width / scale,
+    height: slotRect.height / scale
   }, 400, "swing", function () {
 
-    // 👉 NOW fill slot AFTER animation
     $slot
       .removeClass("empty")
       .addClass("filled sparkle")
@@ -468,14 +475,14 @@ function fillNextSlot(value) {
     $anim.remove();
     setTimeout(() => $slot.removeClass("sparkle"), 600);
 
-    // continue logic AFTER animation completes
     dataValue.push(value);
     updateCorrectNextValue();
+
     if ($(".slot.empty").length === 0) {
-      setTimeout(function () {
+      setTimeout(() => {
         showEndAnimations();
         playBtnSounds(_pageData.sections[sectionCnt - 1].finalAudio);
-      }, 500)
+      }, 500);
       $(".cup").css("pointer-events", "none");
     } else {
       renderCups();
@@ -483,6 +490,7 @@ function fillNextSlot(value) {
     }
   });
 }
+
 
 
 /* ---------------- Feedback ---------------- */
@@ -712,22 +720,38 @@ function resetCupPosition(cup) {
 
 
 
-
 function stayPage() {
-  playClickThen();
-  AudioController.play();
-  $("#home-popup").hide();
+    playClickThen();
+    // AudioController.play();
+    
+    // Resume simulation audio if it was playing before popup
+    if (typeof resumeSimulationAudio === 'function') {
+        resumeSimulationAudio();
+    }
+    
+    $("#home-popup").hide();
 }
-function leavePage() {
-  playClickThen();
-  var audio = document.getElementById("simulationAudio");
-  if (audio) {
-    // Stop audio whether it's playing or paused
-    audio.pause();
-    audio.currentTime = 0;
-  }
 
-  jumtoPage(5);
+function leavePage() {
+    playClickThen();
+    
+    
+    var audio = document.getElementById("simulationAudio");
+    if (audio) {
+        // Stop audio whether it's playing or paused
+        audio.pause();
+        audio.currentTime = 0;
+    }
+    
+    // Clear the manual pause flag since we're leaving
+    if (typeof isManuallyPaused !== 'undefined') {
+        isManuallyPaused = false;
+    }
+    if (typeof simulationWasPlaying !== 'undefined') {
+        simulationWasPlaying = false;
+    }
+    
+    jumtoPage(5);
 }
 
 function jumtoPage(pageNo) {

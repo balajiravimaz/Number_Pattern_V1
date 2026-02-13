@@ -2621,53 +2621,48 @@ document.addEventListener("fullscreenchange", () => {
 });
 
 function goHome(pageCount) {
-
     console.log("Incoming pageCount:", pageCount);
-
     playClickThen();
-
-    // stop audio
+    
+    // ✅ CHECK CURRENT PAGE TYPE (NOT TARGET)
+    var currentPageDetail = _menuView.getPageDetails(_controller.pageCnt);
+    var currentType = currentPageDetail?.type;
+    console.log("Current page type:", currentType);
+    
+    // 👉 if leaving simulation/game → show popup
+    if (currentType === 'simulation' || currentType === 'game') {
+        console.log("Leaving simulation → show popup");
+        
+        // Pause simulation audio using existing function
+        pauseSimulationAudio();
+        
+        $(".popup-home").css("display", "flex");
+        // store where user wanted to go
+        window.__nextPage = pageCount;
+        return;
+    }
+    
+    // stop audio (for non-simulation/game pages)
     const audio = document.getElementById("simulationAudio");
     if (audio && typeof audio.pause === "function") {
         audio.pause();
         audio.currentTime = 0;
     }
-
-    sessionStorage.setItem("stopAudio", "true");
-
+    // sessionStorage.setItem("stopAudio", "true");
+    
     // HOME
     if (pageCount === -1) {
         location.reload();
         return;
     }
-
-    // ✅ CHECK CURRENT PAGE TYPE (NOT TARGET)
-    var currentPageDetail = _menuView.getPageDetails(_controller.pageCnt);
-    var currentType = currentPageDetail?.type;
-
-    console.log("Current page type:", currentType);
-
-    // 👉 if leaving simulation/game → show popup
-    if (currentType === 'simulation' || currentType === 'game') {
-
-        console.log("Leaving simulation → show popup");
-
-        $(".popup-home").css("display", "flex");
-
-        // store where user wanted to go
-        window.__nextPage = pageCount;
-
-        return;
-    }
-
+    
     // normal navigation
     _controller.pageCnt = Number(pageCount);
-
     $(".home_btn").css({
         backgroundImage: "url(assets/images/home.png)"
     });
-
     _controller.updateViewNow();
+    
     if (currentType === 'video') {
         $("footer").find("p").show();
     }
@@ -2685,41 +2680,55 @@ $(".popup-continue").on("click", function () {
 });
 
 
-
-
-
 let simulationWasPlaying = false;
-
+let isManuallyPaused = false; // Track if audio was manually paused
 
 function getSimulationAudio() {
-
     return document.getElementById("simulationAudio");
 }
 
 function pauseSimulationAudio() {
     var pageDetail = _menuView.getPageDetails(_controller.pageCnt);
     var _pageType = pageDetail.type;
-
     const audio = getSimulationAudio();
     if (!audio) return;
 
     simulationWasPlaying = !audio.paused;
-    audio.pause();
-
+    if (simulationWasPlaying) {
+        isManuallyPaused = true; // Set flag when manually pausing
+        audio.pause();
+    }
 }
 
 function resumeSimulationAudio() {
-    console.log("woking @@@@@@@@@ resume")
     var pageDetail = _menuView.getPageDetails(_controller.pageCnt);
     var _pageType = pageDetail.type;
-
     const audio = getSimulationAudio();
     if (!audio) return;
 
-    if (simulationWasPlaying && audio.src) {
+    // Only resume if it was playing AND not ended
+    if (simulationWasPlaying && audio.src && !audio.ended) {
+        isManuallyPaused = false; // Clear flag when resuming
         audio.play().catch(() => { });
     }
-
     simulationWasPlaying = false;
+}
 
+function closeIntroPop(selector) {
+    console.log(selector, "selector")
+    if (!selector.startsWith('#') && !selector.startsWith('.')) {
+        selector = '#' + selector;
+    }
+
+    // Pause popup audio
+    const audio = document.getElementById('popupAudio');
+    if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+    }
+
+    // Resume simulation audio (will check if it was playing before)
+    resumeSimulationAudio();
+
+    $(selector).hide();
 }

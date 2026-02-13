@@ -2561,6 +2561,7 @@ function closeTranscript() {
 // newly functions global
 
 function checkGlobalAudio() {
+
     const musicButtons = document.querySelectorAll('.music'); // all buttons
     if (!musicButtons.length) return;
 
@@ -2667,6 +2668,9 @@ function goHome(pageCount) {
     });
 
     _controller.updateViewNow();
+    if (currentType === 'video') {
+        $("footer").find("p").show();
+    }
 }
 
 //------------------nav new global code added--------------------------

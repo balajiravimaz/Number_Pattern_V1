@@ -975,16 +975,16 @@ function showEndAnimations() {
   });
 }
 
-function closeIntroPop(ldx) {
-  playClickThen();
-  AudioController.play();
-  document.getElementById(ldx).style.display = 'none';
-  let audio = document.getElementById("popupAudio");
-  if (audio.src) {
-    audio.pause();
-    audio.currentTime = 0;
-  }
-}
+// function closeIntroPop(ldx) {
+//   playClickThen();
+//   AudioController.play();
+//   document.getElementById(ldx).style.display = 'none';
+//   let audio = document.getElementById("popupAudio");
+//   if (audio.src) {
+//     audio.pause();
+//     audio.currentTime = 0;
+//   }
+// }
 
 function replayLastAudio() {
   playClickThen();

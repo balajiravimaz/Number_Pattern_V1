@@ -54,7 +54,7 @@ function _pageLoaded() {
 
     }
     appState.pageCount = _controller.pageCnt - 1;
-
+        console.log("_controller._globalMusicPlaying",_controller._globalMusicPlaying)
          if (_controller._globalMusicPlaying) {
             document.getElementById("audio_src").play();
         } 
@@ -69,6 +69,7 @@ function _pageLoaded() {
     setTimeout(function () {
         initPageAnimations();
         showVisitedModule();
+        checkGlobalAudio();
     }, 100)
 
 }

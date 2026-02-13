@@ -746,26 +746,31 @@ function toggleAudio(el) {
         audio.muted = false;
         audio.play();
         el.classList.replace("mute", "playing");
+         _controller._globalMusicPlaying = true;
     } else {
-        audio.pause();
+        audio.pause();        
         el.classList.replace("playing", "mute");
+         _controller._globalMusicPlaying = false;
+        
     }
 }
 
-function closeIntroPop(selector) {
-    console.log(selector, "slector")
-    if (!selector.startsWith('#') && !selector.startsWith('.')) {
-        selector = '#' + selector;
-    }
+// function closeIntroPop(selector) {
+//     console.log(selector, "slector")
+//     if (!selector.startsWith('#') && !selector.startsWith('.')) {
+//         selector = '#' + selector;
+//     }
 
-    const audio = document.getElementById('popupAudio');
-    if (audio) {
-        audio.pause();
-        audio.currentTime = 0;
-    }
-    resumeSimulationAudio();
-    $(selector).hide();
-}
+//     const audio = document.getElementById('popupAudio');
+//     if (audio) {
+//         audio.pause();
+//         audio.currentTime = 0;
+//     }
+//     resumeSimulationAudio();
+//     $(selector).hide();
+// }
+
+
 /* 
 function  globalAudioPlay(ldx){
     // console.log("its ");
