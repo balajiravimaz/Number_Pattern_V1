@@ -2574,14 +2574,13 @@ function checkGlobalAudio() {
 }
 
 
-
 function toggleFullscreen(btn) {
+    playClickThen();
 
-    playClickThen()
+    console.log("full screen");
 
     const doc = document;
     const elem = doc.documentElement;
-
 
     const isFullscreen =
         doc.fullscreenElement ||
@@ -2589,22 +2588,19 @@ function toggleFullscreen(btn) {
         doc.msFullscreenElement;
 
     if (!isFullscreen) {
-        // OPEN fullscreen
         (elem.requestFullscreen ||
             elem.webkitRequestFullscreen ||
             elem.msRequestFullscreen).call(elem);
-
-        setButtonState(btn, true);
     } else {
-        // CLOSE fullscreen
         (doc.exitFullscreen ||
             doc.webkitExitFullscreen ||
             doc.msExitFullscreen).call(doc);
-
-        setButtonState(btn, false);
     }
 
+    // Immediately update button state
+    setButtonState(btn, !isFullscreen);
 }
+
 
 function setButtonState(btn, isFullscreen) {
     btn.classList.toggle("fullScreen", !isFullscreen);
@@ -2616,32 +2612,38 @@ function setButtonState(btn, isFullscreen) {
 }
 
 document.addEventListener("fullscreenchange", () => {
-    const btn = document.getElementById("full-screen");
+    const btn = document.querySelector(".full-screen");
     setButtonState(btn, !!document.fullscreenElement);
 });
+
+
+
+
 
 function goHome(pageCount) {
     console.log("Incoming pageCount:", pageCount);
     playClickThen();
-    
+
     // ✅ CHECK CURRENT PAGE TYPE (NOT TARGET)
     var currentPageDetail = _menuView.getPageDetails(_controller.pageCnt);
     var currentType = currentPageDetail?.type;
     console.log("Current page type:", currentType);
-    
+
     // 👉 if leaving simulation/game → show popup
     if (currentType === 'simulation' || currentType === 'game') {
         console.log("Leaving simulation → show popup");
-        
+
         // Pause simulation audio using existing function
         pauseSimulationAudio();
-        
+        $(".playPause").hide();
+
         $(".popup-home").css("display", "flex");
         // store where user wanted to go
         window.__nextPage = pageCount;
         return;
     }
-    
+   
+
     // stop audio (for non-simulation/game pages)
     const audio = document.getElementById("simulationAudio");
     if (audio && typeof audio.pause === "function") {
@@ -2649,20 +2651,20 @@ function goHome(pageCount) {
         audio.currentTime = 0;
     }
     // sessionStorage.setItem("stopAudio", "true");
-    
+
     // HOME
     if (pageCount === -1) {
         location.reload();
         return;
     }
-    
+
     // normal navigation
     _controller.pageCnt = Number(pageCount);
     $(".home_btn").css({
         backgroundImage: "url(assets/images/home.png)"
     });
     _controller.updateViewNow();
-    
+
     if (currentType === 'video') {
         $("footer").find("p").show();
     }
@@ -2732,3 +2734,5 @@ function closeIntroPop(selector) {
 
     $(selector).hide();
 }
+
+

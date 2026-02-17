@@ -21,6 +21,8 @@ _checkAudioFlag = false;
 _tweenTimeline = null;
 _popTweenTimeline = null;
 var lastPatternId = null;
+var _isSimulationPaused = false;
+var gameStarted = false;
 
 var _audioIndex = 0;
 _videoId = null;
@@ -51,7 +53,7 @@ function _pageLoaded() {
   if (_videoRequired) _videoId = "courseVideo";
 
   //addSlideData();
-  console.log(_pageData.sections, _pageData.sections[0].backBtnSrc, "pageDAtat")
+  $(".playPause").show();
   addSectionData();
   appState.pageCount = _controller.pageCnt - 1;
   $('.introInfo').attr('data-popup', 'introPopup-9');
@@ -96,14 +98,17 @@ function addSectionData() {
           resetSimulationAudio();
           $(".wrapTextaudio").addClass("paused");
           window.enableCaterpillarMovement();
+          gameStarted = true;
+          window.enableSnakeControls();
         });
 
       });
 
       let instText = '';
       for (let k = 0; k < _pageData.sections[sectionCnt - 1].iText.length; k++) {
-        instText += `<p tabindex="0" id="inst_${k + 1}" aria-label="${removeTags(_pageData.sections[sectionCnt - 1].iText[k])}">${_pageData.sections[sectionCnt - 1].iText[k]} <button class="wrapTextaudio playing" id="wrapTextaudio_${k}" onClick="replayLastAudio(this)"></button></p>`
+        instText += `<p tabindex="0" id="inst_${k + 1}" aria-label="${removeTags(_pageData.sections[sectionCnt - 1].iText[k])}">${_pageData.sections[sectionCnt - 1].iText[k]} <button class="wrapTextaudio playing" id="wrapTextaudio_${k}" onclick="replayLastAudio(this, '${_pageData.sections[sectionCnt - 1].content.replayAudios[k]}')"></button></p>`
       }
+
       $("#section-" + sectionCnt)
         .find(".content-holder")
         .find(".col-left")
@@ -272,7 +277,7 @@ function initSnakeGame() {
 
   // FIX 1: Enable high-quality image rendering
   ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = 'high'; // ✅ Added for better quality
+  ctx.imageSmoothingQuality = 'high';
   ctx.webkitImageSmoothingEnabled = true;
   ctx.mozImageSmoothingEnabled = true;
   ctx.msImageSmoothingEnabled = true;
@@ -287,14 +292,18 @@ function initSnakeGame() {
   const WAVE_DURATION = 800;
   let isEndGameWave = false;
 
+  // ✅ Wrong food animation state
+  let wrongFoodAnimation = null;
+  let wrongFoodData = null;
+
   // Movement Animation
   let prevSnake = [];
   let moveStartTime = 0;
   let isMovingAnim = false;
 
-  // 1. CHANGED: Slower, gentler animation timing
-  const MOVE_ANIM_DURATION = 400; // 400ms for a slow, gentle slide
-  const MOVE_DELAY = 400;         // Match delay to animation to prevent overlapping inputs
+  // ✅ FIX 4: Faster movement speed for both mouse and keyboard
+  const MOVE_ANIM_DURATION = 250; // Reduced from 400ms to 250ms for faster movement
+  const MOVE_DELAY = 250;         // Match delay to animation
 
   /* =========================
      GAME CONFIG
@@ -311,7 +320,7 @@ function initSnakeGame() {
   let idleTimer = null;
   let isIdle = false;
   let animationFrameId = null;
-  const IDLE_DURATION = 10000;
+  const IDLE_DURATION = 5000;
   let idleAudioInstance = null;
 
   // Grid Offsets
@@ -337,10 +346,8 @@ function initSnakeGame() {
   // --- STATE VARIABLES ---
   let isProcessingMove = false;
   let isWrongAction = false;
-  let isCorrectAction = false; // <--- NEW: Locks controls during correct audio// <--- NEW: Strictly locks controls during wrong audio
-  let spawnTimer = null;     // <--- NEW: Prevents double timers
-
-
+  let isCorrectAction = false;
+  let spawnTimer = null;
 
   /* =========================
      CONTROLS
@@ -427,68 +434,54 @@ function initSnakeGame() {
     }
   }
 
-
-  // ✅ Store DPR globally to avoid recalculation
   let dpr = window.devicePixelRatio || 1;
 
+  // ✅ FIX 3: Improved fullscreen handling with proper scaling
   function resizeCanvas() {
-    // 1. Force canvas to fit parent visually (Fixes "going outside" issue)
     canvas.style.width = "100%";
     canvas.style.height = "100%";
 
     const rect = gameWrapper.getBoundingClientRect();
 
-    // Safety check: if element is hidden, retry later
     if (rect.width === 0 || rect.height === 0) {
       requestAnimationFrame(resizeCanvas);
       return;
     }
 
-    // Use device pixel ratio for sharp rendering
     dpr = window.devicePixelRatio || 1;
 
-    // Set internal buffer size (High DPI)
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
 
-    // Scale context to match device pixel ratio
-    ctx.setTransform(1, 0, 0, 1, 0, 0); // ✅ Reset transform first
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(dpr, dpr);
 
-    // Re-enable high-quality rendering after scaling
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
-    // --- Grid Calculation Logic ---
-    tileSize = Math.min(rect.width, rect.height) / (BASE_TILE_COUNT + 1);
+    // ✅ Better grid calculation for fullscreen mode
+    // Use slightly more padding in fullscreen to ensure content stays visible
+    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+    const paddingMultiplier = isFullscreen ? 1.5 : 1.2;
 
-    // Calculate how many tiles fit
-    tileCountX = Math.floor(rect.width / tileSize) - 1;
-    tileCountY = Math.floor(rect.height / tileSize) - 1;
+    tileSize = Math.min(rect.width, rect.height) / (BASE_TILE_COUNT + paddingMultiplier);
 
-    // Calculate centering offsets
+    tileCountX = Math.ceil(rect.width / tileSize); // Add extra margin
+    tileCountY = Math.ceil(rect.height / tileSize); // Add extra margin
+
     const usedWidth = tileCountX * tileSize;
     const usedHeight = tileCountY * tileSize;
 
     gridOffsetX = (rect.width - usedWidth) / 2;
     gridOffsetY = (rect.height - usedHeight) / 2;
 
-    // Force immediate redraw to update clip path and grid
     render();
   }
 
-
   function clearCanvas() {
-    // ✅ Save current transform before clearing
     ctx.save();
-
-    // ✅ Reset transform to identity for clearing
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-    // ✅ Clear entire canvas in device pixels
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // ✅ Restore the DPR scaling transform
     ctx.restore();
   }
 
@@ -518,9 +511,7 @@ function initSnakeGame() {
     rectangle: new Image()
   };
   const headImg = new Image();
-  const tailImg = new Image();
 
-  tailImg.src = "pages/module_1/page_4/images/tail.png";
   headImg.src = "pages/module_1/page_4/images/head.png";
 
   function loadShapeImages() {
@@ -555,7 +546,6 @@ function initSnakeGame() {
       if (t >= 1) isMovingAnim = false;
     }
 
-    // ✅ END GAME WAVE ANIMATION - like reference
     if (isEndGameWave) {
       const now = performance.now();
 
@@ -563,45 +553,60 @@ function initSnakeGame() {
         const seg = snake[i];
         const isHead = (i === 0);
 
-        // Calculate wave offset for this segment
         const waveY = Math.sin((now / 400) + (i * 0.5)) * (tileSize * 0.1);
 
         const cx = gridOffsetX + seg.x * tileSize + tileSize / 2;
-        const cy = gridOffsetY + seg.y * tileSize + tileSize / 2 + waveY; // Apply wave
+        const cy = gridOffsetY + seg.y * tileSize + tileSize / 2 + waveY;
 
         if (isHead) {
-          // Draw head
           const size = tileSize * 1.15;
           const headX = Math.round(cx - size / 2);
           const headY = Math.round(cy - size / 2);
           const headSize = Math.round(size);
           ctx.drawImage(headImg, headX, headY, headSize, headSize);
-        } else if (i === snake.length - 1) {
-          // Draw tail
-          const tailWidth = tileSize * 1.0;
-          const tailHeight = tileSize * 0.5;
-          const tailX = Math.round(cx - tailWidth / 2);
-          const tailY = Math.round(cy - tailHeight / 2);
-          ctx.drawImage(tailImg, tailX, tailY, Math.round(tailWidth), Math.round(tailHeight));
         } else {
-          // Draw body with pattern
+          // ✅ FIX 1: Removed tail - only draw body segments
           const patternIndex = i - 1;
           const shape = snakePattern[patternIndex];
           if (!shape || !shapeImages[shape]) continue;
 
           let drawW, drawH;
+
           if (shape === 'rectangle') {
-            drawW = tileSize * 1.05;
-            drawH = tileSize * 0.65;
-          } else if (shape === 'square') {
-            drawW = tileSize * 0.95;
-            drawH = tileSize * 0.95;
+
+            drawW = tileSize * 1.0;
+            drawH = tileSize * 0.72;
+
+            // Detect direction
+            const isVertical = Math.abs(dy) > Math.abs(dx);
+
+            // When vertical, push rectangle slightly so edges meet circle
+            const adjust = tileSize * 0.14;
+
+            const offsetX = 0;
+            const offsetY = isVertical ? -adjust : 0;
+
+            ctx.drawImage(
+              shapeImages[shape],
+              -drawW / 2 + offsetX,
+              -drawH / 2 + offsetY,
+              drawW,
+              drawH
+            );
+
+            ctx.restore();
+            continue;
+          }
+
+          else if (shape === 'square') {
+            drawW = tileSize * 0.98;   // almost full tile
+            drawH = tileSize * 0.98;
           } else {
-            // Circle - Perfect 1:1 ratio
-            const circleSize = tileSize * 0.95;
+            const circleSize = tileSize * 1.04;  // increased slightly
             drawW = circleSize;
             drawH = circleSize;
           }
+
 
           const drawX = Math.round(cx - drawW / 2);
           const drawY = Math.round(cy - drawH / 2);
@@ -609,13 +614,12 @@ function initSnakeGame() {
         }
       }
 
-      // Continue animation
       requestAnimationFrame(render);
       return;
     }
 
-    // --- DRAW BODY ---
-    for (let i = 1; i < snake.length - 1; i++) {
+    // --- DRAW BODY (excluding last segment which was the tail) ---
+    for (let i = 1; i < snake.length; i++) { // ✅ Changed to include all segments except head
       const seg = snake[i];
       const nextSeg = snake[i - 1];
 
@@ -662,23 +666,21 @@ function initSnakeGame() {
       ctx.translate(cx, cy);
       ctx.rotate(rotation);
 
-      // FIX 3: Adjusted shape dimensions to prevent edge cutoff
       let drawW, drawH;
 
       if (shape === 'rectangle') {
-        drawW = tileSize * 1.1;  // ✅ Width stays same
-        drawH = tileSize * 0.7;  // ✅ Reduced height so it looks like rectangle not square
+        drawW = tileSize * 1.02;
+        drawH = tileSize * 0.72;
       } else if (shape === 'square') {
-        drawW = tileSize * 1.0;  // ✅ Full tile size for perfect square
-        drawH = tileSize * 1.0;
+        drawW = tileSize * 0.98;
+        drawH = tileSize * 0.98;
       } else {
-        // Circle - CRITICAL: Must be perfectly square for round appearance
-        const circleSize = tileSize * 1.0;
-        drawW = circleSize;  // ✅ Same width and height for perfect circle
-        drawH = circleSize;  // ✅ Same width and height for perfect circle
+        const circleSize = tileSize * 1.04;  // increased slightly
+        drawW = circleSize;
+        drawH = circleSize;
       }
 
-      // FIX 4: Draw with sub-pixel precision to avoid blurriness
+
       const drawX_precise = Math.round(-drawW / 2);
       const drawY_precise = Math.round(-drawH / 2);
       const drawW_precise = Math.round(drawW);
@@ -695,65 +697,7 @@ function initSnakeGame() {
       ctx.restore();
     }
 
-    // --- DRAW TAIL ---
-    if (snake.length > 1) {
-      const tailIndex = snake.length - 1;
-      const tail = snake[tailIndex];
-      const beforeTail = snake[tailIndex - 1];
-
-      let drawX = tail.x;
-      let drawY = tail.y;
-      let refX = beforeTail.x;
-      let refY = beforeTail.y;
-
-      if (isMovingAnim && prevSnake.length > 0) {
-        let prevTail = prevSnake[prevSnake.length - 1];
-        if (snake.length > prevSnake.length) {
-          drawX = tail.x;
-          drawY = tail.y;
-        } else {
-          drawX = lerp(prevTail.x, tail.x, t);
-          drawY = lerp(prevTail.y, tail.y, t);
-          let prevBeforeTail = prevSnake[prevSnake.length - 2];
-          refX = lerp(prevBeforeTail.x, beforeTail.x, t);
-          refY = lerp(prevBeforeTail.y, beforeTail.y, t);
-        }
-      }
-
-      const cx = gridOffsetX + drawX * tileSize + tileSize / 2;
-      const cy = gridOffsetY + drawY * tileSize + tileSize / 2;
-
-      // ✅ Tail dimensions - short and low like real snake tail
-      const tailWidth = tileSize * 1.0;   // ✅ Width to connect properly
-      const tailHeight = tileSize * 0.5;  // ✅ 50% of body height - short and low
-
-      ctx.save();
-      ctx.translate(cx, cy);
-
-      const dx = refX - drawX;
-      const dy = refY - drawY;
-      let rotation = Math.atan2(dy, dx);
-      ctx.rotate(rotation);
-
-      if (isMovingAnim) {
-        const wagSpeed = 0.02;
-        const wagAmount = tileSize * 0.15;
-        const wagOffset = Math.sin(performance.now() * wagSpeed) * wagAmount;
-        ctx.translate(0, wagOffset);
-      }
-
-      // ✅ Move tail forward to touch body edge without gap
-      const tailForwardOffset = tileSize * 0.15;  // ✅ Slightly increased to ensure connection
-
-      // FIX 5: Use rounded values for crisp rendering
-      const tailX = Math.round((-tailWidth / 2) + tailForwardOffset);
-      const tailY = Math.round(-tailHeight / 2);
-      const tailW = Math.round(tailWidth);
-      const tailH = Math.round(tailHeight);
-
-      ctx.drawImage(tailImg, tailX, tailY, tailW, tailH);
-      ctx.restore();
-    }
+    // ✅ FIX 1: Tail drawing removed completely
 
     // --- DRAW HEAD ---
     if (snake.length > 0) {
@@ -792,9 +736,8 @@ function initSnakeGame() {
       }
 
       const size = tileSize * 1.15 * headScale;
-      const headOverlapReduction = tileSize * 0.1;
+      const headOverlapReduction = 0; // ✅ Removed gap - set to 0 instead of tileSize * 0.1
 
-      // FIX 6: Use rounded values for crisp head rendering
       const headX = Math.round((-size / 2) + headOverlapReduction);
       const headY = Math.round(-size / 2);
       const headSize = Math.round(size);
@@ -808,7 +751,6 @@ function initSnakeGame() {
     }
   }
 
-
   function drawFood() {
     foods.forEach(f => {
       const cx = gridOffsetX + f.x * tileSize + tileSize / 2;
@@ -818,21 +760,18 @@ function initSnakeGame() {
 
       let drawW, drawH;
 
-      // FIX 7: Adjusted food dimensions for proper display
       if (f.shape === 'rectangle') {
-        drawW = tileSize * 0.95; // ✅ Width 
-        drawH = tileSize * 0.65; // ✅ Reduced to look like rectangle not square
+        drawW = tileSize * 1.0;
+        drawH = tileSize * 0.85;
       } else if (f.shape === 'square') {
-        drawW = tileSize * 0.8;  // ✅ Consistent size
+        drawW = tileSize * 0.8;
         drawH = tileSize * 0.8;
       } else {
-        // Circle - CRITICAL: Must be perfectly square for round appearance
         const circleSize = tileSize * 0.85;
-        drawW = circleSize;  // ✅ Same width and height for perfect circle
-        drawH = circleSize;  // ✅ Same width and height for perfect circle
+        drawW = circleSize;
+        drawH = circleSize;
       }
 
-      // FIX 8: Use rounded positions for crisp rendering
       const foodX = Math.round(cx - drawW / 2);
       const foodY = Math.round(cy - drawH / 2);
       const foodW = Math.round(drawW);
@@ -846,8 +785,73 @@ function initSnakeGame() {
         foodH
       );
     });
-  }
 
+    // ✅ Draw wrong food animation if active
+    if (wrongFoodData && wrongFoodAnimation) {
+      const now = performance.now();
+      const elapsed = now - wrongFoodAnimation.startTime;
+      const progress = Math.min(elapsed / wrongFoodAnimation.duration, 1);
+
+      let offsetX = 0;
+      let offsetY = 0;
+      let alpha = 1;
+
+      if (progress < 0.3) {
+        // Shake phase (first 30% of animation)
+        const shakeProgress = progress / 0.3;
+        const shakeIntensity = tileSize * 0.15 * (1 - shakeProgress);
+        offsetX = Math.sin(shakeProgress * Math.PI * 8) * shakeIntensity;
+        offsetY = Math.cos(shakeProgress * Math.PI * 8) * shakeIntensity * 0.5;
+      } else {
+        // Move away and fade phase (remaining 70%)
+        const moveProgress = (progress - 0.3) / 0.7;
+        const easeOut = 1 - Math.pow(1 - moveProgress, 3);
+
+        offsetX = wrongFoodAnimation.dirX * tileSize * 3 * easeOut;
+        offsetY = wrongFoodAnimation.dirY * tileSize * 3 * easeOut;
+        alpha = 1 - moveProgress;
+      }
+
+      const cx = gridOffsetX + wrongFoodData.x * tileSize + tileSize / 2 + offsetX;
+      const cy = gridOffsetY + wrongFoodData.y * tileSize + tileSize / 2 + offsetY;
+
+      let drawW, drawH;
+      if (wrongFoodData.shape === 'rectangle') {
+        drawW = tileSize * 1.0;
+        drawH = tileSize * 0.85;
+      } else if (wrongFoodData.shape === 'square') {
+        drawW = tileSize * 0.8;
+        drawH = tileSize * 0.8;
+      } else {
+        const circleSize = tileSize * 0.85;
+        drawW = circleSize;
+        drawH = circleSize;
+      }
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      const foodX = Math.round(cx - drawW / 2);
+      const foodY = Math.round(cy - drawH / 2);
+      const foodW = Math.round(drawW);
+      const foodH = Math.round(drawH);
+
+      ctx.drawImage(
+        shapeImages[wrongFoodData.shape],
+        foodX,
+        foodY,
+        foodW,
+        foodH
+      );
+      ctx.restore();
+
+      if (progress >= 1) {
+        wrongFoodAnimation = null;
+        wrongFoodData = null;
+      } else {
+        requestAnimationFrame(render);
+      }
+    }
+  }
 
   function triggerWave() {
     if (waveAnimation) cancelAnimationFrame(waveAnimation);
@@ -869,7 +873,6 @@ function initSnakeGame() {
     clearCanvas();
     ctx.save();
 
-    // ✅ Polygon Clipping - use CSS dimensions (not device pixels)
     const rect = gameWrapper.getBoundingClientRect();
     const polygon = getPolygonPoints(rect.width, rect.height);
     ctx.beginPath();
@@ -943,22 +946,53 @@ function initSnakeGame() {
     return pos;
   }
 
+  // ✅ FIX 2: Improved food spawning - closer to snake
   function spawnFoods() {
-    // ✅ Only block spawning if game was active and is now ended
-    // Allow spawning at initial load (isGameActive = false initially)
     if (isGameActive === false && foods.length > 0) {
       console.log("Spawn blocked - game ended");
       return;
     }
 
     foods = [];
-    const correctPos = randomEmptyCell();
+    const head = snake[0];
+
+    // Find positions closer to the snake head
+    function getClosePosition(preferredDistance = 3) {
+      let pos;
+      let attempts = 0;
+      let bestPos = null;
+      let bestDistance = Infinity;
+
+      do {
+        pos = randomEmptyCell();
+        const distance = Math.abs(pos.x - head.x) + Math.abs(pos.y - head.y);
+
+        // Keep track of closest valid position found
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestPos = { ...pos };
+        }
+
+        // If we find a position within preferred distance, use it
+        if (distance <= preferredDistance + 2) {
+          return pos;
+        }
+
+        attempts++;
+      } while (attempts < 50);
+
+      // Return the closest position we found
+      return bestPos || pos;
+    }
+
+    const correctPos = getClosePosition(3);
+
     let wrongPos;
     let attempts = 0;
     do {
-      wrongPos = randomEmptyCell();
+      wrongPos = getClosePosition(3);
       attempts++;
-    } while (attempts < 100 && wrongPos.x === correctPos.x && wrongPos.y === correctPos.y);
+    } while (attempts < 50 && wrongPos.x === correctPos.x && wrongPos.y === correctPos.y);
 
     const shapes = getActiveShapes();
     const safeIndex = nextShapeIndex % currentPatternArr.length;
@@ -975,13 +1009,12 @@ function initSnakeGame() {
     ];
 
     $(".wrapTextaudio").prop("disabled", false);
-    console.log("Foods spawned:", foods.length);
+    console.log("Foods spawned:", foods.length, "at distances:",
+      Math.abs(correctPos.x - head.x) + Math.abs(correctPos.y - head.y),
+      Math.abs(wrongPos.x - head.x) + Math.abs(wrongPos.y - head.y));
   }
 
-
-
   function moveSnake(dir) {
-    // DOUBLE CHECK: Stop if we are already handling a wrong move
     if (isWrongAction) return;
 
     const head = snake[0];
@@ -993,7 +1026,6 @@ function initSnakeGame() {
 
     const newHead = { x: newX, y: newY };
 
-    // Body Collision Check
     if (snake.some((s, index) => index !== 0 && index !== snake.length - 1 && s.x === newHead.x && s.y === newHead.y)) return;
 
     const hitFood = foods.find(f => f.x === newHead.x && f.y === newHead.y);
@@ -1004,9 +1036,6 @@ function initSnakeGame() {
     if (hitFood) {
 
       if (hitFood.correct) {
-        // === CORRECT FOOD ===
-
-        // 1. LOCK CONTROLS IMMEDIATELY
         if (spawnTimer) clearTimeout(spawnTimer);
         spawnTimer = null;
 
@@ -1017,75 +1046,56 @@ function initSnakeGame() {
         nextShapeIndex++;
         hitFood.eaten = true;
 
-        // Visuals
         const cx = gridOffsetX + hitFood.x * tileSize + tileSize / 2;
         const cy = gridOffsetY + hitFood.y * tileSize + tileSize / 2;
         createParticles(cx, cy, "#FFD700");
         triggerWave();
 
-        // 2. Clear food immediately
         foods = [];
 
-        // Win Check
         const hasWon = snakePattern.length >= TARGET_LENGTH;
 
         if (hasWon) {
-          // ✅ FIX: Prevent infinite loop / double trigger
           if (isWinSequenceTriggered) return;
           isWinSequenceTriggered = true;
 
           isGameActive = false;
           $(".replayLastAudio").prop("disabled", true);
 
-          // Trigger Eating Animation & Move
           animateEating();
           animateFoodToHead(hitFood);
 
-          // ✅ LOGIC: Wait for "Correct" sound (from isCorrectFinal), then "Great Job", then "Final"
           isCorrectFinal(() => {
-
-            // 1. Visual updates
             $(".animations").addClass("show");
             centerCompletedSnake();
 
-            // 2. Hide visual after 2.5s (optional, based on your code)
             setTimeout(function () {
               $(".animations").removeClass("show");
               $(".greetingsPop").css({ visibility: "visible", opacity: "1" });
             }, 2500);
 
-            // 3. Update Instruction Text
             $(".inst").html(
               `<p>${_pageData.sections[sectionCnt - 1].finalText} <button class="wrapTextaudio playing" id="wrapTextaudio_2" onClick="replayLastAudio(this)"></button></p>`
             );
             $(".wrapTextaudio").prop("disabled", false);
 
-            // 4. Setup Audio Chain: Great Job -> End Animations
             const audio = document.getElementById("simulationAudio");
             if (audio) {
-              // Clean up any stray listeners
               audio.onended = null;
-
-              // Add listener: When "Great Job" finishes, start Final Sequence
-              // using 'once: true' to ensure it doesn't stick around
               audio.addEventListener("ended", function () {
                 showEndAnimations();
               }, { once: true });
             }
 
-            // 5. Play "Great Job" Audio
             playBtnSounds(_pageData.sections[sectionCnt - 1].greatJob);
           });
 
-          return; // Stop execution here
+          return;
         }
-
-        // === GAME CONTINUES ===
 
         animateEating();
         animateFoodToHead(hitFood);
 
-        // Callback: Wait for "Correct" audio to finish, then unlock
         isCorrect(() => {
           isCorrectAction = false;
           isProcessingMove = false;
@@ -1102,19 +1112,39 @@ function initSnakeGame() {
         snake.shift();
         prevSnake = [];
 
+        // ✅ Store wrong food data and trigger animation
+        wrongFoodData = { ...hitFood };
+
+        // Calculate direction away from snake head
+        const foodDx = hitFood.x - head.x;
+        const foodDy = hitFood.y - head.y;
+        const magnitude = Math.sqrt(foodDx * foodDx + foodDy * foodDy) || 1;
+
+        wrongFoodAnimation = {
+          startTime: performance.now(),
+          duration: 800, // 800ms total animation
+          dirX: foodDx / magnitude,
+          dirY: foodDy / magnitude
+        };
+
+        // Remove wrong food from foods array immediately
+        foods = foods.filter(f => f !== hitFood);
+
         $(".wrapTextaudio").prop("disabled", true);
 
-        // Play Wrong Audio
         playBtnSounds(_pageData.sections[sectionCnt - 1].wrongAudio);
 
-        // Handle UI buttons
         $(".wrapTextaudio").each(function () {
           if ($(this).hasClass("playing")) {
             $(this).removeClass("playing").addClass("paused");
           }
         });
 
-        // Callback: Wait for audio to end
+        updateText(_pageData.sections[sectionCnt - 1].content.wrongFeedback.text, _pageData.sections[sectionCnt - 1].content.wrongFeedback.audioSrc);
+
+        // Trigger animation rendering
+        requestAnimationFrame(render);
+
         audioEnd(() => {
           inCorrectFood();
           $(".wrapTextaudio").prop("disabled", false);
@@ -1127,7 +1157,6 @@ function initSnakeGame() {
       }
     }
     else {
-      // Empty Move
       snake.pop();
     }
 
@@ -1135,7 +1164,6 @@ function initSnakeGame() {
     isMovingAnim = true;
     render();
   }
-
 
   function playAudioOnce(audioSrc, onEnded) {
     const audio = new Audio(audioSrc);
@@ -1145,22 +1173,18 @@ function initSnakeGame() {
     }
   }
 
-
   function inCorrectFood() {
     spawnFoods();
     render();
   }
 
-  // ✅ NEW: Center the completed snake horizontally after game ends with gentle wave animation
   function centerCompletedSnake() {
     if (snake.length === 0) return;
 
-    // Calculate center position for horizontal snake
     const centerY = Math.floor(tileCountY / 2);
     const snakeLength = snake.length;
     const startX = Math.floor((tileCountX - snakeLength) / 2);
 
-    // Rebuild snake horizontally from left to right in center
     const newSnake = [];
     for (let i = 0; i < snakeLength; i++) {
       newSnake.push({
@@ -1169,19 +1193,15 @@ function initSnakeGame() {
       });
     }
 
-    // Reverse to keep head at front
     snake = newSnake.reverse();
 
-    // Reset animation states
     prevSnake = [];
     isMovingAnim = false;
 
     console.log("Snake centered with", snakeLength, "segments including all 6 pattern shapes");
 
-    // ✅ Enable continuous wave animation mode
     isEndGameWave = true;
 
-    // Start continuous animation loop
     function waveLoop() {
       if (isEndGameWave) {
         render();
@@ -1191,11 +1211,10 @@ function initSnakeGame() {
     requestAnimationFrame(waveLoop);
   }
 
-  // ✅ NEW: Gentle wave animation for end celebration
   function triggerGentleWave() {
     if (waveAnimation) cancelAnimationFrame(waveAnimation);
     waveStartTime = performance.now();
-    const GENTLE_WAVE_DURATION = 1500; // 1.5 seconds - slower and gentler
+    const GENTLE_WAVE_DURATION = 1500;
 
     function loop() {
       const elapsed = performance.now() - waveStartTime;
@@ -1210,7 +1229,6 @@ function initSnakeGame() {
     waveAnimation = requestAnimationFrame(loop);
   }
 
-  // ✅ Use existing playBtnSounds with audioEnd callback system
   function isCorrect(callback) {
     if (typeof playBtnSounds === 'function' && typeof _pageData !== 'undefined') {
       const audioPath = _pageData.sections[sectionCnt - 1].correctAudio;
@@ -1218,41 +1236,34 @@ function initSnakeGame() {
         if ($(this).hasClass("playing")) {
           $(".wrapTextaudio").removeClass("playing");
           $(".wrapTextaudio").addClass("paused");
-        } else {
-          // ✅ This specific button is paused
         }
       });
       console.log("is correct")
       playBtnSounds(audioPath);
+      updateText(_pageData.sections[sectionCnt - 1].content.correctFeedback.text, _pageData.sections[sectionCnt - 1].content.correctFeedback.audioSrc);
       $(".wrapTextaudio").prop("disabled", true);
 
-
-      // Use audioEnd to execute callback when audio finishes
       if (callback) {
         audioEnd(callback);
-
       }
     } else {
-      // Fallback if audio system missing
       console.log("is correct gone 2")
       if (callback) setTimeout(callback, 500);
     }
   }
 
-  // ✅ Use playBtnSounds for final correct audio
   function isCorrectFinal(callback) {
     if (typeof playBtnSounds === 'function' && typeof _pageData !== 'undefined') {
       const audioPath = _pageData.sections[sectionCnt - 1].correctAudio;
       $(".wrapTextaudio").prop("disabled", true);
       playBtnSounds(audioPath);
+      updateText(_pageData.sections[sectionCnt - 1].content.correctFeedback.text, _pageData.sections[sectionCnt - 1].content.correctFeedback.audioSrc);
       console.log("final Audio playgin")
 
-      // Use audioEnd to execute callback when audio finishes
       if (callback) {
         audioEnd(callback);
       }
     } else {
-      // Fallback if audio system missing
       if (callback) setTimeout(callback, 500);
     }
   }
@@ -1326,7 +1337,7 @@ function initSnakeGame() {
 
   function waitForImages(callback) {
     const activeKeys = patternMode === 1 ? ['circle', 'square'] : ['circle', 'rectangle'];
-    const imagesToCheck = [headImg, tailImg];
+    const imagesToCheck = [headImg];
     activeKeys.forEach(k => imagesToCheck.push(shapeImages[k]));
     let loaded = 0;
     const total = imagesToCheck.length;
@@ -1351,7 +1362,6 @@ function initSnakeGame() {
       isGameActive = false;
       isProcessingMove = false;
       resizeCanvas();
-      // ✅ Spawn foods immediately so user can see shapes at start
       spawnFoods();
       render();
     });
@@ -1360,7 +1370,6 @@ function initSnakeGame() {
   window.enableCaterpillarMovement = function () {
     console.log("Caterpillar inputs unlocked");
     isGameActive = true;
-    // ✅ Foods already spawned, just enable game and reset idle
     render();
     resetIdleTimer();
   };
@@ -1369,12 +1378,10 @@ function initSnakeGame() {
      INPUT HANDLING
   ========================= */
   function setDirection(dirKey) {
-    // 1. HARD STOP: If we are in the middle of a "Wrong" action/audio, ignore EVERYTHING.
-    if (isWrongAction || isCorrectAction) return; // <--- UPDATED: Added isCorrectAction check
+    if (isWrongAction || isCorrectAction) return;
 
     resetIdleTimer();
 
-    // 2. Standard checks
     if (!isGameActive) return;
     if (isProcessingMove) return;
 
@@ -1393,9 +1400,7 @@ function initSnakeGame() {
     isProcessingMove = true;
     moveSnake(dirVec);
 
-    // Safety unlock for normal moves (cancelled if moveSnake hits wrong food)
     setTimeout(() => {
-      // <--- UPDATED: Only unlock if neither Wrong nor Correct action is happening
       if (!isWrongAction && !isCorrectAction) isProcessingMove = false;
     }, MOVE_DELAY);
   }
@@ -1420,6 +1425,11 @@ function initSnakeGame() {
   window.addEventListener("resize", resizeCanvas);
   window.addEventListener("orientationchange", resizeCanvas);
 
+  // ✅ FIX 3: Listen for fullscreen changes and re-layout
+  document.addEventListener("fullscreenchange", resizeCanvas);
+  document.addEventListener("webkitfullscreenchange", resizeCanvas);
+  document.addEventListener("mozfullscreenchange", resizeCanvas);
+
   function resetIdleTimer() {
     clearTimeout(idleTimer);
     idleTimer = null;
@@ -1434,35 +1444,21 @@ function initSnakeGame() {
     }
   }
 
-  // ✅ COMPREHENSIVE ACTIVITY DETECTION - Monitor ALL user interactions
   function setupGlobalActivityListeners() {
-    // Track any mouse movement on the page
     document.addEventListener("mousemove", resetIdleTimer, { passive: true });
-
-    // Track any mouse clicks on the page
     document.addEventListener("mousedown", resetIdleTimer, { passive: true });
     document.addEventListener("click", resetIdleTimer, { passive: true });
-
-    // Track any keyboard activity on the page
     document.addEventListener("keydown", resetIdleTimer, { passive: true });
     document.addEventListener("keypress", resetIdleTimer, { passive: true });
-
-    // Track touch events for mobile devices
     document.addEventListener("touchstart", resetIdleTimer, { passive: true });
     document.addEventListener("touchmove", resetIdleTimer, { passive: true });
-
-    // Track scroll events
     document.addEventListener("scroll", resetIdleTimer, { passive: true });
-
-    // Track any pointer events
     document.addEventListener("pointerdown", resetIdleTimer, { passive: true });
     document.addEventListener("pointermove", resetIdleTimer, { passive: true });
   }
 
-  // Call this during initialization
   setupGlobalActivityListeners();
 
-  // ✅ NEW HELPER FUNCTIONS for controlling idle timer externally
   window.startIdleTimer = function () {
     if (!isGameActive) return;
     clearTimeout(idleTimer);
@@ -1495,33 +1491,154 @@ function initSnakeGame() {
     animationFrameId = requestAnimationFrame(animateIdleLoop);
   }
 
-  // Start initialization
   startGame();
 
   window.refreshSnakeGame = function () {
-    // Clear any running timers
     if (spawnTimer) clearTimeout(spawnTimer);
     if (idleTimer) clearTimeout(idleTimer);
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
     if (waveAnimation) cancelAnimationFrame(waveAnimation);
     if (eatingAnimation) cancelAnimationFrame(eatingAnimation);
 
-    // Stop any playing audio
     stopIdleSoundNow();
 
-    // Reset game state
     particles = [];
     foods = [];
     isGameActive = false;
     isProcessingMove = false;
     isWrongAction = false;
     isIdle = false;
-    isEndGameWave = false; // ✅ Reset wave animation mode
+    isEndGameWave = false;
 
-    // Restart the game
     startGame();
   };
+  /* =========================
+     EXTERNAL CONTROL API
+  ========================= */
+
+  // ENABLE movement + controls
+  window.enableSnakeControls = function () {
+    isGameActive = true;
+    isProcessingMove = false;
+    $(".controls button").prop("disabled", false);
+    console.log("Snake controls enabled");
+  };
+
+  // DISABLE movement + controls
+  window.disableSnakeControls = function () {
+    isGameActive = false;
+    isProcessingMove = true;
+    $(".controls button").prop("disabled", true);
+    console.log("Snake controls disabled");
+  };
+
+  // ENABLE idle system
+  window.enableIdleStart = function () {
+    if (isGameActive) {
+      resetIdleTimer();
+    }
+    console.log("Idle enabled");
+  };
+
+  // DISABLE idle system
+  window.disableIdleStart = function () {
+    stopIdleTimer();
+    console.log("Idle disabled");
+  };
+
 }
+
+
+// Simulation play and pause
+
+
+function playPauseSimulation(btn) {
+  playClickThen();
+  var audio = document.getElementById("simulationAudio");
+  var hasAudio = !!audio.getAttribute("src");
+
+  _isSimulationPaused = !_isSimulationPaused;
+
+  if (_isSimulationPaused) {
+    // Pause state
+    if (hasAudio) {
+      audio.pause();
+    }
+    disableAll();
+    btn.classList.remove("play");
+    btn.classList.add("pause");
+    btn.dataset.tooltip = "Play";
+  } else {
+    // Play state
+    if (hasAudio) {
+      audio.play().catch(() => { });
+    }
+    enableAll();
+    btn.classList.remove("pause");
+    btn.classList.add("play");
+    btn.dataset.tooltip = "Pause";
+  }
+
+}
+
+function enableAll() {
+  playClickThen();
+  if (gameStarted) {
+    window.enableSnakeControls();
+    window.enableIdleStart();
+  }
+  $(".home_btn, .music,.introInfo,#full-screen, .wrapTextaudio").prop("disabled", false);
+  const audio = document.getElementById("audio_src");
+  if (_controller._globalMusicPlaying) {
+    audio.muted = false;
+    audio.play();
+  }
+
+}
+
+
+
+function disableAll() {
+  playClickThen();
+  window.disableSnakeControls();
+  window.disableIdleStart();
+  $(".home_btn, .music,.introInfo,#full-screen,.wrapTextaudio").prop("disabled", true);
+  const audio = document.getElementById("audio_src");
+  if (_controller._globalMusicPlaying) {
+    audio.pause();
+  }
+}
+
+
+function updateText(txt, audio) {
+
+
+  $("#simulationAudio").on("ended", function () {
+    $(".wrapTextaudio")
+      .removeClass("playing")
+      .addClass("paused");
+    // console.log("audio ended");
+  });
+
+
+
+  let text = `
+    <p tabindex="0" aria-label="${removeTags(txt)}">
+      ${txt}
+      <button 
+        class="wrapTextaudio paused"
+        onclick="replayLastAudio(this, '${audio}')">
+      </button>
+    </p>
+  `;
+
+
+  $(".inst").html(text);
+  $(".wrapTextaudio")
+    .removeClass("paused")
+    .addClass("playing");
+}
+
 
 // window.startIdleTimer() - Start/restart the idle timer
 // window.stopIdleTimer() - Stop the idle timer completely
@@ -1581,6 +1698,7 @@ function jumtoPage(pageNo) {
 
 
 var activeAudio = null;
+
 
 function playBtnSounds(soundFile, callback) {
   const audio = document.getElementById("simulationAudio");
@@ -1801,8 +1919,6 @@ function showEndAnimations() {
 
 
 
-
-
 // function closeIntroPop(ldx) {
 //   playClickThen();
 //   // AudioController.play();
@@ -1814,48 +1930,34 @@ function showEndAnimations() {
 //   }
 // }
 
-function replayLastAudio(btnElement) {
+
+function replayLastAudio(btnElement, audioSrc) {
   playClickThen();
 
   const courseAudio = document.getElementById("courseAudio");
   const simulationAudio = document.getElementById("simulationAudio");
 
-  const index = parseInt(btnElement.id.split("_")[1]);
-  const replayAudios =
-    _pageData.sections[sectionCnt - 1].content.replayAudios;
-
   let activeAudio = null;
 
-  // --------------------------------------------------
-  // 1️⃣ Detect active playing audio
-  // --------------------------------------------------
   if (courseAudio && !courseAudio.paused && !courseAudio.ended) {
     activeAudio = courseAudio;
-  }
-  else if (simulationAudio && !simulationAudio.paused && !simulationAudio.ended) {
+  } else if (simulationAudio && !simulationAudio.paused && !simulationAudio.ended) {
     activeAudio = simulationAudio;
   }
 
-  // --------------------------------------------------
-  // 2️⃣ If something is playing → just toggle mute
-  // --------------------------------------------------
+  // If something playing → toggle mute
   if (activeAudio) {
     activeAudio.muted = !activeAudio.muted;
     updateButtonUI(btnElement, !activeAudio.muted);
     return;
   }
 
-  // --------------------------------------------------
-  // 3️⃣ Nothing playing → call playBtnSounds()
-  // --------------------------------------------------
-  if (replayAudios && replayAudios[index]) {
-
-    playBtnSounds(replayAudios[index]);
-
+  // Nothing playing → play passed audio
+  if (audioSrc) {
+    playBtnSounds(audioSrc);
     resetAllButtons();
     updateButtonUI(btnElement, true);
 
-    // Optional: reset UI when replay ends
     if (simulationAudio) {
       simulationAudio.onended = function () {
         updateButtonUI(btnElement, false);
@@ -1863,6 +1965,8 @@ function replayLastAudio(btnElement) {
     }
   }
 }
+
+
 
 function stopAllAudios() {
   const courseAudio = document.getElementById("courseAudio");
@@ -1891,6 +1995,7 @@ function updateButtonUI(btn, isPlaying) {
     btn.classList.add("paused");
   }
 }
+
 
 function resetAllButtons() {
   document.querySelectorAll(".wrapTextaudio").forEach(btn => {

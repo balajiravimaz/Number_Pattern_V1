@@ -183,7 +183,7 @@
       "headerImg": "pages/module_1/page_8/images/header_bg.png",
       "headerText": "pages/module_1/page_8/images/header_title.png",
       "ost": "",
-      "iText": "Look at the numbers. <span>Drag</span> the cups in and put them in order. <span class='audio'></span>",
+      "iText": "<span>Drag</span> and drop the cups in the correct order. <span class='audio'></span>",
       "endAudio": "",
       "infoImg": "pages/module_1/page_8/images/fun_game.png",      
       "backBtnSrc":"pages/module_1/page_8/images/back.png",

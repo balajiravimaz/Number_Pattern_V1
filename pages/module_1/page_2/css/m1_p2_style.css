@@ -126,7 +126,6 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   position: relative;
   animation: none !important;
   transition: transform 0.5s ease-in;
-  /* Show tooltip on hover */
 }
 @media (max-width: 950px) and (orientation: landscape) {
   #section-1 .content-holder .col-left .content .content-bg .header #home {
@@ -162,6 +161,9 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   transition: opacity 0.2s;
   margin-top: 4px;
   z-index: 10;
+}
+#section-1 .content-holder .col-left .content .content-bg .header #home {
+  /* Show tooltip on hover */
 }
 #section-1 .content-holder .col-left .content .content-bg .header #home:hover::after {
   opacity: 1;

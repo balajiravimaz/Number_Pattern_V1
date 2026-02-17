@@ -127,9 +127,17 @@
       "introAudio": "pages/module_1/page_5/audios/intro_audio.mp3",
       "correctAudio": "pages/module_1/page_5/audios/good_job.mp3",
       "idleAudio": "pages/module_1/page_5/audios/idle.mp3",
-      "wrongAudio": "pages/module_1/page_5/audios/try_again.mp3",
+      "wrongAudio": "pages/module_1/page_5/audios/wrong.mp3",
       "finalAudio": "pages/module_1/page_5/audios/final_audio.mp3",
       "content": {
+        "correctFeedback": {
+          "text": "Well done! That's correct!",
+          "audioSrc": "pages/module_1/page_5/audios/correct.mp3"
+        },
+        "wrongFeedback": {
+          "text": "Try again!",
+          "audioSrc": "pages/module_1/page_5/audios/wrong.mp3"
+        },
         "btnAudios": [
           "pages/module_1/page_5/audios/click.mp3",
           "pages/module_1/page_5/audios/bg_music.mp3"

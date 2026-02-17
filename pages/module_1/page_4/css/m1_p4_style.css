@@ -133,6 +133,11 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst #inst_2 {
   display: none;
 }
+#section-1 .content-holder .col-left .content .content-bg .content-style .inst p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio {
   position: relative;
   width: 25px;
@@ -140,23 +145,17 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   min-width: 25px;
   max-width: 25px;
   cursor: pointer;
-  top: 3px;
   margin-left: 5px;
   background-position: center !important;
   background-size: contain !important;
   background-repeat: no-repeat !important;
 }
-@media (max-width: 950px) and (orientation: landscape) {
-  #section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio {
-    width: 15px;
-    height: 15px;
-    min-width: 15px;
-    max-width: 15px;
-    top: 0px;
-  }
-}
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio:disabled {
   pointer-events: none;
+  background: url(../images/pause.png) !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style .inst .wrapTextaudio.playing {
   background: url(../images/music.png) no-repeat;
@@ -316,7 +315,6 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
 #section-1 .content-holder .col-left .content .content-bg .content-style .header .navBtns button {
   position: relative;
   transition: transform 0.5s ease-in;
-  /* Show tooltip on hover */
 }
 @media screen and (orientation: landscape) and (min-width: 951px) and (max-height: 550px) {
   #section-1 .content-holder .col-left .content .content-bg .content-style .header .navBtns button {
@@ -357,6 +355,9 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   transition: opacity 0.2s;
   margin-top: 4px;
   z-index: 10;
+}
+#section-1 .content-holder .col-left .content .content-bg .content-style .header .navBtns button {
+  /* Show tooltip on hover */
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style .header .navBtns button:hover::after {
   opacity: 1;
@@ -409,9 +410,6 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   opacity: 1;
   max-width: 100%;
   position: relative;
-  /* CHANGE: remove right 200px reservation so canvas can stretch full width */
-  /* Keep canvas fluid; JS will also size it to match DPR correctly */
-  /* Keep controls over the canvas instead of reserving layout space */
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style > .body .animat-container .dummy-patch {
   position: absolute;
@@ -443,6 +441,9 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   justify-content: center;
   align-items: center;
 }
+#section-1 .content-holder .col-left .content .content-bg .content-style > .body .animat-container {
+  /* CHANGE: remove right 200px reservation so canvas can stretch full width */
+}
 #section-1 .content-holder .col-left .content .content-bg .content-style > .body .animat-container .game-wrapper {
   position: absolute;
   inset: 1px;
@@ -455,6 +456,9 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   /* border: 2px solid #ddd; */
   overflow: hidden;
 }
+#section-1 .content-holder .col-left .content .content-bg .content-style > .body .animat-container {
+  /* Keep canvas fluid; JS will also size it to match DPR correctly */
+}
 #section-1 .content-holder .col-left .content .content-bg .content-style > .body .animat-container canvas {
   width: 100%;
   max-width: 100%;
@@ -462,10 +466,13 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   display: block;
   image-rendering: auto;
 }
+#section-1 .content-holder .col-left .content .content-bg .content-style > .body .animat-container {
+  /* Keep controls over the canvas instead of reserving layout space */
+}
 #section-1 .content-holder .col-left .content .content-bg .content-style > .body .animat-container .controls {
   position: absolute;
   right: 80px;
-  top: calc(100% - 165px);
+  top: calc(100% - 190px);
   display: grid;
   grid-template-columns: 35px 35px 35px;
   grid-template-rows: 35px 35px 35px;
@@ -787,7 +794,6 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   height: 20px;
   cursor: pointer;
   transition: transform 0.5s ease-in-out;
-  /* Show tooltip on hover */
 }
 @media (min-width: 951px) and (orientation: landscape) and (hover: none) {
   #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-9 .popup-content .introPopclose {
@@ -827,6 +833,9 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   transition: opacity 0.2s;
   margin-top: 4px;
   z-index: 10;
+}
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-9 .popup-content .introPopclose {
+  /* Show tooltip on hover */
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-9 .popup-content .introPopclose:hover::after {
   opacity: 1;
@@ -882,8 +891,7 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.2);
-  -webkit-backdrop-filter: blur(4px);
-          backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   justify-content: center;
   align-items: center;
   z-index: 1111111;

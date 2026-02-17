@@ -143,6 +143,10 @@
 
 								&:disabled {
 									pointer-events: none;
+									background: url(../images/pause.png) !important;
+									background-size: contain !important;
+									background-repeat: no-repeat !important;
+									background-position: center !important;
 								}
 
 								&.playing {
@@ -554,7 +558,7 @@
 								.controls {
 									position: absolute;
 									right: 80px;
-									top: calc(100% - 165px);
+									top: calc(100% - 190px);
 									display: grid;
 									grid-template-columns: 35px 35px 35px;
 									grid-template-rows: 35px 35px 35px;

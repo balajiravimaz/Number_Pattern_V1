@@ -314,7 +314,6 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
 #section-1 .content-holder .col-left .content .content-bg .content-style .header .navBtns button {
   position: relative;
   transition: transform 0.5s ease-in;
-  /* Show tooltip on hover */
 }
 @media screen and (orientation: landscape) and (min-width: 951px) and (max-height: 550px) {
   #section-1 .content-holder .col-left .content .content-bg .content-style .header .navBtns button {
@@ -355,6 +354,9 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   transition: opacity 0.2s;
   margin-top: 4px;
   z-index: 10;
+}
+#section-1 .content-holder .col-left .content .content-bg .content-style .header .navBtns button {
+  /* Show tooltip on hover */
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style .header .navBtns button:hover::after {
   opacity: 1;
@@ -508,7 +510,6 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   background-size: contain;
   z-index: 10;
   pointer-events: none;
-  animation: handFloat 1.6s ease-in-out infinite;
 }
 @keyframes handFloat {
   0% {
@@ -841,7 +842,6 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   height: 20px;
   cursor: pointer;
   transition: transform 0.5s ease-in-out;
-  /* Show tooltip on hover */
 }
 @media (min-width: 951px) and (orientation: landscape) and (hover: none) {
   #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-7 .popup-content .introPopclose {
@@ -881,6 +881,9 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   transition: opacity 0.2s;
   margin-top: 4px;
   z-index: 10;
+}
+#section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-7 .popup-content .introPopclose {
+  /* Show tooltip on hover */
 }
 #section-1 .content-holder .col-left .content .content-bg .content-style #introPopup-7 .popup-content .introPopclose:hover::after {
   opacity: 1;
@@ -936,8 +939,7 @@ $bg-position: -120px -120px, 0 0, 20px 50px, 25px 55px, 50px 125px;*/
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.2);
-  -webkit-backdrop-filter: blur(4px);
-          backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   justify-content: center;
   align-items: center;
   z-index: 1111111;

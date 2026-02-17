@@ -127,18 +127,25 @@
       "introAudio": "pages/module_1/page_4/audios/intro_audio.mp3",
       "correctAudio": "pages/module_1/page_4/audios/good_job.mp3",
       "idleAudio": "pages/module_1/page_4/audios/idle.mp3",
-      "wrongAudio": "pages/module_1/page_4/audios/try_again.mp3",
+      "wrongAudio": "pages/module_1/page_4/audios/wrong.mp3",
       "greatJob": "pages/module_1/page_4/audios/great_job.mp3",
       "finalAudio": "pages/module_1/page_4/audios/final_audio.mp3",
       "content": {
+        "correctFeedback":{
+          "text":"Well done! That's correct!",
+          "audioSrc":"pages/module_1/page_4/audios/correct.mp3"
+        },
+        "wrongFeedback":{
+          "text":"Try again!",
+          "audioSrc":"pages/module_1/page_4/audios/wrong.mp3"          
+        },
         "btnAudios": [
           "pages/module_1/page_4/audios/click.mp3",
           "pages/module_1/page_4/audios/bg_music.mp3"
         ],
         "replayAudios": [
           "pages/module_1/page_4/audios/replay_1.mp3",
-          "pages/module_1/page_4/audios/replay_2.mp3",
-          "pages/module_1/page_4/audios/replay_3.mp3"
+          "pages/module_1/page_4/audios/replay_2.mp3"          
         ],
         "numberObjects": [
           {
