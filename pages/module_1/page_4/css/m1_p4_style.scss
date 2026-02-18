@@ -511,7 +511,7 @@
 								/* Keep controls over the canvas instead of reserving layout space */
 								.controls {
 									position: absolute;
-									right: 80px;
+									right: 40px;
 									top: calc(100% - 190px);
 									display: grid;
 									grid-template-columns: 35px 35px 35px;
