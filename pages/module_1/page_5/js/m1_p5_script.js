@@ -529,7 +529,7 @@ function initCaterpillarGame() {
     ctx.textBaseline = "middle";
 
     // ✅ Thicker white outline for better readability
-    //ctx.strokeStyle = "#FFFFFF";
+    ctx.strokeStyle = "#ffffff62";
     ctx.lineWidth = Math.max(6, fontSize * 0.2); // Increased outline thickness
     ctx.lineJoin = "round";
     ctx.miterLimit = 2;
@@ -686,7 +686,8 @@ function initCaterpillarGame() {
 
       if (scale > 0.5) {
         ctx.fillStyle = "#2e2e38";
-        ctx.font = `300 ${tileSize * 0.45 * scale}px "Alphakind"`;
+        ctx.font = `3
+        00 ${tileSize * 0.45 * scale}px "Alphakind"`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(f.value, cx, cy);
