@@ -529,14 +529,14 @@ function initCaterpillarGame() {
     ctx.textBaseline = "middle";
 
     // ✅ Thicker white outline for better readability
-    ctx.strokeStyle = "#ffffff62";
+    //ctx.strokeStyle = "#FFFFFF";
     ctx.lineWidth = Math.max(6, fontSize * 0.2); // Increased outline thickness
     ctx.lineJoin = "round";
     ctx.miterLimit = 2;
     ctx.strokeText(text, x, y);
 
     // Black fill for text
-    ctx.fillStyle = "#000000";
+    ctx.fillStyle = "#2e2e38";
     ctx.fillText(text, x, y);
 
     ctx.restore();
@@ -681,13 +681,12 @@ function initCaterpillarGame() {
       ctx.fillStyle = "#ffd17c";
       ctx.fill();
       ctx.lineWidth = 1;
-      ctx.strokeStyle = "#f9f9fa88";
+      ctx.strokeStyle = "#f9f9fa00";
       ctx.stroke();
 
       if (scale > 0.5) {
         ctx.fillStyle = "#2e2e38";
-        ctx.font = `3
-        00 ${tileSize * 0.45 * scale}px "Alphakind"`;
+        ctx.font = `400 ${tileSize * 0.45 * scale}px "Alphakind"`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(f.value, cx, cy);
@@ -735,7 +734,7 @@ function initCaterpillarGame() {
       ctx.strokeStyle = "#2e2e38";
       ctx.stroke();
 
-      ctx.fillStyle = "#000";
+      ctx.fillStyle = "#2e2e38";
       ctx.font = `400 ${tileSize * 0.45}px Alphakind`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
