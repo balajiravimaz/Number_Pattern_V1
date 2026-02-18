@@ -452,49 +452,42 @@ function initCaterpillarGame() {
      CANVAS HELPERS
   ========================= */
   function resizeCanvas() {
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
+  canvas.style.width = "100%";
+  canvas.style.height = "100%";
 
-    const rect = gameWrapper.getBoundingClientRect();
-
-    if (rect.width === 0 || rect.height === 0) {
-      requestAnimationFrame(resizeCanvas);
-      return;
-    }
-
-    dpr = window.devicePixelRatio || 1;
-
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
-
-    // Re-enable high-quality rendering after scaling
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = 'high';
-
-    const logicalWidth = rect.width;
-    const logicalHeight = rect.height;
-
-    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
-    const paddingMultiplier = isFullscreen ? 1.5 : 1.2;
-
-    tileSize = Math.min(logicalWidth, logicalHeight) / (BASE_TILE_COUNT + paddingMultiplier);
-
-    tileCountX = Math.ceil(logicalWidth / tileSize);
-    tileCountY = Math.ceil(logicalHeight / tileSize);
-
-    const usedWidth = tileCountX * tileSize;
-    const usedHeight = tileCountY * tileSize;
-
-    gridOffsetX = (logicalWidth - usedWidth) / 2;
-    gridOffsetY = (logicalHeight - usedHeight) / 2;
-
-    if (snake.length > 0) {
-      render();
-    }
+  const rect = gameWrapper.getBoundingClientRect();
+  if (rect.width === 0 || rect.height === 0) {
+    requestAnimationFrame(resizeCanvas);
+    return;
   }
+
+  dpr = window.devicePixelRatio || 1;
+
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(dpr, dpr);
+
+  const paddingMultiplier = 1.2;
+
+  tileSize = Math.floor(
+    Math.min(rect.width, rect.height) /
+    (BASE_TILE_COUNT + paddingMultiplier)
+  );
+
+  tileCountX = Math.floor(rect.width / tileSize);
+  tileCountY = Math.floor(rect.height / tileSize);
+
+  const usedWidth = tileCountX * tileSize;
+  const usedHeight = tileCountY * tileSize;
+
+  gridOffsetX = Math.floor((rect.width - usedWidth) / 2);
+  gridOffsetY = Math.floor((rect.height - usedHeight) / 2);
+
+  render();
+}
+
 
   function clearCanvas() {
     ctx.save();
@@ -504,21 +497,31 @@ function initCaterpillarGame() {
   }
 
   function drawGrid() {
-    ctx.save();
-    const radius = 3;
-    const color = "#b0b0b0";
-    ctx.fillStyle = color;
-    for (let y = 0; y <= tileCountY; y++) {
-      for (let x = 0; x <= tileCountX; x++) {
-        const px = gridOffsetX + (x * tileSize) - (tileSize / 2);
-        const py = gridOffsetY + (y * tileSize) - (tileSize / 2);
-        ctx.beginPath();
-        ctx.arc(px + tileSize / 2, py + tileSize / 2, radius, 0, Math.PI * 2);
-        ctx.fill();
-      }
+  ctx.save();
+  ctx.fillStyle = "#b0b0b0";
+  const radius = 3;
+
+  for (let y = 0; y <= tileCountY; y++) {
+    for (let x = 0; x <= tileCountX; x++) {
+
+      let cx = gridOffsetX + x * tileSize;
+      let cy = gridOffsetY + y * tileSize;
+
+      // shift edge dots inward so they don't crop
+      if (x === 0) cx += radius;
+      if (y === 0) cy += radius;
+      if (x === tileCountX) cx -= radius;
+      if (y === tileCountY) cy -= radius;
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fill();
     }
-    ctx.restore();
   }
+
+  ctx.restore();
+}
+
 
   // ✅ FIXED: Improved text rendering with better contrast and font weight
   function drawText(text, x, y, scale = 1) {
@@ -777,8 +780,12 @@ function initCaterpillarGame() {
     const newX = head.x + dir.x;
     const newY = head.y + dir.y;
 
-    if (!canMoveToTile(newX, newY)) return;
-    if (newX < 0 || newX >= tileCountX || newY < 0 || newY >= tileCountY) return;
+ if (
+  newX < 0 ||
+  newX >= tileCountX ||
+  newY < 0 ||
+  newY >= tileCountY
+) return;
 
     const newHead = { x: newX, y: newY };
 
@@ -908,30 +915,19 @@ function initCaterpillarGame() {
   }
 
   function render() {
-    clearCanvas();
+  clearCanvas();
 
-    const rect = gameWrapper.getBoundingClientRect();
-    const polygon = getPolygonPoints(rect.width, rect.height);
+  drawGrid();
+  drawFood();
+  drawParticles();
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(polygon[0][0], polygon[0][1]);
-    for (let i = 1; i < polygon.length; i++) ctx.lineTo(polygon[i][0], polygon[i][1]);
-    ctx.closePath();
-    ctx.clip();
-
-    drawGrid();
-    drawFood();
-    drawParticles();
-
-    if (isGameEnded && shouldDrawVictoryLine) {
-      drawEndGameVictoryLine();
-    } else {
-      drawSnake();
-    }
-
-    ctx.restore();
+  if (isGameEnded && shouldDrawVictoryLine) {
+    drawEndGameVictoryLine();
+  } else {
+    drawSnake();
   }
+}
+
 
   /* =========================
      END GAME: DRAW FULL PATTERN
@@ -1042,25 +1038,21 @@ function initCaterpillarGame() {
 
     // ✅ Get all valid empty cells in the playable area
     function getAllValidCells() {
-      const validCells = [];
+  const validCells = [];
 
-      for (let x = 0; x < tileCountX; x++) {
-        for (let y = 0; y < tileCountY; y++) {
-          // Check if tile is in playable area
-          if (!canMoveToTile(x, y)) continue;
+  for (let x = 0; x < tileCountX; x++) {
+    for (let y = 0; y < tileCountY; y++) {
 
-          // Check if not occupied by snake
-          if (snake.some(s => s.x === x && s.y === y)) continue;
+      if (snake.some(s => s.x === x && s.y === y)) continue;
+      if (foods.some(f => f.x === x && f.y === y)) continue;
 
-          // Check if not occupied by existing foods
-          if (foods.some(f => f.x === x && f.y === y)) continue;
-
-          validCells.push({ x, y });
-        }
-      }
-
-      return validCells;
+      validCells.push({ x, y });
     }
+  }
+
+  return validCells;
+}
+
 
     // ✅ Get random position from all valid cells
     function getRandomPosition(excludePositions = []) {

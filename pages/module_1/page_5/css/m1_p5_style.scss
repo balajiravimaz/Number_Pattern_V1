@@ -537,7 +537,7 @@
 									/* was: inset: 16px 200px 16px 16px; */
 									border-radius: 14px;
 									flex: 1 1 100%;
-									width: 100%;
+									width: 88%;
 									height: calc(100% - 20px);
 									background: #ffffff;
 									/* border: 2px solid #ddd; */
@@ -557,7 +557,7 @@
 								/* Keep controls over the canvas instead of reserving layout space */
 								.controls {
 									position: absolute;
-									right: 80px;
+									right: 40px;
 									top: calc(100% - 190px);
 									display: grid;
 									grid-template-columns: 35px 35px 35px;
