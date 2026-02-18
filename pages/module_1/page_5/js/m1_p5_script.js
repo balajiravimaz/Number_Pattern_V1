@@ -23,6 +23,7 @@ _popTweenTimeline = null;
 var lastPatternId = null;
 var _isSimulationPaused = false;
 var gameStarted = false;
+var idleMonitoringEnabled = false;
 
 var _audioIndex = 0;
 _videoId = null;
@@ -103,13 +104,22 @@ function addSectionData() {
           gameStarted = true;
           resetSimulationAudio();
           $(".wrapTextaudio").addClass("paused");
-          window.enableCaterpillarMovement();
+          window.enableCaterpillarControls();
+          window.startCaterpillarIdle();
         });
 
       });
       let instText = '';
       for (let k = 0; k < _pageData.sections[sectionCnt - 1].iText.length; k++) {
-        instText += `<p tabindex="0" id="inst_${k + 1}" aria-label="${removeTags(_pageData.sections[sectionCnt - 1].iText[k])}">${_pageData.sections[sectionCnt - 1].iText[k]} <button class="wrapTextaudio playing" id="wrapTextaudio_${k}" onClick="replayLastAudio(this)"></button></p>`
+        instText += `<p tabindex="0" id="inst_${k + 1}" 
+aria-label="${removeTags(_pageData.sections[sectionCnt - 1].iText[k])}">
+${_pageData.sections[sectionCnt - 1].iText[k]} 
+<button class="wrapTextaudio playing" 
+id="wrapTextaudio_${k}" 
+onClick="replayLastAudio(this, '${_pageData.sections[sectionCnt - 1].content.replayAudios[k]}')">
+</button>
+</p>`;
+
       }
       $("#section-" + sectionCnt)
         .find(".content-holder")
@@ -326,16 +336,18 @@ function initCaterpillarGame() {
   let pendingMove = null;
 
   function idleStartTimer() {
-    if (idleTimer) {
-      clearTimeout(idleTimer);
-      idleTimer = null;
-    }
-    stopIdleSoundNow();
-    isIdle = false;
+    if (!idleMonitoringEnabled) return;
+    if (!isGameActive || isGameEnded) return; // ✅ Don't monitor if game not active
 
-    if (isGameActive && !isGameEnded) {
-      idleTimer = setTimeout(triggerIdleState, IDLE_DURATION);
+    // Clear and stop idle
+    if (idleTimer) clearTimeout(idleTimer);
+    if (isIdle) {
+      stopIdleSoundNow();
+      isIdle = false;
     }
+
+    // ✅ Restart timer
+    idleTimer = setTimeout(triggerIdleState, IDLE_DURATION);
   }
 
   function idleStopTimer() {
@@ -382,22 +394,12 @@ function initCaterpillarGame() {
     idleAudioInstance = new Audio(audioPath);
 
     idleAudioInstance.onended = () => {
-      idleAudioInstance = null;
-
-      // ✅ Only continue loop if still idle
-      if (!isIdle || !isGameActive || isGameEnded) return;
-
-      // ✅ Wait 5 seconds after audio ends, then play again
-      if (idleTimer) {
-        clearTimeout(idleTimer);
-        idleTimer = null;
-      }
-
-      idleTimer = setTimeout(() => {
-        if (isIdle && isGameActive && !isGameEnded) {
-          playIdleSoundNow(); // Play audio again
+      // ✅ Use anonymous timeout for audio loop
+      setTimeout(() => {
+        if (isIdle && idleMonitoringEnabled && !isGameEnded) {
+          playIdleSoundNow();
         }
-      }, 5000); // 5 second delay before next play
+      }, 5000);
     };
 
     idleAudioInstance.play().catch(e => console.log("Idle audio error:", e));
@@ -489,7 +491,7 @@ function initCaterpillarGame() {
     gridOffsetX = (logicalWidth - usedWidth) / 2;
     gridOffsetY = (logicalHeight - usedHeight) / 2;
 
-    if (!isGameActive && snake.length > 0) {
+    if (snake.length > 0) {
       render();
     }
   }
@@ -522,7 +524,7 @@ function initCaterpillarGame() {
   function drawText(text, x, y, scale = 1) {
     ctx.save();
     const fontSize = tileSize * 0.5 * scale;
-    ctx.font = `400 ${fontSize}px Alphakind`; // Changed to 900 for extra bold
+    ctx.font = `bold ${fontSize}px Times New Roman`;  // Changed to 900 for extra bold
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
@@ -642,6 +644,14 @@ function initCaterpillarGame() {
     const polygon = getPolygonPoints();
     const now = Date.now();
 
+
+    foods = foods.filter(f => {
+      if (f.eaten) return false;
+      if (f.x >= tileCountX || f.y >= tileCountY) return false;
+      if (!canMoveToTile(f.x, f.y)) return false;
+      return true;
+    });
+
     foods.forEach(f => {
       if (f.eaten) return;
 
@@ -676,7 +686,7 @@ function initCaterpillarGame() {
 
       if (scale > 0.5) {
         ctx.fillStyle = "#000";
-        ctx.font = `400 ${tileSize * 0.45 * scale}px Alphakind`;
+        ctx.font = `bold ${tileSize * 0.45 * scale}px "Times New Roman"`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(f.value, cx, cy);
@@ -725,7 +735,7 @@ function initCaterpillarGame() {
       ctx.stroke();
 
       ctx.fillStyle = "#000";
-      ctx.font = `bold ${tileSize * 0.45}px Alphakind`;
+      ctx.font = `bold ${tileSize * 0.45}px Times New Roman`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(wrongFoodData.value, cx, cy);
@@ -796,6 +806,7 @@ function initCaterpillarGame() {
       nextValue++;
 
       isGameActive = false;
+      idleStopTimer();
 
       $(".wrapTextaudio").prop("disabled", true);
       playBtnSounds(_pageData.sections[sectionCnt - 1].correctAudio);
@@ -846,6 +857,7 @@ function initCaterpillarGame() {
           spawnFoods();
           isGameActive = true;
           $(".wrapTextaudio").prop("disabled", false);
+          idleStartTimer();
         }
       });
 
@@ -853,6 +865,7 @@ function initCaterpillarGame() {
       snake.shift();
       snake = prevSnake;
       isMoving = false;
+      idleStopTimer();
 
       // Store wrong food data and trigger animation
       wrongFoodData = { ...hitFood };
@@ -886,6 +899,7 @@ function initCaterpillarGame() {
         inCorrectFood();
         $(".wrapTextaudio").prop("disabled", false);
         isGameActive = true;
+        idleStartTimer();
       });
       return;
     } else {
@@ -1026,40 +1040,54 @@ function initCaterpillarGame() {
 
     const head = snake[0];
 
-    function getClosePosition(preferredDistance = 3) {
-      let pos;
-      let attempts = 0;
-      let bestPos = null;
-      let bestDistance = Infinity;
+    // ✅ Get all valid empty cells in the playable area
+    function getAllValidCells() {
+      const validCells = [];
 
-      do {
-        pos = randomEmptyCell();
-        const distance = Math.abs(pos.x - head.x) + Math.abs(pos.y - head.y);
+      for (let x = 0; x < tileCountX; x++) {
+        for (let y = 0; y < tileCountY; y++) {
+          // Check if tile is in playable area
+          if (!canMoveToTile(x, y)) continue;
 
-        if (distance < bestDistance) {
-          bestDistance = distance;
-          bestPos = { ...pos };
+          // Check if not occupied by snake
+          if (snake.some(s => s.x === x && s.y === y)) continue;
+
+          // Check if not occupied by existing foods
+          if (foods.some(f => f.x === x && f.y === y)) continue;
+
+          validCells.push({ x, y });
         }
+      }
 
-        if (distance <= preferredDistance + 2) {
-          return pos;
-        }
-
-        attempts++;
-      } while (attempts < 50);
-
-      return bestPos || pos;
+      return validCells;
     }
 
-    const correctPos = getClosePosition(3);
+    // ✅ Get random position from all valid cells
+    function getRandomPosition(excludePositions = []) {
+      const validCells = getAllValidCells();
 
-    let wrongPos;
-    let attempts = 0;
-    do {
-      wrongPos = getClosePosition(3);
-      attempts++;
-    } while (attempts < 50 && wrongPos.x === correctPos.x && wrongPos.y === correctPos.y);
+      // Filter out excluded positions
+      const availableCells = validCells.filter(cell => {
+        return !excludePositions.some(ex => ex.x === cell.x && ex.y === cell.y);
+      });
 
+      if (availableCells.length === 0) {
+        console.warn("No available cells for food spawn");
+        return randomEmptyCell(); // Fallback to old method
+      }
+
+      // Pick random cell from entire grid
+      const randomIndex = Math.floor(Math.random() * availableCells.length);
+      return availableCells[randomIndex];
+    }
+
+    // ✅ Spawn correct food anywhere on grid
+    const correctPos = getRandomPosition();
+
+    // ✅ Spawn wrong food anywhere on grid (excluding correct food position)
+    const wrongPos = getRandomPosition([correctPos]);
+
+    // ✅ Calculate wrong value
     let wrongValue;
     const possibleValues = [];
     for (let i = currentPattern.start; i <= currentPattern.end; i++) {
@@ -1080,6 +1108,8 @@ function initCaterpillarGame() {
       { ...correctPos, value: nextValue, correct: true, spawnTime: now },
       { ...wrongPos, value: wrongValue, correct: false, spawnTime: now }
     ];
+
+    console.log(`Foods spawned - Correct: (${correctPos.x}, ${correctPos.y}), Wrong: (${wrongPos.x}, ${wrongPos.y})`);
   }
 
   function startGame() {
@@ -1132,10 +1162,10 @@ function initCaterpillarGame() {
   function initSnake(pattern) {
     numberSequence = [];
     const body = [
-      { x: 5, y: 5 },  // ✅ Head matches snake
+      { x: 6, y: 5 },  // ✅ Head matches snake
+      { x: 5, y: 5 },
       { x: 4, y: 5 },
       { x: 3, y: 5 },
-      { x: 2, y: 5 },
       { x: 2, y: 5 }   // ✅ Tail has margin
     ];
     prevSnake = body.map(b => ({ ...b }));
@@ -1180,7 +1210,7 @@ function initCaterpillarGame() {
   window.enableCaterpillarMovement = function () {
     console.log("Caterpillar inputs unlocked");
     isGameActive = true;
-    idleStartTimer();
+    // idleStartTimer();
   };
 
   document.addEventListener("keydown", e => {
@@ -1203,17 +1233,54 @@ function initCaterpillarGame() {
   window.addEventListener("resize", resizeCanvas);
   window.addEventListener("orientationchange", resizeCanvas);
 
-  document.addEventListener("fullscreenchange", resizeCanvas);
-  document.addEventListener("webkitfullscreenchange", resizeCanvas);
-  document.addEventListener("mozfullscreenchange", resizeCanvas);
+  // ✅ Fullscreen event handlers with proper re-rendering
+  document.addEventListener("fullscreenchange", handleFullscreenChange);
+  document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+  document.addEventListener("mozfullscreenchange", handleFullscreenChange);
+  document.addEventListener("MSFullscreenChange", handleFullscreenChange);
 
-  gameWrapper.addEventListener("mousemove", idleStartTimer);
-  gameWrapper.addEventListener("mousedown", idleStartTimer);
-  gameWrapper.addEventListener("mouseup", idleStartTimer);
-  gameWrapper.addEventListener("click", idleStartTimer);
-  gameWrapper.addEventListener("touchstart", idleStartTimer);
-  gameWrapper.addEventListener("touchmove", idleStartTimer);
-  gameWrapper.addEventListener("touchend", idleStartTimer);
+  // ✅ Listen on entire document to catch ALL user interactions
+  document.addEventListener("mousemove", idleStartTimer);
+  document.addEventListener("mousedown", idleStartTimer);
+  document.addEventListener("mouseup", idleStartTimer);
+  document.addEventListener("click", idleStartTimer);
+  document.addEventListener("touchstart", idleStartTimer);
+  document.addEventListener("touchmove", idleStartTimer);
+  document.addEventListener("touchend", idleStartTimer);
+  document.addEventListener("keydown", idleStartTimer);
+  document.addEventListener("scroll", idleStartTimer);
+
+  // ✅ Add fullscreen change handler
+  function handleFullscreenChange() {
+    const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
+    console.log(`Fullscreen ${isFullscreen ? 'ENTERED' : 'EXITED'}`);
+
+    // Small delay to ensure browser has finished fullscreen transition
+    setTimeout(() => {
+      resizeCanvas();
+
+      // ✅ Re-spawn foods in new grid if game is active
+      if (isGameActive && !isGameEnded && foodsSpawned) {
+        const currentFoods = [...foods]; // Save current food data
+
+        // Check if current food positions are still valid
+        const validPositions = currentFoods.every(f =>
+          f.x < tileCountX && f.y < tileCountY && canMoveToTile(f.x, f.y)
+        );
+
+        if (!validPositions) {
+          console.log("Fullscreen: Re-spawning foods due to grid change");
+          foods = []; // Clear old foods
+          spawnFoods(); // Spawn new foods in updated grid
+        }
+      }
+
+      render(); // Force re-render
+    }, 100);
+  }
+
+  // ✅ Make it globally accessible
+  window.handleCaterpillarFullscreenChange = handleFullscreenChange;
 
   /* =========================
      IDLE LOGIC
@@ -1268,19 +1335,6 @@ function initCaterpillarGame() {
     idleStopTimer();
   };
 
-  // ✅ Enable idle system only
-  window.enableCaterpillarIdle = function () {
-    if (isGameActive && !isGameEnded) {
-      idleStartTimer();
-    }
-    console.log("Idle enabled");
-  };
-
-  // ✅ Disable idle system only
-  window.disableCaterpillarIdle = function () {
-    idleStopTimer();
-    console.log("Idle disabled");
-  };
 
   /* =========================
      ✅ NEW: FOOD ANIMATION CONTROLS
@@ -1298,21 +1352,24 @@ function initCaterpillarGame() {
     console.log("Food animation stopped");
   };
 
-  /* =========================
-     ✅ NEW: IDLE TIMER CONTROLS
-  ========================= */
+  // Start monitoring (call after intro audio)
+  window.startCaterpillarIdle = function () {
+    console.log("Idle monitoring enabled");
+    idleMonitoringEnabled = true;
 
-  // Start idle timer - will trigger idle state after IDLE_DURATION
-  window.startIdleTimer = function () {
-    idleStartTimer();
-    console.log("Idle timer started");
+    // ✅ Only start timer if game is active
+    if (isGameActive && !isGameEnded) {
+      idleTimer = setTimeout(triggerIdleState, IDLE_DURATION);
+    }
   };
 
-  // Stop idle timer - prevents idle state from triggering
-  window.stopIdleTimer = function () {
-    idleStopTimer();
-    console.log("Idle timer stopped");
+  // Stop monitoring (call on navigation)
+  window.cleanupCaterpillarGame = function () {
+    idleMonitoringEnabled = false;
+    // cleanup...
   };
+
+
 }
 
 
@@ -1320,41 +1377,12 @@ function initCaterpillarGame() {
 // Simulation play and pause
 
 
-function playPauseSimulation(btn) {
-  playClickThen();
-  var audio = document.getElementById("simulationAudio");
-  var hasAudio = !!audio.getAttribute("src");
-
-  _isSimulationPaused = !_isSimulationPaused;
-
-  if (_isSimulationPaused) {
-    // Pause state
-    if (hasAudio) {
-      audio.pause();
-    }
-    disableAll();
-    btn.classList.remove("play");
-    btn.classList.add("pause");
-    btn.dataset.tooltip = "Play";
-  } else {
-    // Play state
-    if (hasAudio) {
-      audio.play().catch(() => { });
-    }
-    enableAll();
-    btn.classList.remove("pause");
-    btn.classList.add("play");
-    btn.dataset.tooltip = "Pause";
-  }
-
-}
 
 function enableAll() {
   playClickThen();
   if (gameStarted) {
     window.enableCaterpillarControls();
-
-    window.startIdleTimer();
+    window.startCaterpillarIdle();
   }
   window.startFoodAnimation()
   $(".home_btn, .music,.introInfo,#full-screen, .wrapTextaudio").prop("disabled", false);
@@ -1373,7 +1401,8 @@ function enableAll() {
 function disableAll() {
   playClickThen();
   window.disableCaterpillarControls();
-  window.stopIdleTimer();
+  window.disableCaterpillarControls();
+  window.cleanupCaterpillarGame();
   window.stopFoodAnimation()
   $(".home_btn, .music,.introInfo,#full-screen,.wrapTextaudio").prop("disabled", true);
   const audio = document.getElementById("audio_src");
@@ -1446,6 +1475,8 @@ function leavePage() {
     window.stopSnakeIdle();
   }
 
+  $(".playPause").hide();
+
   var audio = document.getElementById("simulationAudio");
   if (audio) {
     // Stop audio whether it's playing or paused
@@ -1475,52 +1506,90 @@ function jumtoPage(pageNo) {
 
 
 
+function playPauseSimulation(btn) {
+  playClickThen();
+  var audio = document.getElementById("simulationAudio");
+
+  // Check if audio is loaded and has actual source
+  var hasAudio = audio.firstChild && audio.firstChild.src;
+
+  _isSimulationPaused = !_isSimulationPaused;
+
+  if (_isSimulationPaused) {
+    // Pause state
+    if (hasAudio && !audio.paused && !audio.ended) {
+      audio.pause();
+    }
+    disableAll();
+    btn.classList.remove("play");
+    btn.classList.add("pause");
+    btn.dataset.tooltip = "Play";
+  } else {
+    // Play state
+    if (hasAudio && audio.paused && !audio.ended) {
+      audio.play().catch(() => { });
+    }
+    enableAll();
+    btn.classList.remove("pause");
+    btn.classList.add("play");
+    btn.dataset.tooltip = "Pause";
+  }
+}
+
 var activeAudio = null;
 
 function playBtnSounds(soundFile, callback) {
   const audio = document.getElementById("simulationAudio");
-
   audio.muted = false;
 
   if (!soundFile) {
     console.warn("Audio source missing!");
-    // If audio is missing but a callback exists, we should probably run it 
-    // so the flow doesn't hang, or just return.
     if (callback) callback();
     return;
   }
 
-  // 1. CRITICAL: Clear any existing onended triggers from previous plays
+  // Clear previous onended
   audio.onended = null;
 
-  // Stop previous audio if it exists
+  // Stop previous audio
   if (activeAudio && !activeAudio.paused) {
     activeAudio.pause();
   }
 
   audio.loop = false;
-  audio.src = soundFile;
+
+  // Remove old <source> if exists
+  while (audio.firstChild) {
+    audio.removeChild(audio.firstChild);
+  }
+
+  // Create new <source> element
+  const source = document.createElement("source");
+  source.src = soundFile;
+  source.type = "audio/mpeg";
+  audio.appendChild(source);
   audio.load();
 
   activeAudio = audio;
 
-  // 2. If a callback is provided, attach it
-  if (typeof callback === "function") {
-    audio.onended = () => {
-      // Remove self to prevent future loops
-      audio.onended = null;
+  // When audio ends
+  audio.onended = () => {
+    audio.onended = null;
+    // Remove source after finish
+    while (audio.firstChild) {
+      audio.removeChild(audio.firstChild);
+    }
+    audio.load(); // reset player
+    if (typeof callback === "function") {
       callback();
-    };
-  }
+    }
+  };
 
   console.log("Playing:", soundFile);
   audio.play().catch((err) => {
     console.warn("Audio play error:", err);
-    // Optional: If play fails, should we trigger callback?
-    // if (callback) callback(); 
   });
 }
-
 
 
 function resetSimulationAudio() {
@@ -1659,7 +1728,7 @@ function showEndAnimations() {
   if (isEndAnimationTriggered) return;
   isEndAnimationTriggered = true;
 
-  console.log("showEndAnimations initiated");
+  // console.log("showEndAnimations initiated");
 
   // Cleanup previous states
   closePopup('introPopup-1');
@@ -1707,50 +1776,42 @@ function showEndAnimations() {
 // }
 
 
-function replayLastAudio(btnElement) {
+function replayLastAudio(btnElement, audioSrc) {
   playClickThen();
 
+  if (typeof idleStopTimer === 'function') {
+    idleStopTimer();
+  }
   const courseAudio = document.getElementById("courseAudio");
   const simulationAudio = document.getElementById("simulationAudio");
 
-  const index = parseInt(btnElement.id.split("_")[1]);
-  const replayAudios =
-    _pageData.sections[sectionCnt - 1].content.replayAudios;
-
   let activeAudio = null;
 
-  console.log("replayyyy");
-  // --------------------------------------------------
-  // 1️⃣ Detect active playing audio
-  // --------------------------------------------------
   if (courseAudio && !courseAudio.paused && !courseAudio.ended) {
     activeAudio = courseAudio;
-  }
-  else if (simulationAudio && !simulationAudio.paused && !simulationAudio.ended) {
+  } else if (simulationAudio && !simulationAudio.paused && !simulationAudio.ended) {
     activeAudio = simulationAudio;
   }
 
-  // --------------------------------------------------
-  // 2️⃣ If something is playing → just toggle mute
-  // --------------------------------------------------
+  // If something playing → toggle mute
   if (activeAudio) {
     activeAudio.muted = !activeAudio.muted;
     updateButtonUI(btnElement, !activeAudio.muted);
     return;
   }
 
-  // --------------------------------------------------
-  // 3️⃣ Nothing playing → call playBtnSounds()
-  // --------------------------------------------------
-  if (replayAudios && replayAudios[index]) {
-
-    console.log("Replay audioso");
-    playBtnSounds(replayAudios[index]);
-
+  // Nothing playing → play passed audio
+  if (audioSrc) {
+    playBtnSounds(audioSrc);
+    audioEnd(function () {
+      // ✅ Restart idle timer after replay ends
+      if (typeof idleStartTimer === 'function') {
+        idleStartTimer();
+      }
+    });
     resetAllButtons();
     updateButtonUI(btnElement, true);
 
-    // Optional: reset UI when replay ends
     if (simulationAudio) {
       simulationAudio.onended = function () {
         updateButtonUI(btnElement, false);
@@ -1758,6 +1819,7 @@ function replayLastAudio(btnElement) {
     }
   }
 }
+
 
 function stopAllAudios() {
   const courseAudio = document.getElementById("courseAudio");

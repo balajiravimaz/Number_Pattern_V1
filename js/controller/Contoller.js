@@ -2576,31 +2576,34 @@ function checkGlobalAudio() {
 
 function toggleFullscreen(btn) {
     playClickThen();
-
     console.log("full screen");
-
     const doc = document;
     const elem = doc.documentElement;
-
     const isFullscreen =
         doc.fullscreenElement ||
         doc.webkitFullscreenElement ||
         doc.msFullscreenElement;
-
+    
     if (!isFullscreen) {
         (elem.requestFullscreen ||
-            elem.webkitRequestFullscreen ||
-            elem.msRequestFullscreen).call(elem);
+        elem.webkitRequestFullscreen ||
+        elem.msRequestFullscreen).call(elem);
     } else {
         (doc.exitFullscreen ||
-            doc.webkitExitFullscreen ||
-            doc.msExitFullscreen).call(doc);
+        doc.webkitExitFullscreen ||
+        doc.msExitFullscreen).call(doc);
     }
-
+    
     // Immediately update button state
     setButtonState(btn, !isFullscreen);
+    
+    // ✅ ADD THIS: Trigger caterpillar game resize and food reposition
+    setTimeout(() => {
+        if (typeof handleFullscreenChange === 'function') {
+            handleFullscreenChange();
+        }
+    }, 150); // Small delay to ensure fullscreen transition completes
 }
-
 
 function setButtonState(btn, isFullscreen) {
     btn.classList.toggle("fullScreen", !isFullscreen);
@@ -2621,21 +2624,20 @@ document.addEventListener("fullscreenchange", () => {
 
 
 function goHome(pageCount) {
-    console.log("Incoming pageCount:", pageCount);
+    // console.log("Incoming pageCount:", pageCount);
     playClickThen();
 
     // ✅ CHECK CURRENT PAGE TYPE (NOT TARGET)
     var currentPageDetail = _menuView.getPageDetails(_controller.pageCnt);
     var currentType = currentPageDetail?.type;
-    console.log("Current page type:", currentType);
+    // console.log("Current page type:", currentType);
 
     // 👉 if leaving simulation/game → show popup
     if (currentType === 'simulation' || currentType === 'game') {
         console.log("Leaving simulation → show popup");
 
         // Pause simulation audio using existing function
-        pauseSimulationAudio();
-        $(".playPause").hide();
+        pauseSimulationAudio();        
 
         $(".popup-home").css("display", "flex");
         // store where user wanted to go

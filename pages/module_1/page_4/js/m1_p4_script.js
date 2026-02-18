@@ -1670,6 +1670,8 @@ function leavePage() {
     window.stopIdleSoundNow();
   }
 
+  $(".playPause").hide();
+
   var audio = document.getElementById("simulationAudio");
   if (audio) {
     // Stop audio whether it's playing or paused
