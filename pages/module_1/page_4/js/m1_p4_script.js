@@ -871,31 +871,10 @@ function initSnakeGame() {
 
   function render() {
     clearCanvas();
-    ctx.save();
-
-    const rect = gameWrapper.getBoundingClientRect();
-    const polygon = getPolygonPoints(rect.width, rect.height);
-    ctx.beginPath();
-    ctx.moveTo(polygon[0][0], polygon[0][1]);
-    for (let i = 1; i < polygon.length; i++) ctx.lineTo(polygon[i][0], polygon[i][1]);
-    ctx.closePath();
-    ctx.clip();
-
     drawGrid();
     drawFood();
     drawParticles();
     drawSnake();
-
-    ctx.restore();
-  }
-
-  const clipPolygon = [
-    [0, 15], [0, 0], [15, 0], [85, 0], [100, 0], [100, 15],
-    [100, 65], [82, 65], [82, 100], [15, 100], [0, 100], [0, 85]
-  ];
-
-  function getPolygonPoints(w, h) {
-    return clipPolygon.map(([px, py]) => [px / 100 * w, py / 100 * h]);
   }
 
   function isPointInPolygon(x, y, polygon) {
@@ -911,15 +890,10 @@ function initSnakeGame() {
   }
 
   function canMoveToTile(tileX, tileY) {
-    const rect = gameWrapper.getBoundingClientRect();
-    const polygon = getPolygonPoints(rect.width, rect.height);
-    const corners = [
-      { cx: gridOffsetX + tileX * tileSize, cy: gridOffsetY + tileY * tileSize },
-      { cx: gridOffsetX + (tileX + 1) * tileSize, cy: gridOffsetY + tileY * tileSize },
-      { cx: gridOffsetX + tileX * tileSize, cy: gridOffsetY + (tileY + 1) * tileSize },
-      { cx: gridOffsetX + (tileX + 1) * tileSize, cy: gridOffsetY + (tileY + 1) * tileSize }
-    ];
-    return corners.every(c => isPointInPolygon(c.cx, c.cy, polygon));
+    return (
+      tileX >= 0 && tileX < tileCountX &&
+      tileY >= 0 && tileY < tileCountY
+    );
   }
 
   /* =========================
@@ -938,7 +912,6 @@ function initSnakeGame() {
     } while (
       attempts < 100 &&
       (
-        !canMoveToTile(pos.x, pos.y) ||
         snake.some(s => s.x === pos.x && s.y === pos.y) ||
         foods.some(f => f.x === pos.x && f.y === pos.y)
       )
@@ -1421,14 +1394,6 @@ function initSnakeGame() {
       setDirection(btn.dataset.dir)
     });
   });
-
-  window.addEventListener("resize", resizeCanvas);
-  window.addEventListener("orientationchange", resizeCanvas);
-
-  // ✅ FIX 3: Listen for fullscreen changes and re-layout
-  document.addEventListener("fullscreenchange", resizeCanvas);
-  document.addEventListener("webkitfullscreenchange", resizeCanvas);
-  document.addEventListener("mozfullscreenchange", resizeCanvas);
 
   function resetIdleTimer() {
     clearTimeout(idleTimer);

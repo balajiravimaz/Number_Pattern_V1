@@ -1230,8 +1230,8 @@ function initCaterpillarGame() {
     });
   });
 
-  window.addEventListener("resize", resizeCanvas);
-  window.addEventListener("orientationchange", resizeCanvas);
+  //window.addEventListener("resize", resizeCanvas);
+  //window.addEventListener("orientationchange", resizeCanvas);
 
   // ✅ Fullscreen event handlers with proper re-rendering
   document.addEventListener("fullscreenchange", handleFullscreenChange);
@@ -1257,7 +1257,7 @@ function initCaterpillarGame() {
 
     // Small delay to ensure browser has finished fullscreen transition
     setTimeout(() => {
-      resizeCanvas();
+     // resizeCanvas();
 
       // ✅ Re-spawn foods in new grid if game is active
       if (isGameActive && !isGameEnded && foodsSpawned) {

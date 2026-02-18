@@ -738,7 +738,8 @@ function playClickThen() {
     clickSound.currentTime = 0;
     clickSound.play().catch(() => {});
 }
-
+const audio = document.getElementById("audio_src");
+audio.pause(); 
 function toggleAudio(el) {
     const audio = document.getElementById("audio_src");
     audio.volume = 0.6;
