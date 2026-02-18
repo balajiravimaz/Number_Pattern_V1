@@ -524,12 +524,12 @@ function initCaterpillarGame() {
   function drawText(text, x, y, scale = 1) {
     ctx.save();
     const fontSize = tileSize * 0.5 * scale;
-    ctx.font = `bold ${fontSize}px Times New Roman`;  // Changed to 900 for extra bold
+    ctx.font = `400 ${fontSize}px Alphakind`;  // Changed to 900 for extra bold
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
     // ✅ Thicker white outline for better readability
-    ctx.strokeStyle = "#FFFFFF";
+    //ctx.strokeStyle = "#FFFFFF";
     ctx.lineWidth = Math.max(6, fontSize * 0.2); // Increased outline thickness
     ctx.lineJoin = "round";
     ctx.miterLimit = 2;
@@ -681,12 +681,12 @@ function initCaterpillarGame() {
       ctx.fillStyle = "#ffd17c";
       ctx.fill();
       ctx.lineWidth = 1;
-      ctx.strokeStyle = "#c08737";
+      ctx.strokeStyle = "#f9f9fa88";
       ctx.stroke();
 
       if (scale > 0.5) {
-        ctx.fillStyle = "#000";
-        ctx.font = `bold ${tileSize * 0.45 * scale}px "Times New Roman"`;
+        ctx.fillStyle = "#2e2e38";
+        ctx.font = `300 ${tileSize * 0.45 * scale}px "Alphakind"`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(f.value, cx, cy);
@@ -731,11 +731,11 @@ function initCaterpillarGame() {
       ctx.fillStyle = "#ffd17c";
       ctx.fill();
       ctx.lineWidth = 1;
-      ctx.strokeStyle = "#c08737";
+      ctx.strokeStyle = "#2e2e38";
       ctx.stroke();
 
       ctx.fillStyle = "#000";
-      ctx.font = `bold ${tileSize * 0.45}px Times New Roman`;
+      ctx.font = `400 ${tileSize * 0.45}px Alphakind`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(wrongFoodData.value, cx, cy);
